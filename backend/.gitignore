@@ -1,0 +1,12 @@
+# Віртуальне середовище (завжди ігноруємо!)
+venv/
+.venv/
+env/
+
+# Кеш Python
+**/__pycache__/
+*.pyc
+
+# Папки IDE
+.vscode/
+.idea/
