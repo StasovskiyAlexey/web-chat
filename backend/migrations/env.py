@@ -10,7 +10,7 @@ from alembic import context
 # Импортируем твои настройки и модели
 from app.core.config import settings
 from app.core.db import Base
-import app.models
+from app.models import room, user, member, message
 
 # Настраиваем URL из конфига (чтобы не дублировать в alembic.ini)
 def get_url():

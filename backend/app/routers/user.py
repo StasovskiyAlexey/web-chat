@@ -1,11 +1,9 @@
-import email
-
 from fastapi import APIRouter, Depends
 from ..schemas.user import UserResponse, UserUpdate
 from ..schemas.response import SuccessResponse
 from ..models.user import User
 
-from ..services.user import UserService
+from ..services import UserService
 from ..dependencies.auth import get_current_user, get_service
 
 router = APIRouter(prefix='/api/v1/users', tags=['Users'])

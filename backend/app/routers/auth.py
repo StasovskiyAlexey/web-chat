@@ -81,6 +81,3 @@ async def logout(response: Response, user: User = Depends(get_current_user)):
     data=user,
     message='Пользователь залогинен'
   )
-
-# Прогуглить и попробовать поиспользовать различные библиотеки python встроенные и другие для работы с бекендом
-# Сделать через контекст проверку юзера

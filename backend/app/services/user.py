@@ -1,6 +1,6 @@
 from ..core.exceptions import AppError
 
-from ..repository.user import UserRepository
+from ..repository import UserRepository
 from ..models.user import User
 
 class UserService:

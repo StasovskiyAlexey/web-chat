@@ -14,19 +14,7 @@ class Settings(BaseSettings):
       "http://localhost:8000",
       "http://127.0.0.1:5173"
   ]
-  
-  google_client_id: str
-  google_secret_client: str
-  google_redirect_url: str
-  
-  github_client_id: str
-  github_secret_client: str
-  github_redirect_url: str
-  
-  discord_client_id: str
-  discord_secret_client: str
-  discord_redirect_url: str
-  
+
   model_config = SettingsConfigDict(
     env_file='.env'
   )

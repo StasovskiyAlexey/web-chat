@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
-import { Route as AuthProviderRouteImport } from './routes/auth/$provider'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -29,43 +28,34 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthProviderRoute = AuthProviderRouteImport.update({
-  id: '/auth/$provider',
-  path: '/auth/$provider',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
-  '/auth/$provider': typeof AuthProviderRoute
   '/auth': typeof AuthIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
-  '/auth/$provider': typeof AuthProviderRoute
   '/auth': typeof AuthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/settings': typeof SettingsRoute
-  '/auth/$provider': typeof AuthProviderRoute
   '/auth/': typeof AuthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/settings' | '/auth/$provider' | '/auth'
+  fullPaths: '/' | '/settings' | '/auth'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/settings' | '/auth/$provider' | '/auth'
-  id: '__root__' | '/' | '/settings' | '/auth/$provider' | '/auth/'
+  to: '/' | '/settings' | '/auth'
+  id: '__root__' | '/' | '/settings' | '/auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SettingsRoute: typeof SettingsRoute
-  AuthProviderRoute: typeof AuthProviderRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
@@ -92,20 +82,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/$provider': {
-      id: '/auth/$provider'
-      path: '/auth/$provider'
-      fullPath: '/auth/$provider'
-      preLoaderRoute: typeof AuthProviderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SettingsRoute: SettingsRoute,
-  AuthProviderRoute: AuthProviderRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 export const routeTree = rootRouteImport
