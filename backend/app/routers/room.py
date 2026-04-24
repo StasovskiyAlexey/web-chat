@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, WebSocketDisconnect, WebSocket
 
 from ..schemas.response import SuccessResponse
-from ..schemas.room import RoomCreate, RoomResponse, RoomUpdate
+from ..schemas.room import RoomCreate, RoomResponse, RoomUpdate, RoomResponseShort
 from ..dependencies.services import get_room_service
 from ..services import RoomService
 from ..models.room import Room
@@ -31,14 +31,14 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, member_id: str)
   except WebSocketDisconnect:
     manager.disconnect(websocket, room_id)
 
-@router.get('/get_rooms', response_model=SuccessResponse[List[RoomResponse]])
-async def get_room(service: RoomService = Depends(get_room_service)):
+@router.get('/get_rooms', response_model=SuccessResponse[List[RoomResponseShort]])
+async def get_rooms(service: RoomService = Depends(get_room_service)):
   rooms = await service.get_rooms()
   return SuccessResponse(
     data=rooms
   )
 
-@router.get('/get_room_by_id', response_model=SuccessResponse[RoomResponse])
+@router.post('/get_room_by_id', response_model=SuccessResponse[RoomResponse])
 async def get_room_by_id(room_id: str, service: RoomService = Depends(get_room_service)):
   room = await service.get_room_by_id(room_id)
   return SuccessResponse(
@@ -46,11 +46,12 @@ async def get_room_by_id(room_id: str, service: RoomService = Depends(get_room_s
   )
 
 @router.post('/create_room', response_model=SuccessResponse[RoomResponse])
-async def create_room(room_data: RoomCreate, service: RoomService = Depends(get_room_service)):
+async def create_room(room_data: RoomCreate, user_id: str, role: str, service: RoomService = Depends(get_room_service)):
   new_room = Room(name=room_data.name, type=room_data.type)
-  await service.create_room(new_room)
+  await service.create_room(new_room, user_id, role)
   return SuccessResponse(
-    data=new_room
+    data=new_room,
+    message='Новую комнату успешно создано'
   )
   
 @router.patch('/update_room', response_model=SuccessResponse[RoomResponse])

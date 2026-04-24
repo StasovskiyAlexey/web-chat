@@ -1,4 +1,4 @@
-import Main from '@/pages/Main'
+import { Rooms } from '@/pages/Room/Rooms'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -11,5 +11,5 @@ export const Route = createFileRoute('/')({
 			})
 		}
 	},
-	component: Main,
+	component: Rooms,
 })

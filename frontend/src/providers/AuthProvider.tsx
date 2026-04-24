@@ -3,9 +3,9 @@ import { useNavigate } from '@tanstack/react-router'
 import { AxiosError } from 'axios'
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { toast } from 'react-toastify'
-import { useService } from './DIProvider'
+import { useInjection } from './DIProvider'
 import { TTypes } from '@/di/types'
-import { AuthService } from '@/services/auth.service'
+import { type TAuthService } from '@/services/auth.service'
 
 export type TAuthContext = {
 	me: () => Promise<TUser | undefined>
@@ -13,13 +13,8 @@ export type TAuthContext = {
 	isLoading: boolean
 	user: TUser | null
 	setUser: React.Dispatch<React.SetStateAction<TUser | null>>
-
-	googleLogin: (code: string) => Promise<TUser>
-	githubLogin: (code: string) => Promise<TUser>
-	discordLogin: (code: string) => Promise<TUser>
 	login: (data: TUserLogin) => Promise<TUser>
 	register: (data: TUserRegister) => Promise<TUser>
-	unlink_social: (provider: string) => Promise<TUser>
 }
 
 const AuthContext = createContext<TAuthContext | null>(null)
@@ -29,7 +24,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 	const navigate = useNavigate()
 
 	const [isLoading, setIsLoading] = useState<boolean>(false)
-	const authService = useService<AuthService>(TTypes.AuthService)
+	const authService = useInjection<TAuthService>(TTypes.AuthService)
 
 	async function me() {
 		try {
@@ -41,77 +36,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 		} catch (e) {
 			setUser(null)
 			console.log(e)
-		}
-	}
-
-	async function googleLogin(code: string) {
-		setIsLoading(true)
-		try {
-			const res = await authService.googleLogin(code)
-			toast.success(res.message)
-			setUser(res.data)
-			return res?.data
-		} catch (e) {
-			setUser(null)
-
-			if (e instanceof AxiosError) {
-				toast.error(e.response?.data.detail)
-			}
-		} finally {
-			setIsLoading(false)
-		}
-	}
-
-	async function githubLogin(code: string) {
-		setIsLoading(true)
-		try {
-			const res = await authService.githubLogin(code)
-			toast.success(res.message)
-			setUser(res.data)
-			return res?.data
-		} catch (e) {
-			setUser(null)
-
-			if (e instanceof AxiosError) {
-				toast.error(e.response?.data.detail)
-			}
-		} finally {
-			setIsLoading(false)
-		}
-	}
-
-	async function discordLogin(code: string) {
-		setIsLoading(true)
-		try {
-			const res = await authService.discordLogin(code)
-			toast.success(res.message)
-			setUser(res.data)
-			return res?.data
-		} catch (e) {
-			setUser(null)
-
-			if (e instanceof AxiosError) {
-				toast.error(e.response?.data.detail)
-			}
-		} finally {
-			setIsLoading(false)
-		}
-	}
-
-	async function unlink_social(provider: string) {
-		setIsLoading(true)
-		try {
-			const res = await authService.unlink_social(provider)
-			toast.success(res?.message)
-			setUser(res?.data)
-			return res?.data
-		} catch (e) {
-			if (e instanceof AxiosError) {
-				toast.warning(e.response?.data.detail)
-			}
-			console.log(e)
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
@@ -175,9 +99,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 	return (
 		<AuthContext.Provider
 			value={{
-				googleLogin,
-				githubLogin,
-				discordLogin,
 				login,
 				register,
 				me,
@@ -185,7 +106,6 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
 				isLoading,
 				user,
 				setUser,
-				unlink_social,
 			}}>
 			{children}
 		</AuthContext.Provider>

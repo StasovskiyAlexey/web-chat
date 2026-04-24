@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..core.exceptions import AppError
 from ..models import Message
 
-from ..schemas import MessageCreate, MessageUpdate
+from ..schemas.message import MessageCreate, MessageUpdate
 
 class MessageRepository():
   def __init__(self, db: AsyncSession):

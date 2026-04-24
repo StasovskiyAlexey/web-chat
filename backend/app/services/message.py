@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from ..repository import MessageRepository
-from ..schemas import MessageCreate, MessageUpdate
+from ..schemas.message import MessageCreate, MessageUpdate
 
 class MessageService:
   def __init__(self, repository: MessageRepository):

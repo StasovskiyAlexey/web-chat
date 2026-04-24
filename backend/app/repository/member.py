@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.exceptions import AppError
 from ..models.member import Member
-from ..schemas import MemberCreate
+from ..schemas.member import MemberCreate
 
 class MemberRepository:
   def __init__(self, db: AsyncSession):

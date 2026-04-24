@@ -1,7 +1,7 @@
 import { useAuth } from '@/providers/AuthProvider'
-import { useService } from '@/providers/DIProvider'
+import { useInjection } from '@/providers/DIProvider'
 import { TTypes } from '@/di/types'
-import { AuthService } from '@/services/auth.service'
+import { type TAuthService } from '@/services/auth.service'
 import { MessageSquare, LogOut, Settings, Menu } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -10,9 +10,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 export default function MobileMenu() {
 	const { user } = useAuth()
-	const authService = useService<AuthService>(TTypes.AuthService)
-
-	const userAvatar = user?.google_account?.picture || user?.github_account?.picture || user?.discord_account?.picture
+	const authService = useInjection<TAuthService>(TTypes.AuthService)
 
 	if (!user) return null
 
@@ -49,7 +47,7 @@ export default function MobileMenu() {
 						<div className='flex items-center gap-4 px-2'>
 							<Avatar className='size-12 border-2 border-primary/10'>
 								<AvatarImage
-									src={userAvatar as string}
+									src={user.picture as string}
 									alt={user?.login}
 								/>
 								<AvatarFallback className='bg-primary/5 text-primary text-lg'>

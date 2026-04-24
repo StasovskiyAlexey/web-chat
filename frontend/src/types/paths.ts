@@ -123,6 +123,210 @@ export interface paths {
         patch: operations["update_user_api_v1_users_update_user_patch"];
         trace?: never;
     };
+    "/api/v1/rooms/get_rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Rooms */
+        get: operations["get_rooms_api_v1_rooms_get_rooms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rooms/get_room_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Room By Id */
+        post: operations["get_room_by_id_api_v1_rooms_get_room_by_id_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rooms/create_room": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Room */
+        post: operations["create_room_api_v1_rooms_create_room_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rooms/update_room": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Room */
+        patch: operations["update_room_api_v1_rooms_update_room_patch"];
+        trace?: never;
+    };
+    "/api/v1/members/get_members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Members */
+        get: operations["get_members_api_v1_members_get_members_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/get_member_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Member By Id */
+        get: operations["get_member_by_id_api_v1_members_get_member_by_id_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/add_member": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Member */
+        post: operations["add_member_api_v1_members_add_member_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/update_member": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update Member */
+        post: operations["update_member_api_v1_members_update_member_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/get_messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Messages */
+        get: operations["get_messages_api_v1_messages_get_messages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/get_message_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Message By Id */
+        get: operations["get_message_by_id_api_v1_messages_get_message_by_id_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/add_message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Message */
+        post: operations["add_message_api_v1_messages_add_message_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/update_message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Message */
+        patch: operations["update_message_api_v1_messages_update_message_patch"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -131,6 +335,191 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** Member */
+        Member: {
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Role */
+            role: string;
+            user: components["schemas"]["User"];
+        };
+        /** MemberCreate */
+        MemberCreate: {
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Role */
+            role: string;
+        };
+        /** MemberResponse */
+        MemberResponse: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Role */
+            role: string;
+            /**
+             * Joined At
+             * Format: date-time
+             */
+            joined_at: string;
+        };
+        /** MemberUpdate */
+        MemberUpdate: {
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Role */
+            role: string;
+        };
+        /** Message */
+        Message: {
+            /** Content */
+            content: string;
+            /** Room Id */
+            room_id: string;
+            /** User Id */
+            user_id: string;
+            /** Member Id */
+            member_id: string;
+        };
+        /** MessageCreate */
+        MessageCreate: {
+            /** Content */
+            content: string;
+            /** Room Id */
+            room_id: string;
+            /** User Id */
+            user_id: string;
+            /** Member Id */
+            member_id: string;
+        };
+        /** MessageResponse */
+        MessageResponse: {
+            /** Content */
+            content: string;
+            /** Room Id */
+            room_id: string;
+            /** User Id */
+            user_id: string;
+            /** Member Id */
+            member_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Is Read */
+            is_read: boolean;
+        };
+        /** MessageUpdate */
+        MessageUpdate: {
+            /** Content */
+            content: string;
+            /** Room Id */
+            room_id: string;
+            /** User Id */
+            user_id: string;
+            /** Member Id */
+            member_id: string;
+        };
+        /** RoomCreate */
+        RoomCreate: {
+            /** Name */
+            name: string;
+            /** Type */
+            type: string;
+        };
+        /** RoomResponse */
+        RoomResponse: {
+            /** Name */
+            name: string;
+            /** Type */
+            type: string;
+            /** Id */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Members */
+            members: components["schemas"]["Member"][];
+            /** Messages */
+            messages: components["schemas"]["Message"][];
+        };
+        /** RoomUpdate */
+        RoomUpdate: {
+            /** Name */
+            name: string;
+            /** Type */
+            type: string;
+        };
+        /** SuccessResponse[List[MemberResponse]] */
+        SuccessResponse_List_MemberResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["MemberResponse"][] | null;
+        };
+        /** SuccessResponse[List[MessageResponse]] */
+        SuccessResponse_List_MessageResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["MessageResponse"][] | null;
+        };
+        /** SuccessResponse[List[RoomResponse]] */
+        SuccessResponse_List_RoomResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["RoomResponse"][] | null;
+        };
+        /** SuccessResponse[MemberResponse] */
+        SuccessResponse_MemberResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["MemberResponse"] | null;
+        };
+        /** SuccessResponse[RoomResponse] */
+        SuccessResponse_RoomResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["RoomResponse"] | null;
         };
         /** SuccessResponse[UserResponse] */
         SuccessResponse_UserResponse_: {
@@ -142,6 +531,15 @@ export interface components {
             /** Message */
             message?: string | null;
             data?: components["schemas"]["UserResponse"] | null;
+        };
+        /** User */
+        User: {
+            /** Login */
+            login: string;
+            /** Email */
+            email: string;
+            /** Picture */
+            picture: string | null;
         };
         /** UserCreate */
         UserCreate: {
@@ -395,6 +793,366 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_rooms_api_v1_rooms_get_rooms_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_RoomResponse__"];
+                };
+            };
+        };
+    };
+    get_room_by_id_api_v1_rooms_get_room_by_id_post: {
+        parameters: {
+            query: {
+                room_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_room_api_v1_rooms_create_room_post: {
+        parameters: {
+            query: {
+                user_id: string;
+                role: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_room_api_v1_rooms_update_room_patch: {
+        parameters: {
+            query: {
+                room_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoomUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_members_api_v1_members_get_members_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_MemberResponse__"];
+                };
+            };
+        };
+    };
+    get_member_by_id_api_v1_members_get_member_by_id_get: {
+        parameters: {
+            query: {
+                member_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_MemberResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_member_api_v1_members_add_member_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_MemberResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_member_api_v1_members_update_member_post: {
+        parameters: {
+            query: {
+                member_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_MemberResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_messages_api_v1_messages_get_messages_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
+                };
+            };
+        };
+    };
+    get_message_by_id_api_v1_messages_get_message_by_id_get: {
+        parameters: {
+            query: {
+                message_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_message_api_v1_messages_add_message_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_message_api_v1_messages_update_message_patch: {
+        parameters: {
+            query: {
+                message_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
                 };
             };
             /** @description Validation Error */

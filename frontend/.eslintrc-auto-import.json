@@ -1,12 +1,14 @@
 {
   "globals": {
+    "ChatStore": true,
+    "EChatStore": true,
     "FullScreenLoader": true,
     "MobileMenu": true,
     "Sidebar": true,
+    "TChatStore": true,
     "axios": true,
     "createRef": true,
     "forwardRef": true,
-    "initStore": true,
     "lazy": true,
     "memo": true,
     "startTransition": true,

@@ -1,25 +1,26 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from sqlalchemy.orm import selectinload
 from ..core.exceptions import AppError
-from ..models.room import Room
+from ..models import Member, Room
 
 class RoomRepository:
   def __init__(self, db: AsyncSession):
     self.db = db
     
   async def get_rooms(self):
-    query = await self.db.execute(select(Room))
-    rooms = query.scalars().all()
+    query = await self.db.execute(select(Room).options(selectinload(Room.members).selectinload(Member.user)))
+    rooms = query.scalars().unique().all()
     return rooms
   
   async def get_room_by_id(self, room_id: str):
-    query = await self.db.execute(select(Room).where(Room.id == room_id))
+    query = await self.db.execute(select(Room).options(selectinload(Room.members).selectinload(Member.user), selectinload(Room.messages)).where(Room.id == room_id))
     room = query.scalars().first()
     return room
   
   async def get_room_by_name(self, room_name: str):
-    query = await self.db.execute(select(Room).where(Room.name == room_name))
+    query = await self.db.execute(select(Room).options(selectinload(Room.members)).where(Room.name == room_name))
     room = query.scalars().all()
     return room
   
@@ -34,8 +35,7 @@ class RoomRepository:
 
     self.db.add(new_room)
     try:
-      await self.db.commit()
-      await self.db.refresh(new_room)
+      await self.db.flush()
       return new_room
     except Exception as e:
       await self.db.rollback() # Откатываем, если что-то пошло не так
@@ -53,7 +53,7 @@ class RoomRepository:
 
     try:
       await self.db.commit()
-      await self.db.refresh(exist_room)
+      await self.db.refresh(exist_room, attribute_names=['members'])
       return exist_room
     except Exception as e:
       await self.db.rollback()

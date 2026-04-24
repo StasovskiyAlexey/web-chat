@@ -11,7 +11,9 @@ declare global {
   const AccordionItem: typeof import('./components/ui/accordion').AccordionItem
   const AccordionTrigger: typeof import('./components/ui/accordion').AccordionTrigger
   const Button: typeof import('./components/ui/button').Button
+  const ChatStore: typeof import('./store/chat.store').ChatStore
   const Counter: typeof import('./components/Counter').Counter
+  const DemoStore: typeof import('./store/demo.store').DemoStore
   const Dialog: typeof import('./components/ui/dialog').Dialog
   const DialogClose: typeof import('./components/ui/dialog').DialogClose
   const DialogContent: typeof import('./components/ui/dialog').DialogContent
@@ -47,12 +49,14 @@ declare global {
   const DropdownMenuSubContent: typeof import('./components/ui/dropdown-menu').DropdownMenuSubContent
   const DropdownMenuSubTrigger: typeof import('./components/ui/dropdown-menu').DropdownMenuSubTrigger
   const DropdownMenuTrigger: typeof import('./components/ui/dropdown-menu').DropdownMenuTrigger
+  const EChatStore: typeof import('./store/chat.store').EChatStore
   const Example: typeof import('./components/VirtualList').Example
   const FullScreenLoader: typeof import('./components/FullScreenLoader').default
   const Header: typeof import('./components/Header').default
   const Loader: typeof import('./components/FullScreenLoader').default
   const Menu: typeof import('./components/Menu').default
   const MobileMenu: typeof import('./components/MobileMenu').default
+  const RoomStore: typeof import('./store/demo.store').RoomStore
   const Select: typeof import('./components/ui/select').Select
   const SelectContent: typeof import('./components/ui/select').SelectContent
   const SelectGroup: typeof import('./components/ui/select').SelectGroup
@@ -105,4 +109,10 @@ declare global {
   const useSyncExternalStore: typeof import('react').useSyncExternalStore
   const useTransition: typeof import('react').useTransition
   const zustand: typeof import('zustand').create
+}
+// for type re-export
+declare global {
+  // @ts-ignore
+  export type { EChatStore, ChatStore, TChatStore } from './store/chat.store'
+  import('./store/chat.store')
 }

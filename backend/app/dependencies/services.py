@@ -7,7 +7,7 @@ from ..services import UserService, RoomService, MemberService, MessageService
 from ..core.db import get_db
 
 def get_room_service(db: AsyncSession = Depends(get_db)):
-  return RoomService(RoomRepository(db))
+  return RoomService(db, RoomRepository(db), MemberRepository(db))
 
 def get_member_service(db: AsyncSession = Depends(get_db)):
   return MemberService(MemberRepository(db), RoomRepository(db))

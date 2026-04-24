@@ -1,12 +1,12 @@
 from datetime import datetime
 from pydantic import BaseModel
-
-from ..schemas import User, Room
+from ..schemas.user import UserResponse
 
 class Member(BaseModel):
   user_id: str
   room_id: str
   role: str
+  user: UserResponse
 
 class MemberCreate(BaseModel):
   user_id: str

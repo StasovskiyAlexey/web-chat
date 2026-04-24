@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from ..schemas.response import SuccessResponse
-from ..schemas import MessageResponse, MessageCreate, MessageUpdate
+from ..schemas.message import MessageResponse, MessageCreate, MessageUpdate
 from ..services import MessageService
 from ..dependencies.services import get_message_service
 
