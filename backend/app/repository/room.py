@@ -10,7 +10,7 @@ class RoomRepository:
     self.db = db
     
   async def get_rooms(self):
-    query = await self.db.execute(select(Room).options(selectinload(Room.members).selectinload(Member.user)))
+    query = await self.db.execute(select(Room).options(selectinload(Room.members).joinedload(Member.user).selectinload(Member.user)))
     rooms = query.scalars().unique().all()
     return rooms
   
@@ -20,8 +20,13 @@ class RoomRepository:
     return room
   
   async def get_room_by_name(self, room_name: str):
-    query = await self.db.execute(select(Room).options(selectinload(Room.members)).where(Room.name == room_name))
+    query = await self.db.execute(select(Room).options(selectinload(Room.members).selectinload(Member.user)).where(Room.name == room_name))
     room = query.scalars().all()
+    return room
+  
+  async def get_room_with_members(self, room_id: str):
+    query = await self.db.execute(select(Room).where(Room.id == room_id).options(selectinload(Room.members).selectinload(Member.user)))
+    room = query.scalar()
     return room
   
   async def create_room(self, new_room: Room):
@@ -58,3 +63,12 @@ class RoomRepository:
     except Exception as e:
       await self.db.rollback()
       raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
+    
+  async def delete_all_rooms(self):
+    query = await self.db.execute(select(Room))
+    rooms = query.scalars().all()
+    
+    for room in rooms:
+      await self.db.delete(room)
+    
+    await self.db.commit()

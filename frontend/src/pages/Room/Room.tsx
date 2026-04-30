@@ -1,81 +1,95 @@
 import { useState } from 'react'
-import { Hash, Send, Users, MoreVertical, Phone, Video, Search, ShieldCheck } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Send, Users, MoreVertical, ShieldCheck } from 'lucide-react'
+import { Button } from '@/components/shared/ui/button'
+import { Input } from '@/components/shared/ui/input'
+import { ScrollArea } from '@/components/shared/ui/scroll-area'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/ui/avatar'
 import { useInjection } from '@/providers/DIProvider'
-import type { TChatStore } from '@/store/chat.store'
+import { EChatStore, type TChatStore } from '@/store/chat.store'
 import { TTypes } from '@/di/types'
 import { useParams } from '@tanstack/react-router'
+import { observer } from 'mobx-react-lite'
+import { useAuth } from '@/providers/AuthProvider'
+import Loader from '@/components/shared/Loader'
+import ErrorFallback from '@/components/shared/ErrorFallback'
+import useWebsocket from '@/hooks/useWebsocket'
+import { type TMessage } from '@/types/chat'
 
-// --- Mock Data ---
-const MOCK_ROOM = {
-	id: '1',
-	name: 'Backend Developers',
-	type: 'group',
-	members: [
-		{ id: '1', name: 'Dmitry', role: 'owner', avatar: '', online: true },
-		{ id: '2', name: 'Alex', role: 'member', avatar: '', online: false },
-		{ id: '3', name: 'Maria', role: 'member', avatar: '', online: true },
-	],
-}
+export const Room = observer(() => {
+	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
+	const chatArea = useRef<null | HTMLDivElement>(null)
 
-// const MOCK_MESSAGES = [
-// 	{ id: 1, sender: 'Dmitry', text: 'Привет! Как там успехи с миграцией на SQLAlchemy 2.0?', time: '10:05', isMe: true },
-// 	{ id: 2, sender: 'Alex', text: 'Почти закончил, воюю с асинхронными сессиями.', time: '10:12', isMe: false },
-// 	{
-// 		id: 3,
-// 		sender: 'Dmitry',
-// 		text: 'О, MissingGreenlet словил? Добавь selectinload в запросы.',
-// 		time: '10:15',
-// 		isMe: true,
-// 	},
-// ]
-
-export default function Room() {
-	const id = useParams({ from: '/rooms/$roomId' }).roomId
+	function scrollToBottom() {
+		chatArea.current?.scrollIntoView({ behavior: 'smooth' })
+	}
 
 	const [message, setMessage] = useState('')
 	const chatStore = useInjection<TChatStore>(TTypes.ChatStore)
-	console.log(chatStore.rooms)
+
+	const { user } = useAuth()
+	const { socket } = useWebsocket(`ws://localhost:8000/api/v1/websockets/room-connection?room_id=${roomId}`)
+	console.log(socket)
+
 	useEffect(() => {
-		if (id) {
-			chatStore.fetchRoomById(id)
+		scrollToBottom()
+	}, [chatStore.room?.messages.length])
+
+	useEffect(() => {
+		if (!socket) return
+
+		// Тут делаем onMessage только делаем функцию хендлер для создания события
+		const handleMessage = (event: MessageEvent) => {
+			try {
+				const data = JSON.parse(event.data)
+				const payload = data.payload
+				console.log(payload)
+				console.log(chatStore.room?.messages)
+				chatStore.room?.messages.push(payload)
+			} catch (e) {
+				console.error(e)
+			}
+		}
+
+		socket.addEventListener('message', handleMessage)
+		return () => socket.removeEventListener('message', handleMessage)
+	}, [socket, roomId])
+
+	function addMessage() {
+		chatStore.addMessage({
+			content: message,
+			room_id: roomId,
+			user_id: user?.id as string,
+			member_id: chatStore.room?.members.find((el) => el.user_id === user?.id)?.id as string,
+		})
+
+		setMessage('')
+	}
+
+	useEffect(() => {
+		if (roomId) {
+			chatStore.fetchRoomById(roomId)
 		}
 	}, [])
 
+	if (chatStore.isLoading.has(EChatStore.fetchRoomById)) {
+		return <Loader message='Загрузка комнаты' />
+	}
+
+	if (chatStore.isError.has(EChatStore.fetchRoomById)) {
+		return <ErrorFallback title='Ошибка при загрузке комнаты' />
+	}
+
 	return (
 		<div className='flex h-screen bg-background overflow-hidden'>
-			{/* --- Основная область чата --- */}
 			<main className='flex-1 flex flex-col min-w-0 border-r'>
-				{/* Header чата */}
 				<header className='h-16 border-b flex items-center justify-between px-4 shrink-0'>
 					<div className='flex items-center gap-3'>
-						<div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary'>
-							<Hash className='w-5 h-5' />
-						</div>
 						<div>
-							<h2 className='font-bold leading-tight'>{MOCK_ROOM.name}</h2>
-							<p className='text-xs text-muted-foreground'>{MOCK_ROOM.members.length} участников</p>
+							<h2 className='font-bold leading-tight'>{chatStore.room?.name}</h2>
+							<p className='text-xs text-muted-foreground'>{chatStore.room?.members.length} участников</p>
 						</div>
 					</div>
 					<div className='flex items-center gap-2'>
-						{/* <Button
-							variant='ghost'
-							size='icon'>
-							<Phone className='w-4 h-4' />
-						</Button>
-						<Button
-							variant='ghost'
-							size='icon'>
-							<Video className='w-4 h-4' />
-						</Button>
-						<Button
-							variant='ghost'
-							size='icon'>
-							<Search className='w-4 h-4' />
-						</Button> */}
 						<Button
 							variant='ghost'
 							size='icon'>
@@ -84,36 +98,39 @@ export default function Room() {
 					</div>
 				</header>
 
-				{/* Область сообщений */}
-				<ScrollArea className='flex-1 p-4'>
-					<div className='space-y-6'>
-						{/* {chatStore.room?.messages.map((msg, i) => (
+				<ScrollArea
+					ref={chatArea}
+					className='flex-1 p-4 overflow-auto'>
+					<div className='space-y-6 '>
+						{chatStore.room?.messages.map((msg, i) => (
 							<div
 								key={i}
-								className={`flex ${msg.member_id ? 'justify-end' : 'justify-start'}`}>
-								<div className={`flex gap-3 max-w-[70%] ${msg.isMe ? 'flex-row-reverse' : ''}`}>
+								className={`flex ${msg.user_id === user?.id ? 'justify-end' : 'justify-start'}`}>
+								<div className={`flex gap-3 max-w-[70%] ${msg.user_id === user?.id ? 'flex-row-reverse' : ''}`}>
 									<Avatar className='w-8 h-8 shrink-0'>
-										<AvatarFallback>{msg.sender[0]}</AvatarFallback>
+										<AvatarFallback>{'Докинуть юзер обьект в схему'}</AvatarFallback>
 									</Avatar>
 									<div>
-										{!msg.isMe && <p className='text-xs font-medium mb-1 ml-1'>{msg.sender}</p>}
+										{msg.user_id !== user?.id && <p className='text-xs font-medium mb-1 ml-1'>{msg.content}</p>}
 										<div
 											className={`p-3 rounded-2xl text-sm ${
-												msg.isMe ? 'bg-primary text-primary-foreground rounded-tr-none' : 'bg-muted rounded-tl-none'
+												msg.user_id === user?.id
+													? 'bg-primary text-primary-foreground rounded-tr-none'
+													: 'bg-muted rounded-tl-none'
 											}`}>
 											{msg.content}
 										</div>
-										<p className={`text-[10px] mt-1 text-muted-foreground ${msg.isMe ? 'text-right' : ''}`}>
-											{msg.content}
+										<p
+											className={`text-[10px] mt-1 text-muted-foreground ${msg.user_id === user?.id ? 'text-right' : ''}`}>
+											{msg.created_at.slice(0, 10)}
 										</p>
 									</div>
 								</div>
 							</div>
-						))} */}
+						))}
 					</div>
 				</ScrollArea>
 
-				{/* Input сообщений */}
 				<footer className='p-4 border-t bg-background'>
 					<form
 						className='flex gap-2'
@@ -125,6 +142,7 @@ export default function Room() {
 							className='flex-1 bg-muted/50 border-none focus-visible:ring-1'
 						/>
 						<Button
+							onClick={() => addMessage()}
 							type='submit'
 							size='icon'
 							disabled={!message}>
@@ -134,7 +152,6 @@ export default function Room() {
 				</footer>
 			</main>
 
-			{/* --- Правая панель (Участники) --- */}
 			<aside className='w-64 hidden lg:flex flex-col shrink-0 bg-muted/30'>
 				<header className='h-16 border-b flex items-center px-4 shrink-0'>
 					<h3 className='font-semibold flex items-center gap-2'>
@@ -151,8 +168,8 @@ export default function Room() {
 								<div className='flex items-center gap-3'>
 									<div className='relative'>
 										<Avatar className='w-9 h-9'>
-											{/* <AvatarImage src={user.user.picture || ''} /> */}
-											<AvatarFallback>{user.user.login}</AvatarFallback>
+											<AvatarImage src={user.user.picture || ''} />
+											<AvatarFallback>1</AvatarFallback>
 										</Avatar>
 									</div>
 									<div>
@@ -168,4 +185,4 @@ export default function Room() {
 			</aside>
 		</div>
 	)
-}
+})

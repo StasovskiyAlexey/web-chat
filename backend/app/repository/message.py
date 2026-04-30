@@ -32,9 +32,10 @@ class MessageRepository():
       self.db.add(new_message)
       await self.db.commit()
       await self.db.refresh(new_message)
+      return new_message
     except Exception as e:
       await self.db.rollback() # Откатываем, если что-то пошло не так
-      raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
+      raise AppError(500, f"Ошибка при cоздании сообщения: {str(e)}")
     
   async def update_message(self, message_id: str, message_data: MessageUpdate):
     exist_message = await self.get_messages_by_id(message_id)

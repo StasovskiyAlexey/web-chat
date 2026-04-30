@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
-from ..schemas.user import UserResponse
+from ..schemas.user import UserResponse, User
 
 class Member(BaseModel):
   user_id: str
@@ -19,6 +19,7 @@ class MemberUpdate(MemberCreate):
 class MemberResponse(BaseModel):
   id: str
   user_id: str
+  user: User
   room_id: str
   role: str
   joined_at: datetime

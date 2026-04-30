@@ -3,10 +3,10 @@ import { useInjection } from '@/providers/DIProvider'
 import { TTypes } from '@/di/types'
 import { type TAuthService } from '@/services/auth.service'
 import { MessageSquare, LogOut, Settings, Menu } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/ui/avatar'
+import { Button } from '@/components/shared/ui/button'
+import { Separator } from '@/components/shared/ui/separator'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/shared/ui/sheet'
 
 export default function MobileMenu() {
 	const { user } = useAuth()

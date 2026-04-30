@@ -1,12 +1,13 @@
 import { Plus, Users, Hash } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/shared/ui/button'
 import { useModal } from '@/providers/ModalProvider'
-import { AddRoomModal } from '@/components/modals/AddRoomModal'
+import { AddRoomModal } from './modals/AddRoomModal'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from '@/providers/DIProvider'
-import type { TChatStore } from '@/store/chat.store'
+import { EChatStore, type TChatStore } from '@/store/chat.store'
 import { TTypes } from '@/di/types'
 import { Link } from '@tanstack/react-router'
+import Loader from '@/components/shared/Loader'
 
 export const Rooms = observer(() => {
 	const { switcher } = useModal()
@@ -15,6 +16,10 @@ export const Rooms = observer(() => {
 	useEffect(() => {
 		chatStore.fetchRooms()
 	}, [])
+
+	if (chatStore.isLoading.has(EChatStore.fetchRooms)) {
+		return <Loader message='Загрузка комнат' />
+	}
 
 	return (
 		<>

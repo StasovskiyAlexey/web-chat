@@ -1,15 +1,15 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shared/ui/tabs'
 import { Search } from 'lucide-react'
-import { Input } from '../ui/input'
+import { Input } from '@/components/shared/ui/input'
 import { useModal } from '@/providers/ModalProvider'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog'
-import { Button } from '../ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/shared/ui/dialog'
+import { Button } from '@/components/shared/ui/button'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from '@/providers/DIProvider'
 import type { TChatStore } from '@/store/chat.store'
 import { TTypes } from '@/di/types'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { Label } from '../ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/shared/ui/radio-group'
+import { Label } from '@/components/shared/ui/label'
 import { useAuth } from '@/providers/AuthProvider'
 
 export const AddRoomModal = observer(() => {
@@ -24,6 +24,7 @@ export const AddRoomModal = observer(() => {
 
 	async function handleCreateRoom() {
 		await chatStore.createRoom({ user_id: user?.id, role: 'owner', name: room.name, type: room.type })
+		switcher('addRoomModal', false)
 	}
 
 	return (

@@ -1,6 +1,9 @@
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
 from ..core.exceptions import AppError
 
-from ..repository import RoomRepository, MemberRepository, UserRepository
+from ..repository import RoomRepository, MemberRepository
 from ..schemas.room import RoomUpdate
 from ..schemas.member import MemberCreate
 from ..models import Room
@@ -34,10 +37,12 @@ class RoomService:
     await self.member_repository.create_member(member_data)
     
     await self.db.commit()
-    await self.db.refresh(new_room, attribute_names=['members', 'messages'])
-    
-    return new_room
+    return await self.repository.get_room_with_members(new_room.id)
   
   async def update_room(self, room_id: str, **room_data: RoomUpdate):
     updated_room = await self.repository.update_room(room_id, **room_data)
     return updated_room
+  
+  async def delete_all_rooms(self):
+    deleted_rooms = await self.repository.delete_all_rooms()
+    return deleted_rooms

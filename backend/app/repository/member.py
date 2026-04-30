@@ -39,7 +39,7 @@ class MemberRepository:
       return new_member
     except Exception as e:
       await self.db.rollback()
-      raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
+      raise AppError(500, f"Ошибка при cоздании пользователя чата: {str(e)}")
     
   async def update_member(self, member_id: str, **member_data):
     exist_member = await self.get_member_by_user_id(member_id)

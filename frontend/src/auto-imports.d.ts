@@ -6,82 +6,82 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const Accordion: typeof import('./components/ui/accordion').Accordion
-  const AccordionContent: typeof import('./components/ui/accordion').AccordionContent
-  const AccordionItem: typeof import('./components/ui/accordion').AccordionItem
-  const AccordionTrigger: typeof import('./components/ui/accordion').AccordionTrigger
-  const Button: typeof import('./components/ui/button').Button
+  const Accordion: typeof import('./components/shared/ui/accordion').Accordion
+  const AccordionContent: typeof import('./components/shared/ui/accordion').AccordionContent
+  const AccordionItem: typeof import('./components/shared/ui/accordion').AccordionItem
+  const AccordionTrigger: typeof import('./components/shared/ui/accordion').AccordionTrigger
+  const Button: typeof import('./components/shared/ui/button').Button
   const ChatStore: typeof import('./store/chat.store').ChatStore
   const Counter: typeof import('./components/Counter').Counter
   const DemoStore: typeof import('./store/demo.store').DemoStore
-  const Dialog: typeof import('./components/ui/dialog').Dialog
-  const DialogClose: typeof import('./components/ui/dialog').DialogClose
-  const DialogContent: typeof import('./components/ui/dialog').DialogContent
-  const DialogDescription: typeof import('./components/ui/dialog').DialogDescription
-  const DialogFooter: typeof import('./components/ui/dialog').DialogFooter
-  const DialogHeader: typeof import('./components/ui/dialog').DialogHeader
-  const DialogOverlay: typeof import('./components/ui/dialog').DialogOverlay
-  const DialogPortal: typeof import('./components/ui/dialog').DialogPortal
-  const DialogTitle: typeof import('./components/ui/dialog').DialogTitle
-  const DialogTrigger: typeof import('./components/ui/dialog').DialogTrigger
-  const Drawer: typeof import('./components/ui/drawer').Drawer
-  const DrawerClose: typeof import('./components/ui/drawer').DrawerClose
-  const DrawerContent: typeof import('./components/ui/drawer').DrawerContent
-  const DrawerDescription: typeof import('./components/ui/drawer').DrawerDescription
-  const DrawerFooter: typeof import('./components/ui/drawer').DrawerFooter
-  const DrawerHeader: typeof import('./components/ui/drawer').DrawerHeader
-  const DrawerOverlay: typeof import('./components/ui/drawer').DrawerOverlay
-  const DrawerPortal: typeof import('./components/ui/drawer').DrawerPortal
-  const DrawerTitle: typeof import('./components/ui/drawer').DrawerTitle
-  const DrawerTrigger: typeof import('./components/ui/drawer').DrawerTrigger
-  const DropdownMenu: typeof import('./components/ui/dropdown-menu').DropdownMenu
-  const DropdownMenuCheckboxItem: typeof import('./components/ui/dropdown-menu').DropdownMenuCheckboxItem
-  const DropdownMenuContent: typeof import('./components/ui/dropdown-menu').DropdownMenuContent
-  const DropdownMenuGroup: typeof import('./components/ui/dropdown-menu').DropdownMenuGroup
-  const DropdownMenuItem: typeof import('./components/ui/dropdown-menu').DropdownMenuItem
-  const DropdownMenuLabel: typeof import('./components/ui/dropdown-menu').DropdownMenuLabel
-  const DropdownMenuPortal: typeof import('./components/ui/dropdown-menu').DropdownMenuPortal
-  const DropdownMenuRadioGroup: typeof import('./components/ui/dropdown-menu').DropdownMenuRadioGroup
-  const DropdownMenuRadioItem: typeof import('./components/ui/dropdown-menu').DropdownMenuRadioItem
-  const DropdownMenuSeparator: typeof import('./components/ui/dropdown-menu').DropdownMenuSeparator
-  const DropdownMenuShortcut: typeof import('./components/ui/dropdown-menu').DropdownMenuShortcut
-  const DropdownMenuSub: typeof import('./components/ui/dropdown-menu').DropdownMenuSub
-  const DropdownMenuSubContent: typeof import('./components/ui/dropdown-menu').DropdownMenuSubContent
-  const DropdownMenuSubTrigger: typeof import('./components/ui/dropdown-menu').DropdownMenuSubTrigger
-  const DropdownMenuTrigger: typeof import('./components/ui/dropdown-menu').DropdownMenuTrigger
+  const Dialog: typeof import('./components/shared/ui/dialog').Dialog
+  const DialogClose: typeof import('./components/shared/ui/dialog').DialogClose
+  const DialogContent: typeof import('./components/shared/ui/dialog').DialogContent
+  const DialogDescription: typeof import('./components/shared/ui/dialog').DialogDescription
+  const DialogFooter: typeof import('./components/shared/ui/dialog').DialogFooter
+  const DialogHeader: typeof import('./components/shared/ui/dialog').DialogHeader
+  const DialogOverlay: typeof import('./components/shared/ui/dialog').DialogOverlay
+  const DialogPortal: typeof import('./components/shared/ui/dialog').DialogPortal
+  const DialogTitle: typeof import('./components/shared/ui/dialog').DialogTitle
+  const DialogTrigger: typeof import('./components/shared/ui/dialog').DialogTrigger
+  const Drawer: typeof import('./components/shared/ui/drawer').Drawer
+  const DrawerClose: typeof import('./components/shared/ui/drawer').DrawerClose
+  const DrawerContent: typeof import('./components/shared/ui/drawer').DrawerContent
+  const DrawerDescription: typeof import('./components/shared/ui/drawer').DrawerDescription
+  const DrawerFooter: typeof import('./components/shared/ui/drawer').DrawerFooter
+  const DrawerHeader: typeof import('./components/shared/ui/drawer').DrawerHeader
+  const DrawerOverlay: typeof import('./components/shared/ui/drawer').DrawerOverlay
+  const DrawerPortal: typeof import('./components/shared/ui/drawer').DrawerPortal
+  const DrawerTitle: typeof import('./components/shared/ui/drawer').DrawerTitle
+  const DrawerTrigger: typeof import('./components/shared/ui/drawer').DrawerTrigger
+  const DropdownMenu: typeof import('./components/shared/ui/dropdown-menu').DropdownMenu
+  const DropdownMenuCheckboxItem: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuCheckboxItem
+  const DropdownMenuContent: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuContent
+  const DropdownMenuGroup: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuGroup
+  const DropdownMenuItem: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuItem
+  const DropdownMenuLabel: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuLabel
+  const DropdownMenuPortal: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuPortal
+  const DropdownMenuRadioGroup: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuRadioGroup
+  const DropdownMenuRadioItem: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuRadioItem
+  const DropdownMenuSeparator: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuSeparator
+  const DropdownMenuShortcut: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuShortcut
+  const DropdownMenuSub: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuSub
+  const DropdownMenuSubContent: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuSubContent
+  const DropdownMenuSubTrigger: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuSubTrigger
+  const DropdownMenuTrigger: typeof import('./components/shared/ui/dropdown-menu').DropdownMenuTrigger
   const EChatStore: typeof import('./store/chat.store').EChatStore
+  const ErrorFallback: typeof import('./components/ErrorFallback').default
   const Example: typeof import('./components/VirtualList').Example
-  const FullScreenLoader: typeof import('./components/FullScreenLoader').default
   const Header: typeof import('./components/Header').default
-  const Loader: typeof import('./components/FullScreenLoader').default
+  const Loader: typeof import('./components/shared/Loader').default
   const Menu: typeof import('./components/Menu').default
   const MobileMenu: typeof import('./components/MobileMenu').default
   const RoomStore: typeof import('./store/demo.store').RoomStore
-  const Select: typeof import('./components/ui/select').Select
-  const SelectContent: typeof import('./components/ui/select').SelectContent
-  const SelectGroup: typeof import('./components/ui/select').SelectGroup
-  const SelectItem: typeof import('./components/ui/select').SelectItem
-  const SelectLabel: typeof import('./components/ui/select').SelectLabel
-  const SelectScrollDownButton: typeof import('./components/ui/select').SelectScrollDownButton
-  const SelectScrollUpButton: typeof import('./components/ui/select').SelectScrollUpButton
-  const SelectSeparator: typeof import('./components/ui/select').SelectSeparator
-  const SelectTrigger: typeof import('./components/ui/select').SelectTrigger
-  const SelectValue: typeof import('./components/ui/select').SelectValue
-  const Sidebar: typeof import('./components/Sidebar').default
+  const Select: typeof import('./components/shared/ui/select').Select
+  const SelectContent: typeof import('./components/shared/ui/select').SelectContent
+  const SelectGroup: typeof import('./components/shared/ui/select').SelectGroup
+  const SelectItem: typeof import('./components/shared/ui/select').SelectItem
+  const SelectLabel: typeof import('./components/shared/ui/select').SelectLabel
+  const SelectScrollDownButton: typeof import('./components/shared/ui/select').SelectScrollDownButton
+  const SelectScrollUpButton: typeof import('./components/shared/ui/select').SelectScrollUpButton
+  const SelectSeparator: typeof import('./components/shared/ui/select').SelectSeparator
+  const SelectTrigger: typeof import('./components/shared/ui/select').SelectTrigger
+  const SelectValue: typeof import('./components/shared/ui/select').SelectValue
+  const Sidebar: typeof import('./components/sidebar/Sidebar').default
   const SocialButton: typeof import('./components/SocialButton').default
-  const Table: typeof import('./components/ui/table').Table
-  const TableBody: typeof import('./components/ui/table').TableBody
-  const TableCaption: typeof import('./components/ui/table').TableCaption
-  const TableCell: typeof import('./components/ui/table').TableCell
-  const TableFooter: typeof import('./components/ui/table').TableFooter
-  const TableHead: typeof import('./components/ui/table').TableHead
-  const TableHeader: typeof import('./components/ui/table').TableHeader
-  const TableRow: typeof import('./components/ui/table').TableRow
+  const Table: typeof import('./components/shared/ui/table').Table
+  const TableBody: typeof import('./components/shared/ui/table').TableBody
+  const TableCaption: typeof import('./components/shared/ui/table').TableCaption
+  const TableCell: typeof import('./components/shared/ui/table').TableCell
+  const TableFooter: typeof import('./components/shared/ui/table').TableFooter
+  const TableHead: typeof import('./components/shared/ui/table').TableHead
+  const TableHeader: typeof import('./components/shared/ui/table').TableHeader
+  const TableRow: typeof import('./components/shared/ui/table').TableRow
   const Test: typeof import('./components/Test').default
-  const Toaster: typeof import('./components/ui/sonner').Toaster
+  const Toaster: typeof import('./components/shared/ui/sonner').Toaster
   const VirtualList: typeof import('./components/VirtualList').default
   const axios: typeof import('axios').default
-  const buttonVariants: typeof import('./components/ui/button').buttonVariants
+  const buttonVariants: typeof import('./components/shared/ui/button').buttonVariants
   const counterStore: typeof import('./store/init.store').counterStore
   const createRef: typeof import('react').createRef
   const forwardRef: typeof import('react').forwardRef
@@ -108,6 +108,8 @@ declare global {
   const useState: typeof import('react').useState
   const useSyncExternalStore: typeof import('react').useSyncExternalStore
   const useTransition: typeof import('react').useTransition
+  const useWebSocket: typeof import('./hooks/useWebSocket').default
+  const useWebsocket: typeof import('./hooks/useWebsocket').default
   const zustand: typeof import('zustand').create
 }
 // for type re-export

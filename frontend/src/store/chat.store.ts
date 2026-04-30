@@ -1,6 +1,6 @@
 import { TTypes } from '@/di/types'
 import type { TChatService } from '@/services/chat.service'
-import type { TRoom, TRoomCreate } from '@/types/room'
+import type { TMessage, TMessageCreate, TMessageUpdate, TRoom, TRoomCreate } from '@/types/chat'
 import { AxiosError } from 'axios'
 import { inject, injectable } from 'inversify'
 import {makeAutoObservable, runInAction} from 'mobx'
@@ -10,7 +10,9 @@ export enum EChatStore {
   fetchRooms = 'fetchRooms',
   fetchRoomById = 'fetchRoomById',
   createRoom = 'createRoom',
-  updateRoom = 'updateRoom'
+  updateRoom = 'updateRoom',
+  createMessage = 'createMessage',
+  updateMessage = 'updateMessage'
 }
 
 @injectable()
@@ -31,7 +33,6 @@ export class ChatStore {
     this.isLoading.add(EChatStore.fetchRooms)
     try {
       const res = await this.chatService.getRooms();
-      console.log(res)
       runInAction(() => {
         this.rooms = res.data; 
       });
@@ -48,7 +49,6 @@ export class ChatStore {
     this.isPending.add(EChatStore.fetchRoomById)
     try {
       const res = await this.chatService.getRoom(roomId);
-      console.log(res)
       runInAction(() => {
         this.room = res.data;
       });
@@ -71,7 +71,6 @@ export class ChatStore {
       runInAction(() => {
         this.rooms.push(res.data);
       });
-      console.log(res)
       toast.success(res.message)
       return res.data;
     } catch (e) {
@@ -81,7 +80,7 @@ export class ChatStore {
       this.isError.add(EChatStore.createRoom);
     } finally {
       this.isPending.delete(EChatStore.createRoom);
-      this.isPending.delete(EChatStore.createRoom)
+      this.isLoading.delete(EChatStore.createRoom)
     }
   }
 
@@ -102,8 +101,49 @@ export class ChatStore {
       this.isError.add(EChatStore.updateRoom);
     } finally {
       this.isLoading.delete(EChatStore.updateRoom);
-      this.isPending.delete(EChatStore.updateRoom)
+      this.isLoading.delete(EChatStore.updateRoom)
     }
+  }
+
+  async addMessage(data: TMessageCreate) {
+    this.isLoading.add(EChatStore.createMessage);
+    this.isPending.add(EChatStore.createMessage)
+
+    try {
+      await this.chatService.createMessage(data);
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        toast.error(e.response?.data.detail)
+      }
+      this.isError.add(EChatStore.createMessage);
+    } finally {
+      this.isPending.delete(EChatStore.createMessage);
+      this.isLoading.delete(EChatStore.createMessage)
+    }
+  }
+
+  async updateMessage(messageId: string, data: TMessageUpdate) {
+    this.isLoading.add(EChatStore.updateMessage);
+    this.isPending.add(EChatStore.updateMessage)
+    try {
+      const res = await this.chatService.updateMessage(messageId, data);
+      toast.success(res.message)
+      return res.data;
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        toast.error(e.response?.data.detail)
+      }
+      this.isError.add(EChatStore.updateMessage);
+    } finally {
+      this.isPending.delete(EChatStore.updateMessage);
+      this.isLoading.delete(EChatStore.updateMessage)
+    }
+  }
+
+  async updateRoomMessages() {
+    runInAction(() => {
+      
+    })
   }
 
 }

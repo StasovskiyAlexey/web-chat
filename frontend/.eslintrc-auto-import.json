@@ -2,9 +2,7 @@
   "globals": {
     "ChatStore": true,
     "EChatStore": true,
-    "FullScreenLoader": true,
     "MobileMenu": true,
-    "Sidebar": true,
     "TChatStore": true,
     "axios": true,
     "createRef": true,
@@ -27,6 +25,7 @@
     "useRef": true,
     "useState": true,
     "useSyncExternalStore": true,
-    "useTransition": true
+    "useTransition": true,
+    "useWebsocket": true
   }
 }

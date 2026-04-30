@@ -1,5 +1,5 @@
-import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Tabs } from '@/components/ui/tabs'
+import { TabsContent, TabsList, TabsTrigger } from '@/components/shared/ui/tabs'
+import { Tabs } from '@/components/shared/ui/tabs'
 
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import AuthForm from './AuthForm'

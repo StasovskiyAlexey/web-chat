@@ -191,6 +191,23 @@ export interface paths {
         patch: operations["update_room_api_v1_rooms_update_room_patch"];
         trace?: never;
     };
+    "/api/v1/rooms/delete_rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Delete Rooms */
+        get: operations["delete_rooms_api_v1_rooms_delete_rooms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/members/get_members": {
         parameters: {
             query?: never;
@@ -283,10 +300,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Message By Id */
-        get: operations["get_message_by_id_api_v1_messages_get_message_by_id_get"];
+        get?: never;
         put?: never;
-        post?: never;
+        /** Get Message By Id */
+        post: operations["get_message_by_id_api_v1_messages_get_message_by_id_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -336,16 +353,6 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
-        /** Member */
-        Member: {
-            /** User Id */
-            user_id: string;
-            /** Room Id */
-            room_id: string;
-            /** Role */
-            role: string;
-            user: components["schemas"]["User"];
-        };
         /** MemberCreate */
         MemberCreate: {
             /** User Id */
@@ -361,6 +368,7 @@ export interface components {
             id: string;
             /** User Id */
             user_id: string;
+            user: components["schemas"]["User"];
             /** Room Id */
             room_id: string;
             /** Role */
@@ -379,17 +387,6 @@ export interface components {
             room_id: string;
             /** Role */
             role: string;
-        };
-        /** Message */
-        Message: {
-            /** Content */
-            content: string;
-            /** Room Id */
-            room_id: string;
-            /** User Id */
-            user_id: string;
-            /** Member Id */
-            member_id: string;
         };
         /** MessageCreate */
         MessageCreate: {
@@ -424,12 +421,6 @@ export interface components {
         MessageUpdate: {
             /** Content */
             content: string;
-            /** Room Id */
-            room_id: string;
-            /** User Id */
-            user_id: string;
-            /** Member Id */
-            member_id: string;
         };
         /** RoomCreate */
         RoomCreate: {
@@ -451,10 +442,35 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
-            /** Members */
-            members: components["schemas"]["Member"][];
-            /** Messages */
-            messages: components["schemas"]["Message"][];
+            /**
+             * Members
+             * @default []
+             */
+            members: components["schemas"]["MemberResponse"][];
+        };
+        /** RoomResponseWithMessages */
+        RoomResponseWithMessages: {
+            /** Name */
+            name: string;
+            /** Type */
+            type: string;
+            /** Id */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Members
+             * @default []
+             */
+            members: components["schemas"]["MemberResponse"][];
+            /**
+             * Messages
+             * @default []
+             */
+            messages: components["schemas"]["MessageResponse"][];
         };
         /** RoomUpdate */
         RoomUpdate: {
@@ -509,6 +525,17 @@ export interface components {
             /** Message */
             message?: string | null;
             data?: components["schemas"]["MemberResponse"] | null;
+        };
+        /** SuccessResponse[RoomResponseWithMessages] */
+        SuccessResponse_RoomResponseWithMessages_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["RoomResponseWithMessages"] | null;
         };
         /** SuccessResponse[RoomResponse] */
         SuccessResponse_RoomResponse_: {
@@ -843,7 +870,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
+                    "application/json": components["schemas"]["SuccessResponse_RoomResponseWithMessages_"];
                 };
             };
             /** @description Validation Error */
@@ -924,6 +951,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_rooms_api_v1_rooms_delete_rooms_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
                 };
             };
         };
@@ -1067,7 +1114,7 @@ export interface operations {
             };
         };
     };
-    get_message_by_id_api_v1_messages_get_message_by_id_get: {
+    get_message_by_id_api_v1_messages_get_message_by_id_post: {
         parameters: {
             query: {
                 message_id: string;

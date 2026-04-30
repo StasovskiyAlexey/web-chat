@@ -1,10 +1,9 @@
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/sidebar/Sidebar'
 import AppProvider from '@/providers/AppProvider'
 import { type ReactNode } from 'react'
 
 export default function MainLayout({ children }: { children?: ReactNode }) {
 	const { width } = useMobile()
-
 	const isMobile = width < 768
 
 	return (

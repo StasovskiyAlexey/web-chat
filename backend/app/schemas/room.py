@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel
-from ..schemas.member import Member
-from ..schemas.message import Message
+from ..schemas.member import MemberResponse
+from ..schemas.message import MessageResponse
 class Room(BaseModel):
   name: str
   type: str
@@ -13,10 +13,10 @@ class RoomCreate(Room):
 class RoomUpdate(Room):
   pass
 
-class RoomResponseShort(Room):
+class RoomResponse(Room):
   id: str
   created_at: datetime
-  members: List[Member] = []
+  members: List[MemberResponse] = []
 
-class RoomResponse(RoomResponseShort):
-  messages: List[Message]
+class RoomResponseWithMessages(RoomResponse):
+  messages: List[MessageResponse] = []
