@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
+from .user import UserResponse
 
 class Message(BaseModel):
   content: str
@@ -25,5 +26,6 @@ class MessageResponse(BaseModel):
   member_id: str
   created_at: datetime
   is_read: bool
+  user: UserResponse
   
   model_config = ConfigDict(from_attributes=True)

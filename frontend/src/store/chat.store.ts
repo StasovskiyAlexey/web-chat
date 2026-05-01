@@ -49,6 +49,7 @@ export class ChatStore {
     this.isPending.add(EChatStore.fetchRoomById)
     try {
       const res = await this.chatService.getRoom(roomId);
+      console.log(res.data)
       runInAction(() => {
         this.room = res.data;
       });
@@ -139,13 +140,8 @@ export class ChatStore {
       this.isLoading.delete(EChatStore.updateMessage)
     }
   }
-
-  async updateRoomMessages() {
-    runInAction(() => {
-      
-    })
-  }
-
 }
 
 export type TChatStore = ChatStore
+
+// Подумать как реализовать кеш в сторе

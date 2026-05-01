@@ -16,7 +16,7 @@ class Message(Base):
   user_id: Mapped[str] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
   
   room: Mapped['Room'] = relationship(back_populates='messages')
-  # user: Mapped['User'] = relationship(back_populates='messages')
+  user: Mapped['User'] = relationship(back_populates='messages')
   
   member_id: Mapped[str] = mapped_column(ForeignKey('members.id', ondelete='CASCADE'))
   member: Mapped['Member'] = relationship(back_populates='messages')

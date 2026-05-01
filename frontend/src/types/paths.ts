@@ -401,6 +401,8 @@ export interface components {
         };
         /** MessageResponse */
         MessageResponse: {
+            /** Id */
+            id: string;
             /** Content */
             content: string;
             /** Room Id */
@@ -416,6 +418,7 @@ export interface components {
             created_at: string;
             /** Is Read */
             is_read: boolean;
+            user: components["schemas"]["UserResponse"];
         };
         /** MessageUpdate */
         MessageUpdate: {
@@ -525,6 +528,17 @@ export interface components {
             /** Message */
             message?: string | null;
             data?: components["schemas"]["MemberResponse"] | null;
+        };
+        /** SuccessResponse[MessageResponse] */
+        SuccessResponse_MessageResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["MessageResponse"] | null;
         };
         /** SuccessResponse[RoomResponseWithMessages] */
         SuccessResponse_RoomResponseWithMessages_: {
@@ -1164,7 +1178,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
+                    "application/json": components["schemas"]["SuccessResponse_MessageResponse_"];
                 };
             };
             /** @description Validation Error */

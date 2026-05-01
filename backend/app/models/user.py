@@ -15,5 +15,6 @@ class User(Base):
   
   # Массив чатов юзера куда он подключен
   membership: Mapped[List['Member']] = relationship(back_populates='user')
+  messages: Mapped['Message'] = relationship(back_populates='user')
   
   is_online: Mapped[bool] = mapped_column(default=False, nullable=False)

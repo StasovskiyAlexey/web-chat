@@ -15,7 +15,7 @@ async def get_members(service: MemberService = Depends(get_member_service)):
     data=members
   )
 
-@router.get('/get_member_by_id', response_model=SuccessResponse[MemberResponse])
+@router.post('/get_member_by_id', response_model=SuccessResponse[MemberResponse])
 async def get_member_by_id(member_id: str, service: MemberService = Depends(get_member_service)):
   member = await service.get_member_by_id(member_id)
   return SuccessResponse(

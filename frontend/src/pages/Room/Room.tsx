@@ -108,10 +108,11 @@ export const Room = observer(() => {
 								className={`flex ${msg.user_id === user?.id ? 'justify-end' : 'justify-start'}`}>
 								<div className={`flex gap-3 max-w-[70%] ${msg.user_id === user?.id ? 'flex-row-reverse' : ''}`}>
 									<Avatar className='w-8 h-8 shrink-0'>
-										<AvatarFallback>{'Докинуть юзер обьект в схему'}</AvatarFallback>
+										<AvatarImage src={msg.user.picture || `https://cdn-icons-png.freepik.com/512/6596/6596121.png`} />
+										<AvatarFallback>{user?.login.slice(0, 2)}</AvatarFallback>
 									</Avatar>
 									<div>
-										{msg.user_id !== user?.id && <p className='text-xs font-medium mb-1 ml-1'>{msg.content}</p>}
+										{msg.user_id !== user?.id && <p className='text-xs font-medium mb-1 ml-1'>{msg.user.login}</p>}
 										<div
 											className={`p-3 rounded-2xl text-sm ${
 												msg.user_id === user?.id

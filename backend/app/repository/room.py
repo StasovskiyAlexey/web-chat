@@ -10,7 +10,7 @@ class RoomRepository:
     self.db = db
     
   async def get_rooms(self):
-    query = await self.db.execute(select(Room).options(selectinload(Room.members).joinedload(Member.user).selectinload(Member.user)))
+    query = await self.db.execute(select(Room).options(selectinload(Room.members).joinedload(Member.user)))
     rooms = query.scalars().unique().all()
     return rooms
   

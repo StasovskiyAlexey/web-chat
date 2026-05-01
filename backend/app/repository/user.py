@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
+from sqlalchemy import select
 
 from ..core.auth import hash_password, verify_password
 from ..models.user import User
@@ -62,25 +62,26 @@ class UserRepository:
     if not user:
       raise AppError(400, f'Пользователя с ID {user_id} не найдено')
     
-    curr_password: str = updated_data['password']
-    new_password: str = updated_data['new_password']
+    curr_password: str = updated_data.get('password', '').strip()
+    new_password: str = updated_data.get('new_password', '').strip()
     
-    if new_password:
+    if new_password and curr_password:
+      if not verify_password(curr_password, user.password):
+        raise AppError(400, 'Введеный текущий пароль не верный')
+      
       if new_password == curr_password:
+        print(new_password, curr_password, 'passwords')
         raise AppError(400, 'Новый пароль не может совпадать с текущим')
     
-    if not verify_password(curr_password, user.password):
-      raise AppError(400, 'Введеный текущий пароль не верный')
-    
-    user.password = hash_password(new_password)
-    
+      user.password = hash_password(new_password)
+
     if user:
-      for key, value in updated_data.items():
-        if key == 'password':
-          continue
+      for key, value in updated_data.items():  
         if hasattr(user, key):
+          if key == 'password' or key == 'new_password':
+            continue
           setattr(user, key, value)
-      
+
       await self.db.commit()
       await self.db.refresh(user)
       

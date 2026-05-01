@@ -17,7 +17,6 @@ export default function SettingsPage() {
 		register,
 		formState: { errors, isDirty },
 		handleSubmit,
-		watch,
 		reset,
 	} = useForm({
 		resolver: zodResolver(userUpdateSchema),
@@ -69,11 +68,6 @@ export default function SettingsPage() {
 								{...register('login', { required: true })}
 								className='border border-black font-medium text-foreground'
 							/>
-							{watch('login') ? (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-green-500' />
-							) : (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-red-500' />
-							)}
 							{errors.login && <p className='text-red-500 text-xs'>{errors.login.message}</p>}
 						</div>
 					</div>
@@ -88,11 +82,6 @@ export default function SettingsPage() {
 								{...register('email', { required: true })}
 								className='font-medium border border-black text-foreground pr-10'
 							/>
-							{watch('email') ? (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-green-500' />
-							) : (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-red-500' />
-							)}
 							{errors.email && <p className='text-red-500 text-xs'>{errors.email.message}</p>}
 						</div>
 					</div>
@@ -106,11 +95,6 @@ export default function SettingsPage() {
 								type='password'
 								className='font-medium border border-black text-foreground'
 							/>
-							{watch('password') ? (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-green-500' />
-							) : (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-red-500' />
-							)}
 						</div>
 					</div>
 					<div className='space-y-2'>
@@ -122,11 +106,6 @@ export default function SettingsPage() {
 								type='password'
 								className='font-medium border border-black text-foreground'
 							/>
-							{watch('new_password') ? (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-green-500' />
-							) : (
-								<CheckCircle2 className='absolute right-3 top-1/2 -translate-y-1/2 size-4 text-red-500' />
-							)}
 						</div>
 					</div>
 					<Button

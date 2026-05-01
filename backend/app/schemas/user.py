@@ -29,6 +29,7 @@ class UserUpdate(BaseModel):
   login: str
   email: str
   password: str
+  new_password: str
 
 class UserResponse(BaseModel):
   id: str

@@ -10,8 +10,6 @@ async def ws_room_connection(websocket: WebSocket, room_id: str):
   try:
     while True:
       data = await websocket.receive_json()
-      print('data', data)
-      
       await websocket_manager.broadcast_to_room(data, room_id)
   except WebSocketDisconnect:
     websocket_manager.disconnect(websocket, room_id)
