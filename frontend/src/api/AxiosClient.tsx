@@ -1,9 +1,11 @@
 import axios, { type AxiosInstance } from 'axios'
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+// Не уверен что всё работает на 100%, так как токен действует какое-то время и затестить сложновато
 let accessToken: string | null = null
 
 export const AxiosClient: AxiosInstance = axios.create({
-	baseURL: 'http://localhost:8000/api/v1/',
+	baseURL: baseUrl,
 	timeout: 5000,
 	withCredentials: true,
 })
@@ -33,7 +35,7 @@ AxiosClient.interceptors.response.use(
 		// Проверяем проблема только в авторизации с помощью статуса 401
 		if (error.response?.status === 401) {
 			try {
-				const res = await axios.post('http://localhost:8000/api/v1/auth/refresh', {}, { withCredentials: true })
+				const res = await axios.post(`${baseUrl}auth/refresh`, {}, { withCredentials: true })
 				const token = res.data.access_token
 				accessToken = token
 

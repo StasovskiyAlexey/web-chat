@@ -49,7 +49,7 @@ export class ChatStore {
     this.isPending.add(EChatStore.fetchRoomById)
     try {
       const res = await this.chatService.getRoom(roomId);
-      console.log(res.data)
+
       runInAction(() => {
         this.room = res.data;
       });

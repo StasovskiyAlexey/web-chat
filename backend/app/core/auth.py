@@ -31,7 +31,7 @@ def decode_token(token: str) -> dict[str, Any]:
   try:
     return jwt.decode(token, secret_key, algorithms=[ALGORITHM])
   except JWTError:
-    raise HTTPException(400, 'Ошибка при декодировании токена')
+    raise HTTPException(401, 'Ошибка при декодировании токена')
   
 def get_token(request: Request, token_type: str) -> str:
   token = request.cookies.get(token_type)

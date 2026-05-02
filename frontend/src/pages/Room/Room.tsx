@@ -13,7 +13,6 @@ import { useAuth } from '@/providers/AuthProvider'
 import Loader from '@/components/shared/Loader'
 import ErrorFallback from '@/components/shared/ErrorFallback'
 import useWebsocket from '@/hooks/useWebsocket'
-import { type TMessage } from '@/types/chat'
 
 export const Room = observer(() => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
@@ -28,7 +27,6 @@ export const Room = observer(() => {
 
 	const { user } = useAuth()
 	const { socket } = useWebsocket(`ws://localhost:8000/api/v1/websockets/room-connection?room_id=${roomId}`)
-	console.log(socket)
 
 	useEffect(() => {
 		scrollToBottom()
