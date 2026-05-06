@@ -4,12 +4,24 @@ from fastapi import APIRouter, WebSocketDisconnect, WebSocket
 
 router = APIRouter(prefix='/api/v1/websockets')
 
-@router.websocket("/room-connection")
+@router.websocket("/room_connection")
 async def ws_room_connection(websocket: WebSocket, room_id: str):
-  await websocket_manager.connect(websocket, room_id)
+  await websocket_manager.connect_room(websocket, room_id)
   try:
     while True:
-      data = await websocket.receive_json()
-      await websocket_manager.broadcast_to_room(data, room_id)
+      message = await websocket.receive_json()
+      await websocket_manager.broadcast_messages_to_room(message, room_id)
   except WebSocketDisconnect:
-    websocket_manager.disconnect(websocket, room_id)
+    websocket_manager.disconnect_room(websocket, room_id)
+
+@router.websocket('/get_notifications')
+async def ws_notifications_connection(websocket: WebSocket, user_id: str):
+  await websocket_manager.connect_notification_to_user(websocket, user_id)
+  
+  try:
+    while True:
+      message = await websocket.receive_json()
+      print('message', message)
+      await websocket_manager.connect_notification_to_user(message, user_id)
+  except WebSocketDisconnect:
+    websocket_manager.disconnect_notification_to_user(websocket, user_id)

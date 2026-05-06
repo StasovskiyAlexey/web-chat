@@ -13,8 +13,8 @@ class User(Base):
   email: Mapped[str] = mapped_column(nullable=False)
   picture: Mapped[str] = mapped_column(nullable=True)
   
-  # Массив чатов юзера куда он подключен
+  user_code: Mapped[str] = mapped_column(default=lambda: str(nanoid.generate(size=8)))
+  
   membership: Mapped[List['Member']] = relationship(back_populates='user')
   messages: Mapped['Message'] = relationship(back_populates='user')
-  
-  is_online: Mapped[bool] = mapped_column(default=False, nullable=False)
+  notifications: Mapped['Notification'] = relationship(back_populates='user')

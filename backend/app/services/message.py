@@ -20,10 +20,9 @@ class MessageService:
   
   async def create_message(self, message_data: MessageCreate):
     new_message = await self.repository.create_message(message_data)
-    print(new_message)
     message = MessageResponse.model_validate(new_message).model_dump(mode='json')
     print('message', message)
-    await websocket_manager.broadcast_to_room({"action": "new_message", "payload": message}, new_message.room_id)
+    await websocket_manager.broadcast_messages_to_room({"action": "new_message", "payload": message}, new_message.room_id)
     return new_message
   
   async def update_message(self, message_id: str, **message_data: MessageUpdate):

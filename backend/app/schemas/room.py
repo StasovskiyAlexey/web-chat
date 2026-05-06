@@ -11,10 +11,11 @@ class RoomCreate(Room):
   pass
 
 class RoomUpdate(Room):
-  pass
+  members: List[MemberResponse]
 
 class RoomResponse(Room):
   id: str
+  room_code: str
   created_at: datetime
   members: List[MemberResponse] = []
 

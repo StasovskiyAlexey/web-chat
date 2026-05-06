@@ -14,6 +14,11 @@ class MemberRepository:
     members = query.scalars().all()
     return members
   
+  async def get_member_by_user_code(self, member_id: str):
+    query = await self.db.execute(select(Member).where(Member.id == member_id))
+    member = query.scalars().first()
+    return member
+  
   async def get_member_by_id(self, member_id: str):
     query = await self.db.execute(select(Member).where(Member.id == member_id))
     member = query.scalars().first()

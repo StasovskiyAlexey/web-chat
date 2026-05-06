@@ -1,23 +1,17 @@
 import { Plus, Users, Hash } from 'lucide-react'
 import { Button } from '@/components/shared/ui/button'
-import { useModal } from '@/providers/ModalProvider'
-import { AddRoomModal } from './modals/AddRoomModal'
-import { observer } from 'mobx-react-lite'
-import { useInjection } from '@/providers/DIProvider'
-import { EChatStore, type TChatStore } from '@/store/chat.store'
-import { TTypes } from '@/di/types'
+import { AddRoomPopup } from './Popovers/AddRoomPopup'
 import { Link } from '@tanstack/react-router'
 import Loader from '@/components/shared/Loader'
+import { usePopup } from '@/providers/PopupProvider'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/ui/popover'
+import { useRooms } from '@/hooks/queries/useChat'
 
-export const Rooms = observer(() => {
-	const { switcher } = useModal()
-	const chatStore = useInjection<TChatStore>(TTypes.ChatStore)
+export const Rooms = () => {
+	const { switcher, popups } = usePopup()
+	const { data: rooms, isLoading } = useRooms()
 
-	useEffect(() => {
-		chatStore.fetchRooms()
-	}, [])
-
-	if (chatStore.isLoading.has(EChatStore.fetchRooms)) {
+	if (isLoading) {
 		return <Loader message='Загрузка комнат' />
 	}
 
@@ -30,15 +24,25 @@ export const Rooms = observer(() => {
 						<p className='text-muted-foreground'>Управляйте своими чатами и обсуждениями.</p>
 					</div>
 
-					<Button
-						onClick={() => switcher('addRoomModal', true)}
-						className='gap-2'>
-						<Plus className='w-4 h-4' /> Создать или найти
-					</Button>
+					<Popover
+						onOpenChange={(open) => switcher('addRoom', open)}
+						open={popups.addRoom.isOpen}>
+						<PopoverTrigger asChild>
+							<Button
+								onClick={() => switcher('addRoom', true)}
+								className='gap-2'>
+								<Plus className='w-4 h-4' /> Создать или найти
+							</Button>
+						</PopoverTrigger>
+
+						<PopoverContent className='w-100'>
+							<AddRoomPopup />
+						</PopoverContent>
+					</Popover>
 				</div>
 
 				<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6'>
-					{chatStore.rooms.map((room) => (
+					{rooms?.map((room) => (
 						<Link
 							to={`/rooms/${room?.id}`}
 							key={room?.id}
@@ -73,7 +77,6 @@ export const Rooms = observer(() => {
 					))}
 				</div>
 			</div>
-			<AddRoomModal />
 		</>
 	)
-})
+}

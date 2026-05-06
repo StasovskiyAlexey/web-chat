@@ -4,33 +4,30 @@ import { Button } from '@/components/shared/ui/button'
 import { Input } from '@/components/shared/ui/input'
 import { ScrollArea } from '@/components/shared/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/ui/avatar'
-import { useInjection } from '@/providers/DIProvider'
-import { EChatStore, type TChatStore } from '@/store/chat.store'
-import { TTypes } from '@/di/types'
 import { useParams } from '@tanstack/react-router'
-import { observer } from 'mobx-react-lite'
 import { useAuth } from '@/providers/AuthProvider'
 import Loader from '@/components/shared/Loader'
 import ErrorFallback from '@/components/shared/ErrorFallback'
 import useWebsocket from '@/hooks/useWebsocket'
+import { websocketUrl } from '@/lib/envVariables'
+import { useChatMutations, useRoom } from '@/hooks/queries/useChat'
+import dayjs from 'dayjs'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/ui/popover'
+import { usePopup } from '@/providers/PopupProvider'
+import RoomSettingsPopup from './Popovers/RoomSettingsPopup'
 
-export const Room = observer(() => {
+export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
 	const chatArea = useRef<null | HTMLDivElement>(null)
 
-	function scrollToBottom() {
-		chatArea.current?.scrollIntoView({ behavior: 'smooth' })
-	}
-
 	const [message, setMessage] = useState('')
-	const chatStore = useInjection<TChatStore>(TTypes.ChatStore)
+	const { popups, switcher } = usePopup()
+
+	const { addMessage } = useChatMutations()
+	const { data: room, isLoading, isError } = useRoom(roomId)
 
 	const { user } = useAuth()
-	const { socket } = useWebsocket(`ws://localhost:8000/api/v1/websockets/room-connection?room_id=${roomId}`)
-
-	useEffect(() => {
-		scrollToBottom()
-	}, [chatStore.room?.messages.length])
+	const { socket } = useWebsocket(`${websocketUrl}/room_connection?room_id=${roomId}`)
 
 	useEffect(() => {
 		if (!socket) return
@@ -40,9 +37,7 @@ export const Room = observer(() => {
 			try {
 				const data = JSON.parse(event.data)
 				const payload = data.payload
-				console.log(payload)
-				console.log(chatStore.room?.messages)
-				chatStore.room?.messages.push(payload)
+				room?.messages.push(payload)
 			} catch (e) {
 				console.error(e)
 			}
@@ -52,28 +47,22 @@ export const Room = observer(() => {
 		return () => socket.removeEventListener('message', handleMessage)
 	}, [socket, roomId])
 
-	function addMessage() {
-		chatStore.addMessage({
+	function handleAddMessage() {
+		addMessage({
 			content: message,
 			room_id: roomId,
 			user_id: user?.id as string,
-			member_id: chatStore.room?.members.find((el) => el.user_id === user?.id)?.id as string,
+			member_id: room?.members.find((el) => el.user_id === user?.id)?.id as string,
 		})
 
 		setMessage('')
 	}
 
-	useEffect(() => {
-		if (roomId) {
-			chatStore.fetchRoomById(roomId)
-		}
-	}, [])
-
-	if (chatStore.isLoading.has(EChatStore.fetchRoomById)) {
+	if (isLoading) {
 		return <Loader message='Загрузка комнаты' />
 	}
 
-	if (chatStore.isError.has(EChatStore.fetchRoomById)) {
+	if (isError) {
 		return <ErrorFallback title='Ошибка при загрузке комнаты' />
 	}
 
@@ -83,16 +72,26 @@ export const Room = observer(() => {
 				<header className='h-16 border-b flex items-center justify-between px-4 shrink-0'>
 					<div className='flex items-center gap-3'>
 						<div>
-							<h2 className='font-bold leading-tight'>{chatStore.room?.name}</h2>
-							<p className='text-xs text-muted-foreground'>{chatStore.room?.members.length} участников</p>
+							<h2 className='font-bold leading-tight'>{room?.name}</h2>
+							<p className='text-xs text-muted-foreground'>{room?.members.length} участников</p>
 						</div>
 					</div>
 					<div className='flex items-center gap-2'>
-						<Button
-							variant='ghost'
-							size='icon'>
-							<MoreVertical className='w-4 h-4' />
-						</Button>
+						<Popover
+							open={popups.roomSettings.isOpen}
+							onOpenChange={(open) => switcher('roomSettings', open, room)}>
+							<PopoverTrigger asChild>
+								<Button
+									variant='ghost'
+									size='icon'>
+									<MoreVertical className='w-4 h-4' />
+								</Button>
+							</PopoverTrigger>
+
+							<PopoverContent>
+								<RoomSettingsPopup />
+							</PopoverContent>
+						</Popover>
 					</div>
 				</header>
 
@@ -100,28 +99,26 @@ export const Room = observer(() => {
 					ref={chatArea}
 					className='flex-1 p-4 overflow-auto'>
 					<div className='space-y-6 '>
-						{chatStore.room?.messages.map((msg, i) => (
+						{room?.messages.map((msg, i) => (
 							<div
 								key={i}
 								className={`flex ${msg.user_id === user?.id ? 'justify-end' : 'justify-start'}`}>
 								<div className={`flex gap-3 max-w-[70%] ${msg.user_id === user?.id ? 'flex-row-reverse' : ''}`}>
-									<Avatar className='w-8 h-8 shrink-0'>
+									<Avatar className='size-10 shrink-0'>
 										<AvatarImage src={msg.user.picture || `https://cdn-icons-png.freepik.com/512/6596/6596121.png`} />
 										<AvatarFallback>{user?.login.slice(0, 2)}</AvatarFallback>
 									</Avatar>
 									<div>
 										{msg.user_id !== user?.id && <p className='text-xs font-medium mb-1 ml-1'>{msg.user.login}</p>}
 										<div
-											className={`p-3 rounded-2xl text-sm ${
-												msg.user_id === user?.id
-													? 'bg-primary text-primary-foreground rounded-tr-none'
-													: 'bg-muted rounded-tl-none'
+											className={`p-2 rounded-sm text-sm ${
+												msg.user_id === user?.id ? 'bg-black text-primary-foreground' : 'bg-muted'
 											}`}>
 											{msg.content}
 										</div>
 										<p
 											className={`text-[10px] mt-1 text-muted-foreground ${msg.user_id === user?.id ? 'text-right' : ''}`}>
-											{msg.created_at.slice(0, 10)}
+											{dayjs(msg.created_at).format(`DD.MM.YYYY HH:mm`)}
 										</p>
 									</div>
 								</div>
@@ -141,7 +138,7 @@ export const Room = observer(() => {
 							className='flex-1 bg-muted/50 border-none focus-visible:ring-1'
 						/>
 						<Button
-							onClick={() => addMessage()}
+							onClick={() => handleAddMessage()}
 							type='submit'
 							size='icon'
 							disabled={!message}>
@@ -160,15 +157,15 @@ export const Room = observer(() => {
 
 				<ScrollArea className='flex-1'>
 					<div className='p-4 space-y-4'>
-						{chatStore.room?.members.map((user) => (
+						{room?.members.map((user) => (
 							<div
 								key={user.user_id}
 								className='flex items-center justify-between group'>
 								<div className='flex items-center gap-3'>
 									<div className='relative'>
-										<Avatar className='w-9 h-9'>
+										<Avatar className='size-9'>
 											<AvatarImage src={user.user.picture || ''} />
-											<AvatarFallback>1</AvatarFallback>
+											<AvatarFallback>{user.user.login.slice(0, 2)}</AvatarFallback>
 										</Avatar>
 									</div>
 									<div>
@@ -184,4 +181,4 @@ export const Room = observer(() => {
 			</aside>
 		</div>
 	)
-})
+}

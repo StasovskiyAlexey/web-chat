@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.exceptions import AppError
-from ..models import Message
+from ..models import Message, User
 
 from ..schemas.message import MessageCreate, MessageUpdate
 

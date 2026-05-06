@@ -35,4 +35,7 @@ class UserResponse(BaseModel):
   id: str
   login: str
   email: EmailStr
+  user_code: str
   picture: str | None
+  
+  model_config = ConfigDict(from_attributes=True)

@@ -16,5 +16,7 @@ class Room(Base):
   members: Mapped[List['Member']] = relationship(back_populates='room', cascade="all, delete-orphan")
   messages: Mapped[List['Message']] = relationship(back_populates='room', cascade="all, delete-orphan")
   
+  room_code: Mapped[str] = mapped_column(default=lambda: str(nanoid.generate(size=10)), nullable=False)
+  
   type: Mapped[str] = mapped_column(Enum('direct', 'group', name='direct'), default='room_type')
   created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

@@ -1,4 +1,4 @@
-import Sidebar from '@/components/sidebar/Sidebar'
+import { Sidebar } from '@/components/sidebar/Sidebar'
 import AppProvider from '@/providers/AppProvider'
 import { type ReactNode } from 'react'
 

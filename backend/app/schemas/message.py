@@ -28,4 +28,5 @@ class MessageResponse(BaseModel):
   is_read: bool
   user: UserResponse
   
+  # Позволяет конвертировать обьект SQLAlchemy в pydantic модель
   model_config = ConfigDict(from_attributes=True)

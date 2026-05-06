@@ -15,7 +15,7 @@ export default function MobileMenu() {
 	if (!user) return null
 
 	return (
-		<div className='lg:hidden fixed top-4 left-4 z-50'>
+		<div className='lg:hidden bg-gray-100 lg:px-8 px-4 flex justify-start items-center min-h-16 z-50'>
 			<Sheet>
 				{/* Кнопка открытия (Бургер) */}
 				<SheetTrigger asChild>

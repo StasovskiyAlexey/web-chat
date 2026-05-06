@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh Access Token */
+        post: operations["refresh_access_token_api_v1_auth_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/register_user": {
         parameters: {
             query?: never;
@@ -72,7 +89,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/users/get_user_by_email": {
+    "/api/v1/users/get_user_by_token": {
         parameters: {
             query?: never;
             header?: never;
@@ -81,25 +98,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Get User By Email */
-        post: operations["get_user_by_email_api_v1_users_get_user_by_email_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/users/get_user_by_id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Get User By Id */
-        post: operations["get_user_by_id_api_v1_users_get_user_by_id_post"];
+        /** Get User */
+        post: operations["get_user_api_v1_users_get_user_by_token_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -232,10 +232,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Member By Id */
-        get: operations["get_member_by_id_api_v1_members_get_member_by_id_get"];
+        get?: never;
         put?: never;
-        post?: never;
+        /** Get Member By Id */
+        post: operations["get_member_by_id_api_v1_members_get_member_by_id_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -344,6 +344,111 @@ export interface paths {
         patch: operations["update_message_api_v1_messages_update_message_patch"];
         trace?: never;
     };
+    "/api/v1/notifications/get_notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get Notifications */
+        post: operations["get_notifications_api_v1_notifications_get_notifications_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/add_notification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Notifications */
+        post: operations["add_notifications_api_v1_notifications_add_notification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/update_notification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update Notification
+         * @description В основном для обновления is_read оповещения
+         */
+        post: operations["update_notification_api_v1_notifications_update_notification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invitations/get_user_invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get User Invitations */
+        post: operations["get_user_invitations_api_v1_invitations_get_user_invitations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invitations/get_user_invitation_by_id": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get User Invitation By Id */
+        post: operations["get_user_invitation_by_id_api_v1_invitations_get_user_invitation_by_id_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invitations/create_user_invitation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create User Invitation */
+        post: operations["create_user_invitation_api_v1_invitations_create_user_invitation_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -352,6 +457,35 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InvitationCreate */
+        InvitationCreate: {
+            /** Inviter Id */
+            inviter_id: string;
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Status */
+            status: string;
+        };
+        /** InvitationResponse */
+        InvitationResponse: {
+            /** Id */
+            id: string;
+            /** Inviter Id */
+            inviter_id: string;
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** MemberCreate */
         MemberCreate: {
@@ -425,6 +559,52 @@ export interface components {
             /** Content */
             content: string;
         };
+        /** NotificationCreate */
+        NotificationCreate: {
+            /** User Id */
+            user_id: string;
+            /** Invitation Id */
+            invitation_id: string;
+            /** Title */
+            title: string;
+            /** Is Read */
+            is_read: boolean;
+            /** Type */
+            type: string;
+        };
+        /** NotificationResponse */
+        NotificationResponse: {
+            /** Id */
+            id: string;
+            /** User Id */
+            user_id: string;
+            /** Invitation Id */
+            invitation_id: string;
+            /** Title */
+            title: string;
+            /** Is Read */
+            is_read: boolean;
+            /** Type */
+            type: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** NotificationUpdate */
+        NotificationUpdate: {
+            /** User Id */
+            user_id: string;
+            /** Invitation Id */
+            invitation_id: string;
+            /** Title */
+            title: string;
+            /** Is Read */
+            is_read: boolean;
+            /** Type */
+            type: string;
+        };
         /** RoomCreate */
         RoomCreate: {
             /** Name */
@@ -440,6 +620,8 @@ export interface components {
             type: string;
             /** Id */
             id: string;
+            /** Room Code */
+            room_code: string;
             /**
              * Created At
              * Format: date-time
@@ -459,6 +641,8 @@ export interface components {
             type: string;
             /** Id */
             id: string;
+            /** Room Code */
+            room_code: string;
             /**
              * Created At
              * Format: date-time
@@ -481,6 +665,17 @@ export interface components {
             name: string;
             /** Type */
             type: string;
+        };
+        /** SuccessResponse[InvitationResponse] */
+        SuccessResponse_InvitationResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["InvitationResponse"] | null;
         };
         /** SuccessResponse[List[MemberResponse]] */
         SuccessResponse_List_MemberResponse__: {
@@ -505,6 +700,18 @@ export interface components {
             message?: string | null;
             /** Data */
             data?: components["schemas"]["MessageResponse"][] | null;
+        };
+        /** SuccessResponse[List[NotificationResponse]] */
+        SuccessResponse_List_NotificationResponse__: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            /** Data */
+            data?: components["schemas"]["NotificationResponse"][] | null;
         };
         /** SuccessResponse[List[RoomResponse]] */
         SuccessResponse_List_RoomResponse__: {
@@ -539,6 +746,17 @@ export interface components {
             /** Message */
             message?: string | null;
             data?: components["schemas"]["MessageResponse"] | null;
+        };
+        /** SuccessResponse[NotificationResponse] */
+        SuccessResponse_NotificationResponse_: {
+            /**
+             * Status
+             * @default 200
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["NotificationResponse"] | null;
         };
         /** SuccessResponse[RoomResponseWithMessages] */
         SuccessResponse_RoomResponseWithMessages_: {
@@ -612,6 +830,8 @@ export interface components {
              * Format: email
              */
             email: string;
+            /** User Code */
+            user_code: string;
             /** Picture */
             picture: string | null;
         };
@@ -623,6 +843,8 @@ export interface components {
             email: string;
             /** Password */
             password: string;
+            /** New Password */
+            new_password: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -646,6 +868,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    refresh_access_token_api_v1_auth_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     register_user_api_v1_auth_register_user_post: {
         parameters: {
             query?: never;
@@ -752,11 +994,9 @@ export interface operations {
             };
         };
     };
-    get_user_by_email_api_v1_users_get_user_by_email_post: {
+    get_user_api_v1_users_get_user_by_token_post: {
         parameters: {
-            query: {
-                email: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -770,46 +1010,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_user_by_id_api_v1_users_get_user_by_id_post: {
-        parameters: {
-            query: {
-                id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse_UserResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1009,7 +1209,7 @@ export interface operations {
             };
         };
     };
-    get_member_by_id_api_v1_members_get_member_by_id_get: {
+    get_member_by_id_api_v1_members_get_member_by_id_post: {
         parameters: {
             query: {
                 member_id: string;
@@ -1214,6 +1414,202 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_List_MessageResponse__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_notifications_api_v1_notifications_get_notifications_post: {
+        parameters: {
+            query: {
+                user_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_List_NotificationResponse__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_notifications_api_v1_notifications_add_notification_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_NotificationResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_notification_api_v1_notifications_update_notification_post: {
+        parameters: {
+            query: {
+                user_id: string;
+                notification_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_NotificationResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_invitations_api_v1_invitations_get_user_invitations_post: {
+        parameters: {
+            query: {
+                user_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_InvitationResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_user_invitation_by_id_api_v1_invitations_get_user_invitation_by_id_post: {
+        parameters: {
+            query: {
+                user_id: string;
+                invitation_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_InvitationResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_user_invitation_api_v1_invitations_create_user_invitation_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InvitationCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_InvitationResponse_"];
                 };
             };
             /** @description Validation Error */

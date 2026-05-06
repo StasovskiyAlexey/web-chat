@@ -5,30 +5,12 @@ export type TModalContext = {
 	modals: TModals
 }
 
-export type TModals = {
-	addRoomModal: { modal: string; isOpen: boolean; props?: unknown }
-}
-
-export type TModalStore<T> = {
-	modals: {
-		[K in keyof TModals]: {
-			isOpen: boolean
-			data: T | null
-		}
-	}
-	switcher: <K extends keyof TModals>(modal: K, isOpen: boolean, data?: TModals[K]) => void
-}
+export type TModals = {}
 
 const ModalContext = createContext<TModalContext | null>(null)
 
 export const ModalProvider = ({ children }: { children?: ReactNode }) => {
-	const modalsMap = {
-		addRoomModal: {
-			modal: 'addRoomModal',
-			isOpen: false,
-			props: null,
-		},
-	}
+	const modalsMap = {}
 
 	const [modals, setModals] = useState<TModals>(modalsMap)
 

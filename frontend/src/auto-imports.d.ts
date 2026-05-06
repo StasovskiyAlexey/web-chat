@@ -56,6 +56,7 @@ declare global {
   const Loader: typeof import('./components/shared/Loader').default
   const Menu: typeof import('./components/Menu').default
   const MobileMenu: typeof import('./components/MobileMenu').default
+  const NotificationStore: typeof import('./store/notification.store').NotificationStore
   const RoomStore: typeof import('./store/demo.store').RoomStore
   const Select: typeof import('./components/shared/ui/select').Select
   const SelectContent: typeof import('./components/shared/ui/select').SelectContent

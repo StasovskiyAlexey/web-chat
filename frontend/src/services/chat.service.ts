@@ -1,7 +1,7 @@
 import type { IHttpClient } from "@/di/interfaces";
 import { TTypes } from "@/di/types";
 import type { TResponse } from "@/types/response";
-import { type TMessage, type TMessageCreate, type TMessageUpdate, type TRoom, type TRoomCreate } from "@/types/chat";
+import { type TMessage, type TMessageCreate, type TMessageUpdate, type TNotification, type TNotificationUpdate, type TRoom, type TRoomCreate } from "@/types/chat";
 import { inject, injectable } from "inversify";
 
 @injectable()
@@ -49,6 +49,17 @@ export class ChatService {
     const res = await this.http.post<TResponse<TRoom>>(`messages/update_message`, {message_id: messageId}, {
       params: {
         content: data.content
+      }
+    });
+    return res.data
+  }
+
+  async updateNotification(userId: string, notificationId: string, notificationData: TNotificationUpdate) {
+    const res = await this.http.post<TResponse<TNotification>>(`notifications/update_notification`, {}, {
+      params: {
+        user_id: userId,
+        notification_id: notificationId,
+        notification_data: notificationData
       }
     });
     return res.data

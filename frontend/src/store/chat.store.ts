@@ -1,6 +1,6 @@
 import { TTypes } from '@/di/types'
 import type { TChatService } from '@/services/chat.service'
-import type { TMessage, TMessageCreate, TMessageUpdate, TRoom, TRoomCreate } from '@/types/chat'
+import type { TMessageCreate, TMessageUpdate, TRoom, TRoomCreate } from '@/types/chat'
 import { AxiosError } from 'axios'
 import { inject, injectable } from 'inversify'
 import {makeAutoObservable, runInAction} from 'mobx'
@@ -12,7 +12,8 @@ export enum EChatStore {
   createRoom = 'createRoom',
   updateRoom = 'updateRoom',
   createMessage = 'createMessage',
-  updateMessage = 'updateMessage'
+  updateMessage = 'updateMessage',
+  updateNotification = 'updateNotification',
 }
 
 @injectable()
@@ -29,27 +30,34 @@ export class ChatStore {
   room: TRoom | null = null
 
   async fetchRooms() {
-    this.isPending.add(EChatStore.fetchRooms)
-    this.isLoading.add(EChatStore.fetchRooms)
+    runInAction(() => {
+      this.isPending.add(EChatStore.fetchRooms)
+      this.isLoading.add(EChatStore.fetchRooms)
+    })
     try {
       const res = await this.chatService.getRooms();
       runInAction(() => {
         this.rooms = res.data; 
       });
     } catch (e) {
-      this.isError.add(EChatStore.fetchRooms);
+      runInAction(() => {
+        this.isError.add(EChatStore.fetchRooms);
+      })
     } finally {
-      this.isPending.delete(EChatStore.fetchRooms)
-      this.isLoading.delete(EChatStore.fetchRooms)
+      runInAction(() => {
+        this.isPending.delete(EChatStore.fetchRooms)
+        this.isLoading.delete(EChatStore.fetchRooms)
+      })
     }
   }
 
   async fetchRoomById(roomId: string) {
-    this.isLoading.add(EChatStore.fetchRoomById);
-    this.isPending.add(EChatStore.fetchRoomById)
+    runInAction(() => {
+      this.isLoading.add(EChatStore.fetchRoomById);
+      this.isPending.add(EChatStore.fetchRoomById)
+    })
     try {
       const res = await this.chatService.getRoom(roomId);
-
       runInAction(() => {
         this.room = res.data;
       });
@@ -57,16 +65,22 @@ export class ChatStore {
       if (e instanceof AxiosError) {
         toast.error(e.response?.data.detail)
       }
-      this.isError.add(EChatStore.fetchRoomById);
+      runInAction(() => {
+        this.isError.add(EChatStore.fetchRoomById);
+      })
     } finally {
-      this.isPending.delete(EChatStore.fetchRoomById);
-      this.isLoading.delete(EChatStore.fetchRoomById);
+      runInAction(() => {
+        this.isPending.delete(EChatStore.fetchRoomById);
+        this.isLoading.delete(EChatStore.fetchRoomById);
+      })
     }
   }
 
   async createRoom(data: TRoomCreate) {
-    this.isLoading.add(EChatStore.createRoom);
-    this.isPending.add(EChatStore.createRoom)
+    runInAction(() => {
+      this.isLoading.add(EChatStore.createRoom);
+      this.isPending.add(EChatStore.createRoom)
+    })
     try {
       const res = await this.chatService.createRoom(data);
       runInAction(() => {
@@ -143,5 +157,3 @@ export class ChatStore {
 }
 
 export type TChatStore = ChatStore
-
-// Подумать как реализовать кеш в сторе

@@ -24,6 +24,11 @@ class UserRepository:
     user = query.scalars().first()
     return user
   
+  async def get_user_by_code(self, code: str):
+    query = await self.db.execute(select(User).where(User.user_code == code))
+    user = query.scalars().first()
+    return user
+  
   async def create_user(self, new_user: User):
     user = await self.get_user_by_email(new_user.email)
     
