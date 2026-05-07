@@ -1,40 +1,51 @@
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..models import Notification
 from ..core.exceptions import AppError
 from ..schemas.notification import NotificationUpdate, NotificationCreate
+from ..schemas.invite import InviteCreate
 
 class NotificationRepository():
   def __init__(self, db: AsyncSession):
     self.db = db
     
   async def get_notifications(self, user_id: str):
-    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id))
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invitation)))
     notifications = query.scalars().all()
     return notifications
   
-  async def create_notification(self, user_id: str, notification_data: NotificationCreate, invite_id: str):
-    new_notification = Notification(invitation_id=invite_id ,title=notification_data.title, user_id=user_id)
-
-    try:
-      self.db.add(new_notification)
-      # await self.db.commit()
-      # await self.db.refresh(new_notification)
-      await self.db.flush()
-      return new_notification
-    except Exception as e:
-      await self.db.rollback()
-      raise AppError(500, f"Ошибка при cоздании оповещения: {str(e)}")
-    
-  async def update_notification(self, user_id: str, notification_id: str, **notification_data: NotificationUpdate):
-    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
+  async def get_notification_by_id(self, user_id: str, notification_id: str):
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invitation)).where(Notification.id == notification_id))
     notification = query.scalar_one_or_none()
+    return notification
+  
+  async def create_notification(self, user_id: str, notification_data: NotificationCreate, invitation_id: str):
+    new_notification = Notification(title=notification_data.title, user_id=user_id, invitation_id=invitation_id)
+
+    self.db.add(new_notification)
+    await self.db.flush()
+    await self.db.refresh(new_notification, ["invitation"])
+    return new_notification
     
-    for key, value in notification_data.items():
-      if hasattr(notification, key):
-        setattr(notification, key, value)
+  async def update_notification(self, user_id: str, notification_id: str):
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
+    exist_notification = query.scalar_one_or_none()
+    print('exist_notification', exist_notification)
+    if exist_notification:
+      exist_notification.is_read = True
     
     await self.db.commit()
-    await self.db.refresh(notification)
-    return notification
+    await self.db.refresh(exist_notification)
+    return exist_notification
+
+  async def read_all_notifications(self, user_id: str, notification_id: str):
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
+    exist_notification = query.scalar_one_or_none()
+    print('exist_notification', exist_notification)
+    if exist_notification:
+      exist_notification.is_read = True
     
+    await self.db.commit()
+    await self.db.refresh(exist_notification)
+    return exist_notification

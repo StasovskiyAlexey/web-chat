@@ -5,7 +5,6 @@ from ..schemas.response import SuccessResponse
 from ..schemas.notification import NotificationCreate, NotificationResponse, NotificationUpdate
 from ..services import NotificationService
 from ..dependencies.services import get_notification_service
-from ..models import User
 
 router = APIRouter(prefix='/api/v1/notifications', tags=['Notifications'])
 

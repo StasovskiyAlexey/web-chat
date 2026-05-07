@@ -1,24 +1,21 @@
 from ..core.exceptions import AppError
 
-from ..repository import RoomRepository, MemberRepository, UserRepository
+from ..repository import RoomRepository, MemberRepository, UserRepository, NotificationRepository, InviteRepository
 from ..schemas.room import RoomUpdate
 from ..schemas.member import MemberCreate
 from ..models import Room
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..schemas.notification import NotificationCreate
-from ..schemas.invite import InviteCreate
-
-from ..services.notification import NotificationService
-from ..services.invite import InviteService
+from ..schemas.invite import InviteCreateToRoom
 
 class RoomService: 
-  def __init__(self, db: AsyncSession, repository: RoomRepository, user_repository: UserRepository, member_repository: MemberRepository, notification_service: NotificationService, invitation_service: InviteService):
+  def __init__(self, db: AsyncSession, repository: RoomRepository, user_repository: UserRepository, member_repository: MemberRepository, notification_repository: NotificationRepository, invitation_repository: InviteRepository):
+    self.db = db
     self.repository = repository
     self.user_repository = user_repository
-    self.db = db
     self.member_repository = member_repository
-    self.notification_service = notification_service
-    self.invitation_service = invitation_service
+    self.notification_repository = notification_repository
+    self.invitation_repository = invitation_repository
     
   async def get_rooms(self, user_id: str):
     rooms = await self.repository.get_rooms(user_id)
@@ -48,7 +45,7 @@ class RoomService:
     updated_room = await self.repository.update_room(room_id, **room_data)
     return updated_room
   
-  async def invite_user_to_room(self, user_code: str, inviter_id: str, notification_data: NotificationCreate, invitation_data: InviteCreate):
+  async def invite_user_to_room(self, user_code: str, inviter_id: str, notification_data: NotificationCreate, invitation_data: InviteCreateToRoom):
     exist_user = await self.user_repository.get_user_by_code(user_code)
     
     if not exist_user:
@@ -58,24 +55,23 @@ class RoomService:
     
     if not exist_room:
       raise AppError(400, 'Комната не найдена')
-    
-    # Это должно быть в отправке инвайта (проверка на активный инвайт)
-    # active_invite = await self.repository.get_user_invite_by_id(user_id, invite_id)
-    
-    # if active_invite:
-    #   raise AppError(400, f'Приглашение в комнату для пользователя с ID {user_id} уже есть')
 
     user_ids_in_room = [user.user_id for user in exist_room.members]
 
     if exist_user.id in user_ids_in_room:
       raise AppError(400, 'Пользователь уже добавлен в комнату')
     
-    new_invite = await self.invitation_service.create_invite(inviter_id, exist_user.id, invitation_data)
+    if await self.invitation_repository.is_active_user_invite(exist_user.id, invitation_data.room_id):
+      raise AppError(400, 'Приглашение пользователю уже отправлено')
+    
+    new_invite = await self.invitation_repository.create_invite(inviter_id, exist_user.id, invitation_data.room_id)
     
     if new_invite:
-      await self.notification_service.create_notification(exist_user.id, notification_data, new_invite.id)
+      await self.notification_repository.create_notification(exist_user.id, notification_data, invitation_id=new_invite.id)
 
     await self.db.commit()
+    
+    await self.db.refresh(new_invite)
     return new_invite
   
   async def delete_all_rooms(self):

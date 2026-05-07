@@ -1,43 +1,47 @@
-import { UserIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '@/components/shared/ui/button'
+import { useChatMutations } from '@/hooks/queries/useChat'
+import { useAuth } from '@/providers/AuthProvider'
+import type { TRoom } from '@/types/chat'
 
-export default function InviteUserToRoom() {
-	const [userCode, setUserCode] = useState('')
+export default function InviteUserToRoom({ room }: { room: TRoom }) {
+	const [code, setCode] = useState('')
+	const { inviteToRoom } = useChatMutations()
+	const { user } = useAuth()
 
-	const handleSend = () => {
-		if (!userCode.trim()) return
+	const handleInviteToRoom = () => {
+		inviteToRoom({
+			code: code,
+			inviterId: user?.id as string,
+			notificationData: { title: 'Приглашение в комнату', type: 'invite' },
+			inviteData: { roomId: room?.id as string },
+		})
+		setCode('')
 	}
 
 	return (
-		<div className='w-full max-w-[320px] p-1'>
+		<div className='w-full p-1'>
 			<div className='flex flex-col gap-4'>
 				<div>
-					<h3 className='text-sm font-semibold text-gray-900'>Запросити учасника</h3>
-					<p className='text-xs text-gray-500 mt-1'>
-						Введіть унікальний код користувача, щоб надіслати йому запит на вхід.
-					</p>
+					<h3 className='text-sm font-semibold text-gray-900'>Пригласить участника</h3>
+					<p className='text-xs text-gray-500 mt-1'>Введите уникальный код участника.</p>
 				</div>
 
-				<div className='relative group'>
-					<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-						<UserIcon className='h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors' />
-					</div>
+				<div className='relative gap-2 flex group'>
 					<input
 						type='text'
-						value={userCode}
-						onChange={(e) => setUserCode(e.target.value)}
-						placeholder='Наприклад: #USER-1234'
-						className='block w-full pl-10 pr-12 py-2.5 text-sm border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none'
+						value={code}
+						onChange={(e) => setCode(e.target.value)}
+						placeholder='Например l0JCuCB_'
+						className='text-sm w-full pl-2 border-gray-200 rounded-md bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none'
 					/>
 
-					<button
-						onClick={handleSend}
-						className='absolute inset-y-1.5 right-1.5 flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'></button>
-				</div>
-
-				<div className='flex items-center gap-2 px-1'>
-					<div className='w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse' />
-					<span className='text-[10px] uppercase tracking-wider font-bold text-gray-400'>Очікування підтвердження</span>
+					<Button
+						disabled={!code}
+						onClick={() => handleInviteToRoom()}
+						className='flex items-center text-xs justify-center bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'>
+						Добавить
+					</Button>
 				</div>
 			</div>
 		</div>

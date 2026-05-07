@@ -3,6 +3,7 @@
     "ChatStore": true,
     "EChatStore": true,
     "MobileMenu": true,
+    "NotificationItem": true,
     "TChatStore": true,
     "axios": true,
     "createRef": true,

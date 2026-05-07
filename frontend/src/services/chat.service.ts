@@ -1,7 +1,7 @@
 import type { IHttpClient } from "@/di/interfaces";
 import { TTypes } from "@/di/types";
 import type { TResponse } from "@/types/response";
-import { type TMessage, type TMessageCreate, type TMessageUpdate, type TNotification, type TNotificationUpdate, type TRoom, type TRoomCreate } from "@/types/chat";
+import { type TMessage, type TMessageCreate, type TMessageUpdate, type TNotification, type TRoom, type TRoomCreate } from "@/types/chat";
 import { inject, injectable } from "inversify";
 
 @injectable()
@@ -54,12 +54,30 @@ export class ChatService {
     return res.data
   }
 
-  async updateNotification(userId: string, notificationId: string, notificationData: TNotificationUpdate) {
-    const res = await this.http.post<TResponse<TNotification>>(`notifications/update_notification`, {}, {
+  async inviteToRoom(code: string, inviterId: string, notificationData: {title: string, type: string}, inviteData: {roomId: string}) {
+    const res = await this.http.post<TResponse<any>>(`rooms/invite_user_to_room`, {
+      notification_data: {
+        title: notificationData.title,
+        type: notificationData.type
+      },
+      invite_data: {
+        room_id: inviteData.roomId
+      }}, 
+      {params: {
+        user_code: code, 
+        inviter_id: inviterId
+      }
+    });
+    return res.data
+  }
+
+  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string) {
+    const res = await this.http.post<TResponse<TNotification>>(`rooms/accept_room_invite`, {}, {
       params: {
-        user_id: userId,
         notification_id: notificationId,
-        notification_data: notificationData
+        status: status,
+        invite_id: inviteId, 
+        user_id: userId, 
       }
     });
     return res.data

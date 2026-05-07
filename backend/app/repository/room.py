@@ -27,9 +27,9 @@ class RoomRepository:
     if room:
       for user in room.members:
         if user.id == user_id:
-          raise AppError(400, 'Пользователь уже добавлен в комнату')
+          return True
       
-    return room
+    return False
   
   async def get_room_by_name(self, room_name: str):
     query = await self.db.execute(select(Room).options(selectinload(Room.members).selectinload(Member.user)).where(Room.name == room_name))

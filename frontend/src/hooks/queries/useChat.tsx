@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { useInjection } from '@/providers/DIProvider'
 import { TTypes } from '@/di/types'
 import type { TChatService } from '@/services/chat.service'
-import type { TMessageCreate, TRoomCreate, TRoomUpdate } from '@/types/chat'
+import type { TMessageCreate, TRoomCreate, TRoomInvite, TRoomUpdate } from '@/types/chat'
 import { queryClient } from '@/lib/query-client'
 
 export const useRooms = () => {
@@ -65,9 +65,46 @@ export const useChatMutations = () => {
 		},
 	})
 
+	const inviteToRoom = useMutation({
+		mutationFn: (data: TRoomInvite) =>
+			chatService.inviteToRoom(
+				data.code,
+				data.inviterId,
+				{
+					title: data.notificationData.title,
+					type: data.notificationData.type,
+				},
+				{ roomId: data.inviteData.roomId },
+			),
+		onSuccess: (res) => {
+			queryClient.invalidateQueries({ queryKey: ['notifications'] })
+			toast.success(res.message)
+			return res.data
+		},
+		onError: (e: AxiosError<any>) => {
+			toast.error(e.response?.data.detail)
+		},
+	})
+
+	const acceptInviteToRoom = useMutation({
+		mutationFn: (data: { userId: string; notificationId: string; inviteId: string; status: string }) =>
+			chatService.acceptInvite(data.userId, data.notificationId, data.inviteId, data.status),
+		onSuccess: (res) => {
+			queryClient.invalidateQueries({ queryKey: ['notifications'] })
+			toast.success(res.message)
+			console.log(res)
+			return res.data
+		},
+		onError: (e: AxiosError<any>) => {
+			toast.error(e.response?.data.detail)
+		},
+	})
+
 	return {
 		addRoom: addRoom.mutate,
 		updateRoom: updateRoom.mutate,
 		addMessage: addMessage.mutate,
+		inviteToRoom: inviteToRoom.mutate,
+		acceptInviteToRoom: acceptInviteToRoom.mutate,
 	}
 }

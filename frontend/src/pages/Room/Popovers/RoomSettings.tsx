@@ -9,7 +9,7 @@ import type { TRoom } from '@/types/chat'
 export default function RoomSettings() {
 	const { switcher, popups } = usePopup()
 	const room: TRoom = popups.roomSettings.props
-	console.log(room)
+
 	return (
 		<div className='flex w-full max-w-4xl rounded-xl bg-white'>
 			{/* Бокове меню (Sidebar) */}
@@ -18,10 +18,6 @@ export default function RoomSettings() {
 				<div className='flex items-center gap-2 bg-gray-100 rounded-sm p-2'>
 					<p className='text-sm'>Код для приглашения:</p>
 					<span className='text-red-500 uppercase text-xs'>{room?.room_code}</span>
-				</div>
-				<div className='flex items-center gap-2 bg-gray-100 rounded-sm p-2'>
-					<p className='text-sm'>ID комнаты:</p>
-					<span className='text-red-500 uppercase text-xs'>{room?.id}</span>
 				</div>
 				<Separator />
 				<nav className='space-y-1 w-full'>
@@ -33,12 +29,12 @@ export default function RoomSettings() {
 								onClick={() => switcher('inviteUserToRoom', true)}
 								className='w-full'
 								variant='outline'>
-								<UserPlus /> Добавить пользователя
+								<UserPlus /> Добавить участника
 							</Button>
 						</PopoverTrigger>
 
-						<PopoverContent>
-							<InviteUserToRoom />
+						<PopoverContent className='w-80'>
+							<InviteUserToRoom room={room} />
 						</PopoverContent>
 					</Popover>
 				</nav>

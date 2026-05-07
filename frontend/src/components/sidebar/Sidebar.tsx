@@ -112,8 +112,7 @@ export const Sidebar = observer(() => {
 						<div className='flex flex-col gap-1 min-w-0'>
 							<span className='truncate text-xs font-semibold text-foreground'>{user?.login}</span>
 							<span className='truncate text-xs text-muted-foreground'>{user?.email}</span>
-							<span className='truncate text-xs text-muted-foreground'>Код пользователя: {user?.user_code}</span>
-							<span className='truncate text-xs text-muted-foreground'>ID пользователя: {user?.id}</span>
+							<span className='truncate text-xs text-muted-foreground'>Код приглашения: {user?.user_code}</span>
 						</div>
 					)}
 				</div>

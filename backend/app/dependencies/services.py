@@ -14,7 +14,7 @@ from ..services.invite import InviteService
 from ..core.db import get_db
 
 def get_room_service(db: AsyncSession = Depends(get_db)):
-  return RoomService(db, RoomRepository(db), UserRepository(db), MemberRepository(db), NotificationService(NotificationRepository(db)), InviteService(InviteRepository(db), RoomRepository(db), MemberRepository(db)))
+  return RoomService(db, RoomRepository(db), UserRepository(db), MemberRepository(db), NotificationRepository(db), InviteRepository(db))
 
 def get_member_service(db: AsyncSession = Depends(get_db)):
   return MemberService(MemberRepository(db), RoomRepository(db))
@@ -29,4 +29,4 @@ def get_notification_service(db: AsyncSession = Depends(get_db)):
   return NotificationService(NotificationRepository(db))
 
 def get_invitation_service(db: AsyncSession = Depends(get_db)):
-  return InviteService(InviteRepository(db), RoomRepository(db), MemberRepository(db))
+  return InviteService(InviteRepository(db), RoomRepository(db), MemberRepository(db), NotificationRepository(db))

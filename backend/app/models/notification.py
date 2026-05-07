@@ -12,6 +12,8 @@ class Notification(Base):
   user_id: Mapped[str] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
   invitation_id: Mapped[str] = mapped_column(ForeignKey('invitations.id', ondelete='CASCADE'))
   
+  invitation: Mapped['Invitation'] = relationship(lazy='joined')
+  
   title: Mapped[str] = mapped_column(String(255), nullable=True)
   is_read: Mapped[bool] = mapped_column(Boolean, default=False)
   type: Mapped[str] = mapped_column(Enum('invite', name='invite'), default='invite')

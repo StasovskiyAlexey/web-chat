@@ -14,7 +14,7 @@ import { useChatMutations, useRoom } from '@/hooks/queries/useChat'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/ui/popover'
 import { usePopup } from '@/providers/PopupProvider'
-import RoomSettingsPopup from './Popovers/RoomSettingsPopup'
+import RoomSettings from './Popovers/RoomSettings'
 
 export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
@@ -88,8 +88,8 @@ export const Room = () => {
 								</Button>
 							</PopoverTrigger>
 
-							<PopoverContent>
-								<RoomSettingsPopup />
+							<PopoverContent className='w-80'>
+								<RoomSettings />
 							</PopoverContent>
 						</Popover>
 					</div>
@@ -155,7 +155,7 @@ export const Room = () => {
 					</h3>
 				</header>
 
-				<ScrollArea className='flex-1'>
+				<ScrollArea className='flex-1 overflow-auto'>
 					<div className='p-4 space-y-4'>
 						{room?.members.map((user) => (
 							<div

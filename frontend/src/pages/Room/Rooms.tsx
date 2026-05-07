@@ -1,6 +1,6 @@
 import { Plus, Users, Hash } from 'lucide-react'
 import { Button } from '@/components/shared/ui/button'
-import { AddRoomPopup } from './Popovers/AddRoomPopup'
+import { AddRoomPopup } from './Popovers/AddRoom'
 import { Link } from '@tanstack/react-router'
 import Loader from '@/components/shared/Loader'
 import { usePopup } from '@/providers/PopupProvider'

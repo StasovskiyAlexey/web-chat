@@ -1,6 +1,6 @@
 import type { IHttpClient } from "@/di/interfaces";
 import { TTypes } from "@/di/types";
-import type { TNotification, TNotificationCreate, TNotificationUpdate } from "@/types/chat";
+import type { TInvite, TNotification, TNotificationCreate, TNotificationUpdate } from "@/types/chat";
 import type { TResponse } from "@/types/response";
 import { inject, injectable } from "inversify";
 
@@ -13,12 +13,16 @@ export class NotificationService {
     return res.data
   }
 
+  async getInvitations(userId: string) {
+    const res = await this.http.post<TResponse<TInvite[]>>(`invitations/get_user_invitations?user_id=${userId}`)
+    return res.data
+  }
+
   async addNotification(userId: string, data: TNotificationCreate) {
     const res = await this.http.post<TResponse<TNotification[]>>(`notifications/add_notification`, {}, {
       params: {
         user_id: userId,
         title: data.title,
-        is_read: data.is_read,
         type: data.type
       }
     })
@@ -35,6 +39,7 @@ export class NotificationService {
     });
     return res.data
   }
+
 }
 
 export type TNotificationService = NotificationService
