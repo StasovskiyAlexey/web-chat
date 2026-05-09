@@ -13,6 +13,7 @@ export default defineConfig({
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
+			routesDirectory: './src/app/routes',
     }),
     AutoImport({
       dirs: [

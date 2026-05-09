@@ -1,11 +1,11 @@
 import { Plus, Users, Hash } from 'lucide-react'
-import { Button } from '@/components/shared/ui/button'
-import { AddRoomPopup } from './Popovers/AddRoom'
+import { Button } from '@/shared/ui/button'
+import { AddRoomPopup } from '@/entities/room/ui/popovers/AddRoom'
 import { Link } from '@tanstack/react-router'
-import Loader from '@/components/shared/Loader'
-import { usePopup } from '@/providers/PopupProvider'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/ui/popover'
-import { useRooms } from '@/hooks/queries/useChat'
+import Loader from '@/shared/Loader'
+import { usePopup } from '@/app/providers/PopupProvider'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
+import { useRooms } from '@/entities/room/model/queries/useRooms'
 
 export const Rooms = () => {
 	const { switcher, popups } = usePopup()

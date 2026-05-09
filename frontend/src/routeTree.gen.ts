@@ -8,11 +8,11 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthIndexRouteImport } from './routes/auth/index'
-import { Route as RoomsRoomIdRouteImport } from './routes/rooms/$roomId'
+import { Route as rootRouteImport } from './app/routes/__root'
+import { Route as SettingsRouteImport } from './app/routes/settings'
+import { Route as IndexRouteImport } from './app/routes/index'
+import { Route as AuthIndexRouteImport } from './app/routes/auth/index'
+import { Route as RoomsRoomIdRouteImport } from './app/routes/rooms/$roomId'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',

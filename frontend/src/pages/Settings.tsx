@@ -1,13 +1,13 @@
-import { useAuth } from '@/providers/AuthProvider'
-import { Input } from '@/components/shared/ui/input'
-import { Label } from '@/components/shared/ui/label'
-import { User, Mail, CheckCircle2, Settings } from 'lucide-react'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { Input } from '@/shared/ui/input'
+import { Label } from '@/shared/ui/label'
+import { User, Mail, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/shared/ui/button'
-import { useUserMutations } from '@/hooks/queries/useUser'
+import { Button } from '@/shared/ui/button'
+import { useUserMutations } from '@/entities/auth/model/queries/useUser'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type TUserUpdateSchema, userUpdateSchema } from '@/types/schemas'
+import { type TUserUpdateSchema, userUpdateSchema } from '@/entities/auth/model/schemas'
 
 export default function SettingsPage() {
 	const { user } = useAuth()

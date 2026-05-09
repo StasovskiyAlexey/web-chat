@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { Send, Users, MoreVertical, ShieldCheck } from 'lucide-react'
-import { Button } from '@/components/shared/ui/button'
-import { Input } from '@/components/shared/ui/input'
-import { ScrollArea } from '@/components/shared/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shared/ui/avatar'
+import { Button } from '@/shared/ui/button'
+import { Input } from '@/shared/ui/input'
+import { ScrollArea } from '@/shared/ui/scroll-area'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { useParams } from '@tanstack/react-router'
-import { useAuth } from '@/providers/AuthProvider'
-import Loader from '@/components/shared/Loader'
-import ErrorFallback from '@/components/shared/ErrorFallback'
-import useWebsocket from '@/hooks/useWebsocket'
-import { websocketUrl } from '@/lib/envVariables'
-import { useChatMutations, useRoom } from '@/hooks/queries/useChat'
+import { useAuth } from '@/app/providers/AuthProvider'
+import Loader from '@/shared/Loader'
+import ErrorFallback from '@/shared/ErrorFallback'
+import { websocketUrl } from '@/app/lib/envVariables'
+import { useRoomMutations, useRoom } from '@/entities/room/model/queries/useRooms'
 import dayjs from 'dayjs'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/shared/ui/popover'
-import { usePopup } from '@/providers/PopupProvider'
-import RoomSettings from './Popovers/RoomSettings'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
+import { usePopup } from '@/app/providers/PopupProvider'
+import RoomSettings from '@/entities/room/ui/popovers/RoomSettings'
+import useWebsocket from '@/shared/hooks/useWebsocket'
 
 export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
@@ -23,7 +23,7 @@ export const Room = () => {
 	const [message, setMessage] = useState('')
 	const { popups, switcher } = usePopup()
 
-	const { addMessage } = useChatMutations()
+	const { addMessage } = useRoomMutations()
 	const { data: room, isLoading, isError } = useRoom(roomId)
 
 	const { user } = useAuth()

@@ -6,7 +6,7 @@ from fastapi import Request, HTTPException
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 
-T = TypeVar("T")
+T = TypeVar("T")  
 ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 secret_key = settings.secret_key
@@ -22,7 +22,7 @@ def create_refresh_token(user_id: str) -> str:
   payload = {"user_id": user_id, "exp": datetime.now() + timedelta(days=7)}
   return jwt.encode(payload, secret_key, algorithm=ALGORITHM)
 
-# Для API
+# Для API 
 def create_access_token(user_id: str):
   payload = {"user_id": user_id, "exp": datetime.now() + timedelta(minutes=15)}
   return jwt.encode(payload, secret_key, algorithm=ALGORITHM)

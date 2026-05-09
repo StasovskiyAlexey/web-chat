@@ -4,7 +4,13 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@/app": ["./src/app/*"],
+			"@/entities": ["./src/entities/*"],
+			"@/features": ["./src/features/*"],
+			"@/pages": ["./src/pages/*"],
+			"@/shared": ["./src/shared/*"],
+			"@/widgets": ["./src/widgets/*"]
 		},
 		"experimentalDecorators": true, // ОБЯЗАТЕЛЬНО для @inject
 		"emitDecoratorMetadata": true, // ОБЯЗАТЕЛЬНО для DI

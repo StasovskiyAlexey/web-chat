@@ -1,9 +1,9 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen' // Дерево роутов(генерируется самостоятельно)
-import { useAuth } from './providers/AuthProvider'
-import { useInjection } from './providers/DIProvider'
-import { type TAuthService } from './services/auth.service'
-import { TTypes } from './di/types'
+import { useAuth } from './app/providers/AuthProvider'
+import { useInjection } from './app/providers/DIProvider'
+import { type TAuthService } from './entities/auth/api/auth.service'
+import { TTypes } from './shared/di/types'
 
 const router = createRouter({
 	routeTree,
