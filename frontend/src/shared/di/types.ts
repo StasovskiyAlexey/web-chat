@@ -4,4 +4,5 @@ export const TTypes = {
   ChatService: Symbol.for("ChatService"),
   RoomService: Symbol.for("RoomService"),
   NotificationService: Symbol.for("NotificationService"),
+  UserService: Symbol.for("UserService")
 };

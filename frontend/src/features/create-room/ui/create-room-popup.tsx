@@ -3,16 +3,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 import { Search } from 'lucide-react'
 import { Input } from '@/shared/ui/input'
 import { Button } from '@/shared/ui/button'
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
-import { Label } from '@/shared/ui/label'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { usePopup } from '@/app/providers/PopupProvider'
-import { useRoomMutations } from '@/entities/room/model/queries/useRooms'
+import { useCreateRoom } from '../model/use-create-room'
 
-export const AddRoomPopup = () => {
+export const CreateRoomPopup = () => {
 	const { switcher } = usePopup()
 	const { user } = useAuth()
-	const { addRoom } = useRoomMutations()
+	const { mutate } = useCreateRoom()
 
 	const [room, setRoom] = useState({
 		name: '',
@@ -20,11 +18,11 @@ export const AddRoomPopup = () => {
 	})
 
 	async function handleCreateRoom() {
-		addRoom({
-			user_id: user?.id,
+		mutate({
+			userId: user?.id as string,
 			role: 'owner',
 			name: room.name,
-			type: room.type,
+			type: 'direct',
 		})
 		switcher('addRoom', false)
 	}
@@ -32,8 +30,8 @@ export const AddRoomPopup = () => {
 	return (
 		<>
 			<div className='space-y-2 mb-4'>
-				<h4 className='font-medium leading-none'>Кімнати</h4>
-				<p className='text-sm text-muted-foreground'>Знайдіть існуючу кімнату або створіть власну.</p>
+				<h4 className='font-medium leading-none'>Поиск или создание комнаты</h4>
+				<p className='text-sm text-muted-foreground'>Найдите существующую комнату или создайте свою</p>
 			</div>
 
 			<Tabs
@@ -43,9 +41,9 @@ export const AddRoomPopup = () => {
 					<TabsTrigger
 						disabled
 						value='search'>
-						Пошук
+						Поиск
 					</TabsTrigger>
-					<TabsTrigger value='create'>Створення</TabsTrigger>
+					<TabsTrigger value='create'>Создание</TabsTrigger>
 				</TabsList>
 
 				<TabsContent
@@ -58,7 +56,7 @@ export const AddRoomPopup = () => {
 							className='pl-8'
 						/>
 					</div>
-					<Button className='w-full'>Знайти</Button>
+					<Button className='w-full'>Найти</Button>
 				</TabsContent>
 
 				<TabsContent
@@ -66,31 +64,13 @@ export const AddRoomPopup = () => {
 					className='space-y-4 pt-4'>
 					<Input
 						onChange={(e) => setRoom((prev) => ({ ...prev, name: e.target.value }))}
-						placeholder='Назва нової кімнати'
+						placeholder='Название новой комнаты'
 					/>
-					<RadioGroup
-						onValueChange={(e) => setRoom((prev) => ({ ...prev, type: e }))}
-						defaultValue={room.type}>
-						<div className='flex items-center gap-3'>
-							<RadioGroupItem
-								value='direct'
-								id='pop-direct'
-							/>
-							<Label htmlFor='pop-direct'>Директ</Label>
-						</div>
-						<div className='flex items-center gap-3'>
-							<RadioGroupItem
-								value='group'
-								id='pop-group'
-							/>
-							<Label htmlFor='pop-group'>Група</Label>
-						</div>
-					</RadioGroup>
 					<Button
 						onClick={handleCreateRoom}
 						disabled={!room.name}
 						className='w-full'>
-						Створити кімнату
+						Создать комнату
 					</Button>
 				</TabsContent>
 			</Tabs>

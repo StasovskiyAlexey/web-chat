@@ -4,10 +4,10 @@ import { Label } from '@/shared/ui/label'
 import { User, Mail, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/shared/ui/button'
-import { useUserMutations } from '@/entities/auth/model/queries/useUser'
+import { useUserMutations } from '@/entities/user/model/queries/useUser'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type TUserUpdateSchema, userUpdateSchema } from '@/entities/auth/model/schemas'
+import { type TUserUpdateSchema, userUpdateSchema } from '@/entities/user/model/schemas'
 
 export default function SettingsPage() {
 	const { user } = useAuth()

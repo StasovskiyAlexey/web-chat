@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useAuth } from '@/app/providers/AuthProvider'
-import { LogOut, Settings, ChevronLeft, House, MessageSquare, Bell } from 'lucide-react'
+import { LogOut, Settings, ChevronLeft, House, Bell } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Separator } from '@/shared/ui/separator'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { NavItem } from './nav-item'
 import { usePopup } from '@/app/providers/PopupProvider'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
-import { NotificationPopup } from '@/entities/notification/ui/popups/NotificationPopup'
+import { NotificationPopup } from '@/entities/notification/ui/notifications-popup'
 import { websocketUrl } from '@/app/lib/envVariables'
 import { observer } from 'mobx-react-lite'
 import useWebsocket from '@/shared/hooks/useWebsocket'
@@ -19,7 +19,6 @@ export const Sidebar = observer(() => {
 
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
 	console.log(socket)
-
 	if (!user) return null
 
 	return (
@@ -34,21 +33,21 @@ export const Sidebar = observer(() => {
 				<ChevronLeft className='size-4' />
 			</button>
 
-			<div className='mb-6 flex items-center px-2 py-2'>
-				<div className='flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground'>
-					<MessageSquare className='size-5' />
-				</div>
-				<AnimatePresence>
-					{isOpen && (
-						<motion.span
-							initial={{ opacity: 0, x: -10 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: -10 }}
-							className='ml-3 truncate font-bold tracking-tight text-foreground'>
-							Web-Chat
-						</motion.span>
-					)}
-				</AnimatePresence>
+			<div className='flex flex-col justify-start items-start px-2 py-2'>
+				{isOpen ? (
+					<div className='flex items-center gap-2'>
+						<span className='ml-3 truncate font-bold tracking-tight text-foreground'>Web-Chat</span>
+						<img
+							className='size-10'
+							src='https://static.vecteezy.com/system/resources/thumbnails/008/508/754/small_2x/3d-chat-mail-message-notification-chatting-illustration-png.png'
+						/>
+					</div>
+				) : (
+					<img
+						className='size-10'
+						src='https://static.vecteezy.com/system/resources/thumbnails/008/508/754/small_2x/3d-chat-mail-message-notification-chatting-illustration-png.png'
+					/>
+				)}
 			</div>
 
 			<nav className='flex flex-col gap-2'>
@@ -114,6 +113,7 @@ export const Sidebar = observer(() => {
 							<span className='truncate text-xs font-semibold text-foreground'>{user?.login}</span>
 							<span className='truncate text-xs text-muted-foreground'>{user?.email}</span>
 							<span className='truncate text-xs text-muted-foreground'>Код приглашения: {user?.user_code}</span>
+							<span className='truncate text-xs text-muted-foreground'>ID пользователя: {user?.id}</span>
 						</div>
 					)}
 				</div>

@@ -1,23 +1,9 @@
 import { useState } from 'react'
-import { Button } from '@/shared/ui/button'
-import { useRoomMutations } from '@/entities/room/model/queries/useRooms'
-import { useAuth } from '@/app/providers/AuthProvider'
 import type { TRoom } from '@/entities/room/model/types'
+import { InviteToRoomBtn } from '@/features/invite-to-room'
 
 export default function InviteUserToRoom({ room }: { room: TRoom }) {
 	const [code, setCode] = useState('')
-	const { inviteToRoom } = useRoomMutations()
-	const { user } = useAuth()
-
-	const handleInviteToRoom = () => {
-		inviteToRoom({
-			code: code,
-			inviterId: user?.id as string,
-			notificationData: { title: 'Приглашение в комнату', type: 'invite' },
-			inviteData: { roomId: room?.id as string },
-		})
-		setCode('')
-	}
 
 	return (
 		<div className='w-full p-1'>
@@ -36,12 +22,10 @@ export default function InviteUserToRoom({ room }: { room: TRoom }) {
 						className='text-sm w-full pl-2 border-gray-200 rounded-md bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none'
 					/>
 
-					<Button
-						disabled={!code}
-						onClick={() => handleInviteToRoom()}
-						className='flex items-center text-xs justify-center bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'>
-						Добавить
-					</Button>
+					<InviteToRoomBtn
+						code={code}
+						room={room}
+					/>
 				</div>
 			</div>
 		</div>

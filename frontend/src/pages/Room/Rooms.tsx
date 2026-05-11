@@ -1,14 +1,10 @@
-import { Plus, Users, Hash } from 'lucide-react'
-import { Button } from '@/shared/ui/button'
-import { AddRoomPopup } from '@/entities/room/ui/popovers/AddRoom'
+import { Users, Hash } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import Loader from '@/shared/Loader'
-import { usePopup } from '@/app/providers/PopupProvider'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { useRooms } from '@/entities/room/model/queries/useRooms'
+import { CreateRoomBtn } from '@/features/create-room'
 
 export const Rooms = () => {
-	const { switcher, popups } = usePopup()
 	const { data: rooms, isLoading } = useRooms()
 
 	if (isLoading) {
@@ -24,21 +20,7 @@ export const Rooms = () => {
 						<p className='text-muted-foreground'>Управляйте своими чатами и обсуждениями.</p>
 					</div>
 
-					<Popover
-						onOpenChange={(open) => switcher('addRoom', open)}
-						open={popups.addRoom.isOpen}>
-						<PopoverTrigger asChild>
-							<Button
-								onClick={() => switcher('addRoom', true)}
-								className='gap-2'>
-								<Plus className='w-4 h-4' /> Создать или найти
-							</Button>
-						</PopoverTrigger>
-
-						<PopoverContent className='w-100'>
-							<AddRoomPopup />
-						</PopoverContent>
-					</Popover>
+					<CreateRoomBtn />
 				</div>
 
 				<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6'>

@@ -56,7 +56,7 @@ export default function AuthForm({
 			<Button
 				type='submit'
 				className='w-full h-11 text-white font-semibold rounded-lg shadow-lg transition-all'>
-				{tab === 'login' ? 'Увійти до аккаунту' : 'Створити профіль'}
+				{tab === 'login' ? 'Войти в аккаунт' : 'Создать аккаунт'}
 			</Button>
 		</form>
 	)

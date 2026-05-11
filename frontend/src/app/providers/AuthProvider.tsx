@@ -1,11 +1,11 @@
-import type { TUser, TUserLogin, TUserRegister } from '@/entities/auth/model/types'
+import type { TUser, TUserLogin, TUserRegister } from '@/entities/user/model/types'
 import { useNavigate } from '@tanstack/react-router'
 import { AxiosError } from 'axios'
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { toast } from 'react-toastify'
 import { useInjection } from './DIProvider'
 import { TTypes } from '@/shared/di/types'
-import { type TAuthService } from '@/entities/auth/api/auth.service'
+import { type TAuthService } from '@/features/auth/api/auth.service'
 
 export type TAuthContext = {
 	me: () => Promise<TUser | undefined>

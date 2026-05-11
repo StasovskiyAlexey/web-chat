@@ -1,4 +1,4 @@
-import Auth from 'frontend/src/pages/Auth/Auth'
+import Auth from '@/pages/Auth'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth/')({

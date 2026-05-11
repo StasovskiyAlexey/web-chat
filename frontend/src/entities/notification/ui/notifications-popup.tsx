@@ -1,11 +1,10 @@
-import { Bell, Check, CheckCheck, UserPlus, X } from 'lucide-react'
-import { Button } from '@/shared/ui/button'
+import { Bell, Check, CheckCheck, UserPlus } from 'lucide-react'
 import { ScrollArea } from '@/shared/ui/scroll-area'
-import { useNotifications } from '../../model/queries/useNotifications'
+import { useNotifications } from '@/entities/notification/model/queries/useNotifications'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { Separator } from '@/shared/ui/separator'
 import dayjs from 'dayjs'
-import { useRoomMutations } from '@/entities/room/model/queries/useRooms'
+import { AcceptButtons } from '@/features/accept-room-invite'
 
 export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 	const { user } = useAuth()
@@ -15,10 +14,6 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 	}
 
 	const { data: notifications } = useNotifications(user?.id)
-
-	const { acceptInviteToRoom } = useRoomMutations()
-
-	console.log(notifications)
 
 	useEffect(() => {
 		if (!socket) return
@@ -43,21 +38,13 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 			{/* Header */}
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-2'>
-					<h4 className='font-bold text-base text-slate-800'>Сповіщення</h4>
-					{notifications?.some((n) => !n.is_read) && <div className='h-2 w-2 bg-blue-500 rounded-full animate-pulse' />}
+					<h4 className='font-bold text-base text-slate-800'>Уведомления</h4>{' '}
 				</div>
-				<Button
-					variant='ghost'
-					size='sm'
-					disabled={!notifications?.some((n) => !n.is_read)}
-					className='h-8 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50'>
-					Прочитати все
-				</Button>
 			</div>
 
 			<Separator className='opacity-50 my-4' />
 
-			<ScrollArea className='flex-1'>
+			<ScrollArea className='flex-1 overflow-auto'>
 				{notifications && notifications.length > 0 ? (
 					<div className='flex flex-col'>
 						{notifications.map((item) => (
@@ -114,36 +101,7 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 								</div>
 
 								{/* Блок дій (тільки для активних інвайтів) */}
-								{item.type === 'invite' && !item.is_read && (
-									<div className='flex gap-2 ml-11'>
-										<button
-											onClick={() =>
-												acceptInviteToRoom({
-													userId: user.id,
-													notificationId: item.id,
-													inviteId: item.invitation_id,
-													status: 'accepted',
-												})
-											}
-											className='flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-md shadow-sm transition-all active:scale-95'>
-											<Check size={14} />
-											Принять
-										</button>
-										<button
-											onClick={() =>
-												acceptInviteToRoom({
-													userId: user.id,
-													notificationId: item.id,
-													inviteId: item.invitation_id,
-													status: 'canceled',
-												})
-											}
-											className='flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-600 text-[11px] font-semibold rounded-md border border-slate-200 transition-all active:scale-95'>
-											<X size={14} />
-											Отклонить
-										</button>
-									</div>
-								)}
+								{item.type === 'invite' && !item.is_read && <AcceptButtons notification={item} />}
 
 								{/* Розділювач, крім останнього елемента */}
 								<div className='absolute bottom-0 left-4 right-4 h-px bg-slate-100 group-last:hidden' />
@@ -155,8 +113,8 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 						<div className='p-4 bg-slate-50 rounded-full mb-4'>
 							<Bell className='w-8 h-8 opacity-20' />
 						</div>
-						<p className='text-sm font-medium'>Немає нових сповіщень</p>
-						<p className='text-xs opacity-70'>Тут з'являтимуться запрошення</p>
+						<p className='text-sm font-medium'>Новых уведомлений нет</p>
+						<p className='text-xs opacity-70'>Тут появляется приглашение в комнату</p>
 					</div>
 				)}
 			</ScrollArea>

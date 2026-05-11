@@ -1,23 +1,12 @@
-import type { TUser, TUserLogin, TUserRegister } from "@/types/user";
+import type { TUser, TUserLogin, TUserRegister } from "@/entities/user/model/types";
 import { inject, injectable } from "inversify";
-import { TTypes } from "../../../shared/di/types";
-import type { IHttpClient } from "../../../shared/di/interfaces";
+import { TTypes } from "@/shared/di/types";
+import type { IHttpClient } from "@/shared/di/interfaces";
 import type { TResponse } from "@/app/types/response";
-import type { TUserUpdateSchema } from "@/types/schemas";
 
 @injectable()
 export class AuthService {
   constructor(@inject(TTypes.HttpClient) private http: IHttpClient) {}
-
-  async updateUser(userData: TUserUpdateSchema) {
-    const res = await this.http.patch<TResponse<TUser>>('users/update_user', {
-      login: userData.login,
-      email: userData.email,
-      new_password: userData.new_password,
-      password: userData.password
-    })
-    return res.data
-  }
 
   async me() {
     try {

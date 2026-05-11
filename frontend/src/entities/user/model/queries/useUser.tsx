@@ -1,16 +1,16 @@
 import { TTypes } from '@/shared/di/types'
 import { useInjection } from '@/app/providers/DIProvider'
-import { AuthService } from '@/entities/auth/api/auth.service'
-import type { TUserUpdateSchema } from '@/entities/auth/model/schemas'
+import type { TUserUpdateSchema } from '@/entities/user/model/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
+import type { TUserService } from '../../api/user.service'
 
 export const useUserMutations = () => {
-	const authService = useInjection<AuthService>(TTypes.AuthService)
+	const userService = useInjection<TUserService>(TTypes.UserService)
 
 	const updateUser = useMutation({
-		mutationFn: (data: TUserUpdateSchema) => authService.updateUser(data),
+		mutationFn: (data: TUserUpdateSchema) => userService.updateUser(data),
 		onSuccess: (data) => {
 			toast.success(data.message)
 		},

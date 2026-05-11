@@ -2,6 +2,7 @@ import { Sidebar } from '@/widgets/sidebar/sidebar'
 import AppProvider from '../providers/AppProvider'
 import { type ReactNode } from 'react'
 import useMobile from '@/shared/hooks/useMobile'
+import MobileMenu from '@/widgets/mobile-menu'
 
 export default function MainLayout({ children }: { children?: ReactNode }) {
 	const { width } = useMobile()

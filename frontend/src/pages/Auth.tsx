@@ -2,11 +2,11 @@ import { TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 import { Tabs } from '@/shared/ui/tabs'
 
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
-import AuthForm from '@/entities/auth/ui/AuthForm'
+import AuthForm from '@/features/auth/ui/AuthForm'
 import { inputs } from '@/app/lib/constants'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { userLoginSchema, userRegisterSchema } from '@/entities/auth/model/schemas'
+import { userLoginSchema, userRegisterSchema } from '@/entities/user/model/schemas'
 
 export default function Auth() {
 	const [activeTab, setActiveTab] = useState<string>('login')

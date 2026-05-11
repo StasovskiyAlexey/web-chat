@@ -44,11 +44,12 @@ class InviteService():
     
     if is_member:
       raise AppError(400, 'Вы уже являетесь участником этой комнаты')
-    
-    member_data = MemberCreate(user_id=user_id, room_id=target_room_id, role='member')
-    await self.member_repository.create_member(member_data)
-    
+
     await self.repository.update_invite(invite_id, user_id, status)
+    
+    if status == 'accepted':
+      member_data = MemberCreate(user_id=user_id, room_id=target_room_id, role='member')
+      await self.member_repository.create_member(member_data)
     
     if exist_user_notification:
       await self.notification_repository.update_notification(user_id, exist_user_notification.id)

@@ -40,6 +40,14 @@ export class NotificationService {
     return res.data
   }
 
+  async readAllNotifications(userId: string) {
+    const res = await this.http.post<TResponse<TNotification>>(`notifications/read_all_notifications`, {}, {
+      params: {
+        user_id: userId,
+      }
+    });
+    return res.data
+  }
 }
 
 export type TNotificationService = NotificationService

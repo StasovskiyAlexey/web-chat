@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { Separator } from '@/shared/ui/separator'
 import { usePopup } from '@/app/providers/PopupProvider'
 import { UserPlus } from 'lucide-react'
-import InviteUserToRoom from './InviteUserToRoom'
+import InviteUserToRoom from '@/features/invite-to-room/ui/invite-to-room-popup'
 import type { TRoom } from '@/entities/room/model/types'
 
 export default function RoomSettings() {

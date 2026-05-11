@@ -13,8 +13,9 @@ import { useRoomMutations, useRoom } from '@/entities/room/model/queries/useRoom
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { usePopup } from '@/app/providers/PopupProvider'
-import RoomSettings from '@/entities/room/ui/popovers/RoomSettings'
+import RoomSettings from '@/entities/room/ui/room-settings-popup'
 import useWebsocket from '@/shared/hooks/useWebsocket'
+import { queryClient } from '@/app/lib/query-client'
 
 export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
@@ -37,7 +38,13 @@ export const Room = () => {
 			try {
 				const data = JSON.parse(event.data)
 				const payload = data.payload
-				room?.messages.push(payload)
+
+				console.log(payload)
+				queryClient.setQueryData(['rooms', roomId], (oldData: any) => {
+					if (!oldData) return oldData
+					console.log(oldData)
+					return { ...oldData, messages: [...oldData.messages, payload] }
+				})
 			} catch (e) {
 				console.error(e)
 			}
@@ -111,7 +118,7 @@ export const Room = () => {
 									<div>
 										{msg.user_id !== user?.id && <p className='text-xs font-medium mb-1 ml-1'>{msg.user.login}</p>}
 										<div
-											className={`p-2 rounded-sm text-sm ${
+											className={`p-2 rounded-sm flex justify-center text-sm ${
 												msg.user_id === user?.id ? 'bg-black text-primary-foreground' : 'bg-muted'
 											}`}>
 											{msg.content}

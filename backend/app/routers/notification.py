@@ -26,4 +26,7 @@ async def add_notifications(user_id: str, invite_id: str, notification_data: Not
 @router.post('/update_notification', response_model=SuccessResponse[NotificationResponse], description='В основном для обновления is_read оповещения, и для принятие или отмены инвайтов')
 async def update_notification(user_id: str, notification_id: str, service: NotificationService = Depends(get_notification_service), **notification_data: NotificationUpdate):
   updated_notification = await service.update_notification(user_id, notification_id, **notification_data)
-  return updated_notification
+  return SuccessResponse(
+    data=updated_notification,
+    message='Уведомление успешно обновлено'
+  )

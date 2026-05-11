@@ -23,7 +23,7 @@ export class RoomService {
       name: data.name,
       type: data.type
     }, 
-    {params: {user_id: data.user_id, role: data.role}});
+    {params: {user_id: data.userId, role: data.role}});
     return res.data
   }
 

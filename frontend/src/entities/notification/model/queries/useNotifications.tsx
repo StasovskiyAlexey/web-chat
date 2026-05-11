@@ -5,7 +5,7 @@ import { type TNotificationService } from '../../api/notifications.service'
 import type { TNotificationCreate, TNotificationUpdate } from '@/entities/notification/model/types'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 export const useNotifications = (userId: string) => {
 	const notificationService = useInjection<TNotificationService>(TTypes.NotificationService)

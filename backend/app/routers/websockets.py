@@ -20,8 +20,8 @@ async def ws_notifications_connection(websocket: WebSocket, user_id: str):
   
   try:
     while True:
-      message = await websocket.receive_json()
-      print('message', message)
-      await websocket_manager.connect_notification_to_user(message, user_id)
+      notification = await websocket.receive_json()
+      print('notification', notification)
+      await websocket_manager.broadcast_notifications_to_user(notification, user_id)
   except WebSocketDisconnect:
     websocket_manager.disconnect_notification_to_user(websocket, user_id)

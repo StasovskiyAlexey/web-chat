@@ -4,10 +4,10 @@ from fastapi import WebSocket
 class WebsocketManager:
   def __init__(self):
     
-    # Массив для активных подключений к комнате
+    # Обьект для активных подключений к комнате
     self.room_connections: Dict[str, List[WebSocket]] = {}
     
-    # Массив для оповещений пользователей
+    # Обьект для оповещений пользователей
     self.user_notifications_connections: Dict[str, List[WebSocket]] = {}
   
   # Подключение комнаты

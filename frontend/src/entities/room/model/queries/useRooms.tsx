@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { AxiosError } from 'axios'
 import { useInjection } from '@/app/providers/DIProvider'
 import { TTypes } from '@/shared/di/types'
@@ -29,7 +29,7 @@ export const useRoom = (roomId: string) => {
 export const useRoomMutations = () => {
 	const roomService = useInjection<TRoomService>(TTypes.RoomService)
 
-	const addRoom = useMutation({
+	const createRoom = useMutation({
 		mutationFn: (data: TRoomCreate) => roomService.createRoom(data),
 		onSuccess: (res) => {
 			queryClient.invalidateQueries({ queryKey: ['rooms'] })
@@ -56,8 +56,7 @@ export const useRoomMutations = () => {
 	const addMessage = useMutation({
 		mutationFn: (data: TMessageCreate) => roomService.createMessage(data),
 		onSuccess: (res) => {
-			queryClient.invalidateQueries({ queryKey: ['messages'] })
-			toast.success(res.message)
+			queryClient.invalidateQueries({ queryKey: ['room'] })
 			return res.data
 		},
 		onError: (e: AxiosError<any>) => {
@@ -101,7 +100,7 @@ export const useRoomMutations = () => {
 	})
 
 	return {
-		addRoom: addRoom.mutate,
+		createRoom: createRoom.mutate,
 		updateRoom: updateRoom.mutate,
 		addMessage: addMessage.mutate,
 		inviteToRoom: inviteToRoom.mutate,
