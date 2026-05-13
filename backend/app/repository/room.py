@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sqlalchemy.orm import selectinload
 from ..core.exceptions import AppError
-from ..models import Member, Room
+from ..models import Member, Room, User
 from ..schemas.room import RoomUpdate
 
 class RoomRepository:
@@ -17,6 +17,11 @@ class RoomRepository:
   
   async def get_room_by_id(self, room_id: str):
     query = await self.db.execute(select(Room).where(Room.id == room_id).options(selectinload(Room.members).selectinload(Member.user), selectinload(Room.messages)))
+    room = query.scalar_one_or_none()
+    return room
+  
+  async def get_room_by_code(self, code: str):
+    query = await self.db.execute(select(Room).where(Room.room_code == code).options(selectinload(Room.members).selectinload(Member.user), selectinload(Room.messages)))
     room = query.scalar_one_or_none()
     return room
   
@@ -55,7 +60,7 @@ class RoomRepository:
       await self.db.flush()
       return new_room
     except Exception as e:
-      await self.db.rollback() # Откатываем, если что-то пошло не так
+      await self.db.rollback()
       raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
   
   async def update_room(self, room_id: str, **room_data: RoomUpdate):
@@ -91,6 +96,22 @@ class RoomRepository:
     except Exception as e:
       await self.db.rollback()
       raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
+    
+  async def delete_current_room(self, room_id: str, user_id: str):
+    query = await self.db.execute(select(Room).where(Room.id == room_id).options(selectinload(Room.members).selectinload(Member.user)))
+    
+    # Комнаты с members
+    room = query.scalar_one_or_none()
+    
+    for member in room.members:
+      if member.user_id == user_id:
+        if member.role != 'owner':
+          raise AppError(400, 'Удалить комнату может только владелец комнаты')
+        
+    await self.db.delete(room)
+    await self.db.commit()
+      
+    return room
     
   async def delete_all_rooms(self):
     query = await self.db.execute(select(Room))

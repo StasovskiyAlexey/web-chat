@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { useInjection } from '@/app/providers/DIProvider'
 import { TTypes } from '@/shared/di/types'
 import type { TRoomService } from '@/entities/room/api/room.service'
-import type { TMessageCreate, TRoomCreate, TRoomInvite, TRoomUpdate } from '../types'
+import type { TMessageCreate, TRoomCreate, TRoomInvite, TRoomUpdate } from '../model/types'
 import { queryClient } from '@/app/lib/query-client'
 
 export const useRooms = () => {

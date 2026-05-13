@@ -10,7 +10,7 @@ export default function useWebsocket(url: string) {
 		}
 
 		ws.onerror = (err) => {
-			console.error('⚠️ Помилка сокета:', err)
+			console.error('⚠️ Ошибка сокета:', err)
 		}
 
 		ws.onclose = () => {

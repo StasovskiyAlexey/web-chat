@@ -10,10 +10,11 @@ interface NavItemProps {
 	isOpen: boolean
 	variant?: 'default' | 'danger'
 	onClick?: () => void
+	data?: any[]
 }
 
 export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
-	({ to, icon: Icon, label, isOpen, variant = 'default', onClick, ...props }, ref) => {
+	({ to, icon: Icon, label, isOpen, variant = 'default', onClick, data, ...props }, ref) => {
 		const location = useLocation()
 		const isActive = location.pathname === to
 
@@ -40,6 +41,7 @@ export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
 						</motion.span>
 					)}
 				</AnimatePresence>
+				{data?.some((el) => !el.is_read) && <div className='size-2 bg-blue-500 rounded-full' />}
 			</Button>
 		)
 

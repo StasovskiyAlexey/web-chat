@@ -1,7 +1,7 @@
 import { Users, Hash } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import Loader from '@/shared/Loader'
-import { useRooms } from '@/entities/room/model/queries/useRooms'
+import { useRooms } from '@/entities/room/api/queries'
 import { CreateRoomBtn } from '@/features/create-room'
 
 export const Rooms = () => {
@@ -13,7 +13,7 @@ export const Rooms = () => {
 
 	return (
 		<>
-			<div className='p-8 max-w-[1440px] mx-auto'>
+			<div className='p-8 mx-auto'>
 				<div className='flex justify-between items-center mb-8'>
 					<div>
 						<h1 className='text-3xl font-bold tracking-tight'>Ваши комнаты</h1>
@@ -62,3 +62,5 @@ export const Rooms = () => {
 		</>
 	)
 }
+
+// делать доступ в комнату по коду

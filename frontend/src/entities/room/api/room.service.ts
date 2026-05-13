@@ -3,6 +3,7 @@ import { TTypes } from "@/shared/di/types";
 import type { TResponse } from "@/app/types/response";
 import { type TMessage, type TMessageCreate, type TMessageUpdate, type TRoom, type TRoomCreate } from '@/entities/room/model/types';
 import { inject, injectable } from "inversify";
+import type { TNotificationCreate } from "@/entities/notification/model/types";
 
 @injectable()
 export class RoomService {
@@ -78,6 +79,25 @@ export class RoomService {
         status: status,
         invite_id: inviteId, 
         user_id: userId, 
+      }
+    });
+    return res.data
+  }
+ 
+  async deleteRoom(roomId: string) {
+    const res = await this.http.post<TResponse<null>>(`rooms/delete_room`, {}, {
+      params: {
+        room_id: roomId
+      }
+    });
+    return res.data
+  }
+
+  async joinToRoomByCode(roomCode: string, inviterId: string, data: TNotificationCreate) {
+    const res = await this.http.post<TResponse<null>>(`rooms/invite_from_user_to_room`, {title: data.title, type: data.type}, {
+      params: {
+        room_code: roomCode,
+        inviter_id: inviterId
       }
     });
     return res.data

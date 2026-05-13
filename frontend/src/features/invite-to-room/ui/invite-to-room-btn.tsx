@@ -1,24 +1,28 @@
-import useInviteToRoom from '../model/use-invite-to-room'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { usePopup } from '@/app/providers/PopupProvider'
 import type { TRoom } from '@/entities/room/model/types'
 import { Button } from '@/shared/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
+import { UserPlus } from 'lucide-react'
+import InviteUserToRoom from './invite-to-room-popup'
 
-export default function InviteToRoomBtn({ code, room }: { code: string; room: TRoom }) {
-	const { mutate } = useInviteToRoom()
-	const { user } = useAuth()
+export default function InviteToRoomBtn({ room }: { room: TRoom }) {
+	const { switcher, popups } = usePopup()
 	return (
-		<Button
-			disabled={!code}
-			onClick={() =>
-				mutate({
-					code: code,
-					inviterId: user?.id as string,
-					notificationData: { title: 'Приглашение в комнату', type: 'invite' },
-					inviteData: { roomId: room?.id as string },
-				})
-			}
-			className='flex items-center text-xs justify-center bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors'>
-			Добавить
-		</Button>
+		<Popover
+			open={popups.inviteUserToRoom.isOpen}
+			onOpenChange={(open) => switcher('inviteUserToRoom', open)}>
+			<PopoverTrigger asChild>
+				<Button
+					onClick={() => switcher('inviteUserToRoom', true)}
+					className='w-full'
+					variant='outline'>
+					<UserPlus /> Добавить участника
+				</Button>
+			</PopoverTrigger>
+
+			<PopoverContent className='w-80'>
+				<InviteUserToRoom room={room} />
+			</PopoverContent>
+		</Popover>
 	)
 }

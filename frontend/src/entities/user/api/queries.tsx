@@ -4,7 +4,7 @@ import type { TUserUpdateSchema } from '@/entities/user/model/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
-import type { TUserService } from '../../api/user.service'
+import type { TUserService } from './user.service'
 
 export const useUserMutations = () => {
 	const userService = useInjection<TUserService>(TTypes.UserService)

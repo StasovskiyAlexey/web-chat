@@ -10,6 +10,9 @@ class InviteCreate(Invite):
   user_id: str
   room_id: str
   status: str
+  
+class InviteCreateFromUserToRoom(Invite):
+  inviter_id: str
 
 class InviteCreateToRoom(Invite):
   room_id: str

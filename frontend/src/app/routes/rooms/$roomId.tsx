@@ -1,4 +1,4 @@
-import { Room } from '@/pages/Room/Room'
+import { Room } from '@/pages/room/room'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import Loader from '@/shared/Loader'
 

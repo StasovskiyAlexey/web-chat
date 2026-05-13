@@ -1,10 +1,10 @@
 import { Bell, Check, CheckCheck, UserPlus } from 'lucide-react'
 import { ScrollArea } from '@/shared/ui/scroll-area'
-import { useNotifications } from '@/entities/notification/model/queries/useNotifications'
+import { useNotifications } from '../api/queries'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { Separator } from '@/shared/ui/separator'
 import dayjs from 'dayjs'
-import { AcceptButtons } from '@/features/accept-room-invite'
+import { AcceptButtons } from '@/features/accept-invite-room'
 
 export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 	const { user } = useAuth()
@@ -75,7 +75,7 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 											</span>
 											<div className='flex items-center gap-2 mt-1'>
 												<span className='text-[10px] uppercase tracking-wider font-semibold text-slate-400'>
-													Invite ID: {item.invitation_id.slice(0, 8)}...
+													ID: {item.invitation_id}
 												</span>
 											</div>
 										</div>

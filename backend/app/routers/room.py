@@ -5,11 +5,11 @@ from fastapi.security import HTTPAuthorizationCredentials
 
 from ..schemas.response import SuccessResponse
 from ..schemas.room import RoomCreate, RoomResponse, RoomUpdate, RoomResponseWithMessages
-from ..dependencies.services import get_room_service, get_invitation_service
+from ..dependencies.services import get_room_service, get_invitation_service, get_user_service
 from ..services import RoomService, InviteService
 from ..models import Room, User
 from ..dependencies.auth import get_user_by_access_token, get_user_by_refresh_token
-from ..schemas.invite import InviteCreateToRoom, InviteResponse, InviteUpdate
+from ..schemas.invite import InviteCreateToRoom, InviteResponse
 from ..schemas.notification import NotificationCreate
 
 router = APIRouter(prefix='/api/v1/rooms', tags=['Rooms'])
@@ -36,15 +36,14 @@ async def create_room(room_data: RoomCreate, user_id: str, role: str, service: R
     data=new_room,
     message='Новую комнату успешно создано'
   )
-  
+
 @router.patch('/update_room', response_model=SuccessResponse[RoomResponse])
 async def update_room(room_id: str, room_data: RoomUpdate, service: RoomService = Depends(get_room_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
-  print(room_data.model_dump())
   updated_room = await service.update_room(room_id, **room_data.model_dump())
   return SuccessResponse(
     data=updated_room
   )
-  
+
 @router.post('/invite_user_to_room', response_model=SuccessResponse[InviteResponse])
 async def invite_user_to_room(user_code: str, inviter_id: str, notification_data: NotificationCreate, invite_data: InviteCreateToRoom, service: RoomService = Depends(get_room_service)):
   invite_to_room = await service.invite_user_to_room(
@@ -55,9 +54,21 @@ async def invite_user_to_room(user_code: str, inviter_id: str, notification_data
   )
   return SuccessResponse(
     data=invite_to_room,
-    message='Приглашение в комнату успешно отправлено'
+    message='Приглашение пользователю успешно отправлено'
   )
-  
+
+@router.post('/invite_from_user_to_room', response_model=SuccessResponse[InviteResponse])
+async def invite_from_user_to_room(room_code: str, notification_data: NotificationCreate, inviter_id: str, service: RoomService = Depends(get_room_service)):
+  invite_to_room = await service.invite_from_user_to_room(
+    room_code,
+    notification_data,
+    inviter_id
+  )
+  return SuccessResponse(
+    data=invite_to_room,
+    message='Приглашение для добавления в комнату успешно отправлено'
+  )
+
 @router.post('/accept_room_invite', response_model=SuccessResponse[None])
 async def accept_room_invite(invite_id: str, notification_id: str, user_id: str, status: str, service: InviteService = Depends(get_invitation_service)):
   await service.accept_room_invite(invite_id, notification_id, user_id, status)
@@ -72,7 +83,15 @@ async def accept_room_invite(invite_id: str, notification_id: str, user_id: str,
     message=message
   )
 
-@router.get('/delete_rooms', response_model=SuccessResponse[RoomResponse])
+@router.post('/delete_room', response_model=SuccessResponse[RoomResponse])
+async def delete_room_by_id(room_id: str, user: User = Depends(get_user_by_refresh_token), service: RoomService = Depends(get_room_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
+  deleted_room = await service.delete_current_room(room_id, user.id)
+  return SuccessResponse(
+    data=deleted_room,
+    message='Комната успешно удалена'
+  )
+
+@router.get('/delete_room', response_model=SuccessResponse[RoomResponse])
 async def delete_rooms(service: RoomService = Depends(get_room_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
   deleted_rooms = await service.delete_all_rooms()
   return SuccessResponse(

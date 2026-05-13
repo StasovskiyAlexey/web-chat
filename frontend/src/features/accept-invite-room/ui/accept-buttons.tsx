@@ -4,7 +4,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 import type { TNotification } from '@/entities/notification/model/types'
 
 export default function AcceptButtons({ notification }: { notification: TNotification }) {
-	const { mutate } = useAcceptRoomInvite(notification)
+	const { mutate } = useAcceptRoomInvite()
 	const { user } = useAuth()
 
 	return (

@@ -1,4 +1,4 @@
-import SettingsPage from '@/pages/Settings'
+import SettingsPage from '@/pages/settings'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/settings')({

@@ -9,16 +9,18 @@ import { usePopup } from '@/app/providers/PopupProvider'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { NotificationPopup } from '@/entities/notification/ui/notifications-popup'
 import { websocketUrl } from '@/app/lib/envVariables'
-import { observer } from 'mobx-react-lite'
 import useWebsocket from '@/shared/hooks/useWebsocket'
+import { useNotifications } from '@/entities/notification/api/queries'
 
-export const Sidebar = observer(() => {
+export const Sidebar = () => {
 	const { logout, user } = useAuth()
-	const [isOpen, setIsOpen] = useState<boolean>(true)
 	const { switcher, popups } = usePopup()
+	const { data: notifications } = useNotifications(user?.id as string)
+	console.log(notifications)
 
+	const [isOpen, setIsOpen] = useState<boolean>(true)
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
-	console.log(socket)
+
 	if (!user) return null
 
 	return (
@@ -71,6 +73,7 @@ export const Sidebar = observer(() => {
 							icon={Bell}
 							label='Уведомления'
 							isOpen={isOpen}
+							data={notifications}
 						/>
 					</PopoverTrigger>
 
@@ -120,4 +123,4 @@ export const Sidebar = observer(() => {
 			</div>
 		</motion.aside>
 	)
-})
+}

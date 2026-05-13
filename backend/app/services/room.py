@@ -6,7 +6,7 @@ from ..schemas.member import MemberCreate
 from ..models import Room
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..schemas.notification import NotificationCreate
-from ..schemas.invite import InviteCreateToRoom
+from ..schemas.invite import InviteCreateFromUserToRoom, InviteCreateToRoom
 
 class RoomService: 
   def __init__(self, db: AsyncSession, repository: RoomRepository, user_repository: UserRepository, member_repository: MemberRepository, notification_repository: NotificationRepository, invitation_repository: InviteRepository):
@@ -73,6 +73,48 @@ class RoomService:
     
     await self.db.refresh(new_invite)
     return new_invite
+  
+  async def invite_from_user_to_room(self, room_code: str, notification_data: NotificationCreate, inviter_id: str):
+    exist_room = await self.repository.get_room_by_code(room_code)
+    
+    if not exist_room:
+      raise AppError(400, 'Такой комнаты не существует')
+    
+    for user in exist_room.members:
+      if user.user_id == inviter_id:
+        raise AppError(400, 'Этот пользователь уже находится в комнате')
+      
+      if user.role == 'owner':
+        exist_user = await self.user_repository.get_user_by_id(user.user_id)
+        
+        exist_invite = await self.invitation_repository.is_active_user_invite(exist_user.id, exist_room.id)
+        current_user_in_room = await self.repository.check_member_in_room(exist_room.id, exist_user.id)
+        
+        print('exist_user', exist_user)
+        
+        if not exist_user:
+          AppError(400, 'Пользователь не найден')
+          
+    if exist_invite:
+      raise AppError(400, 'Приглашение в комнату еще существует')
+    
+    if current_user_in_room:
+      raise AppError(400, 'Пользователь уже существует в комнате')
+      
+    if exist_user:
+      new_invite = await self.invitation_repository.create_invite(inviter_id, exist_user.id, exist_room.id)
+    
+    if new_invite:
+      await self.notification_repository.create_notification(exist_user.id, notification_data, new_invite.id)
+    
+    await self.db.commit()
+    
+    await self.db.refresh(new_invite)
+    return new_invite
+  
+  async def delete_current_room(self, room_id: str, user_id: str):
+    deleted_room = await self.repository.delete_current_room(room_id, user_id)
+    return deleted_room
   
   async def delete_all_rooms(self):
     deleted_rooms = await self.repository.delete_all_rooms()

@@ -1,7 +1,7 @@
 import { usePopup } from '@/app/providers/PopupProvider'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { Plus } from 'lucide-react'
-import { CreateRoomPopup } from './create-room-popup'
+import { AddRoomPopup } from '@/widgets/add-room-popup/ui/add-room-popup'
 import { Button } from '@/shared/ui/button'
 
 export default function CreateRoomBtn({ message = 'Создать или найти' }: { message?: string }) {
@@ -21,7 +21,7 @@ export default function CreateRoomBtn({ message = 'Создать или най�
 			</PopoverTrigger>
 
 			<PopoverContent className='w-80'>
-				<CreateRoomPopup />
+				<AddRoomPopup />
 			</PopoverContent>
 		</Popover>
 	)

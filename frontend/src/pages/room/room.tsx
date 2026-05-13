@@ -9,7 +9,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 import Loader from '@/shared/Loader'
 import ErrorFallback from '@/shared/ErrorFallback'
 import { websocketUrl } from '@/app/lib/envVariables'
-import { useRoomMutations, useRoom } from '@/entities/room/model/queries/useRooms'
+import { useRoomMutations, useRoom } from '@/entities/room/api/queries'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { usePopup } from '@/app/providers/PopupProvider'
@@ -29,7 +29,7 @@ export const Room = () => {
 
 	const { user } = useAuth()
 	const { socket } = useWebsocket(`${websocketUrl}/room_connection?room_id=${roomId}`)
-
+	console.log(room)
 	useEffect(() => {
 		if (!socket) return
 
@@ -95,7 +95,7 @@ export const Room = () => {
 								</Button>
 							</PopoverTrigger>
 
-							<PopoverContent className='w-80'>
+							<PopoverContent className='w-70'>
 								<RoomSettings />
 							</PopoverContent>
 						</Popover>
@@ -166,7 +166,7 @@ export const Room = () => {
 					<div className='p-4 space-y-4'>
 						{room?.members.map((user) => (
 							<div
-								key={user.user_id}
+								key={user.id}
 								className='flex items-center justify-between group'>
 								<div className='flex items-center gap-3'>
 									<div className='relative'>

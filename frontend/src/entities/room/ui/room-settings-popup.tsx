@@ -1,14 +1,16 @@
-import { Button } from '@/shared/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { Separator } from '@/shared/ui/separator'
 import { usePopup } from '@/app/providers/PopupProvider'
-import { UserPlus } from 'lucide-react'
-import InviteUserToRoom from '@/features/invite-to-room/ui/invite-to-room-popup'
 import type { TRoom } from '@/entities/room/model/types'
+import { InviteToRoomBtn } from '@/features/invite-to-room'
+import DeleteRoomBtn from '@/features/delete-room/ui/delete-room-btn'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export default function RoomSettings() {
-	const { switcher, popups } = usePopup()
+	const { popups } = usePopup()
+	const { user } = useAuth()
 	const room: TRoom = popups.roomSettings.props
+
+	const isOwnerRoom = room?.members.find((el) => el.user_id == user?.id)?.role === 'owner'
 
 	return (
 		<div className='flex w-full max-w-4xl rounded-xl bg-white'>
@@ -19,25 +21,18 @@ export default function RoomSettings() {
 					<p className='text-sm'>Код для приглашения:</p>
 					<span className='text-red-500 uppercase text-xs'>{room?.room_code}</span>
 				</div>
-				<Separator />
-				<nav className='space-y-1 w-full'>
-					<Popover
-						open={popups.inviteUserToRoom.isOpen}
-						onOpenChange={(open) => switcher('inviteUserToRoom', open)}>
-						<PopoverTrigger asChild>
-							<Button
-								onClick={() => switcher('inviteUserToRoom', true)}
-								className='w-full'
-								variant='outline'>
-								<UserPlus /> Добавить участника
-							</Button>
-						</PopoverTrigger>
-
-						<PopoverContent className='w-80'>
-							<InviteUserToRoom room={room} />
-						</PopoverContent>
-					</Popover>
-				</nav>
+				<div className='flex gap-2'>
+					<p className='text-sm'>ID:</p>
+					<span className='text-red-500 uppercase text-xs'>{room?.id}</span>
+				</div>
+				{isOwnerRoom && (
+					<>
+						<Separator />
+						<nav className='space-y-1 w-full'>
+							<DeleteRoomBtn room={room} /> <InviteToRoomBtn room={room} />
+						</nav>
+					</>
+				)}
 			</aside>
 		</div>
 	)

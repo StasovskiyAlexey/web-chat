@@ -1,7 +1,7 @@
 import { TTypes } from '@/shared/di/types'
 import { queryClient } from '@/app/lib/query-client'
 import { useInjection } from '@/app/providers/DIProvider'
-import { type TNotificationService } from '../../api/notifications.service'
+import { type TNotificationService } from './notifications.service'
 import type { TNotificationCreate, TNotificationUpdate } from '@/entities/notification/model/types'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
@@ -11,8 +11,9 @@ export const useNotifications = (userId: string) => {
 	const notificationService = useInjection<TNotificationService>(TTypes.NotificationService)
 
 	return useQuery({
-		queryKey: ['notifications'],
+		queryKey: ['notifications', userId],
 		queryFn: () => notificationService.getNotifications(userId).then((res) => res.data),
+		enabled: !!userId,
 	})
 }
 
@@ -28,7 +29,7 @@ export const useNotificationMutations = () => {
 			return res.data
 		},
 		onError: (e: AxiosError<any>) => {
-			toast.error(e.response?.data.detail || 'Помилка при створенні кімнати')
+			toast.error(e.response?.data.detail)
 		},
 	})
 
@@ -41,7 +42,7 @@ export const useNotificationMutations = () => {
 			return res.data
 		},
 		onError: (e: AxiosError<any>) => {
-			toast.error(e.response?.data.detail || 'Помилка при створенні кімнати')
+			toast.error(e.response?.data.detail)
 		},
 	})
 
