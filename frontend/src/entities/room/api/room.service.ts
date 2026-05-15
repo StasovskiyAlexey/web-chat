@@ -94,10 +94,21 @@ export class RoomService {
   }
 
   async joinToRoomByCode(roomCode: string, inviterId: string, data: TNotificationCreate) {
-    const res = await this.http.post<TResponse<null>>(`rooms/invite_from_user_to_room`, {title: data.title, type: data.type}, {
+    const res = await this.http.post<TResponse<null>>(`rooms/join_to_room`, {title: data.title, type: data.type}, {
       params: {
         room_code: roomCode,
         inviter_id: inviterId
+      }
+    });
+    return res.data
+  }
+
+  async deleteMemberFromRoom(roomId: string, userId: string, memberId: string) {
+    const res = await this.http.post<TResponse<null>>(`rooms/delete_member_from_room`, {}, {
+      params: {
+        room_id: roomId,
+        user_id: userId,
+        member_id: memberId
       }
     });
     return res.data

@@ -61,7 +61,7 @@ class RoomService:
     if exist_user.id in user_ids_in_room:
       raise AppError(400, 'Пользователь уже добавлен в комнату')
     
-    if await self.invitation_repository.is_active_user_invite(exist_user.id, invitation_data.room_id):
+    if await self.invitation_repository.get_active_user_invite(exist_user.id, invitation_data.room_id):
       raise AppError(400, 'Приглашение пользователю уже отправлено')
     
     new_invite = await self.invitation_repository.create_invite(inviter_id, exist_user.id, invitation_data.room_id)
@@ -74,43 +74,69 @@ class RoomService:
     await self.db.refresh(new_invite)
     return new_invite
   
-  async def invite_from_user_to_room(self, room_code: str, notification_data: NotificationCreate, inviter_id: str):
+  async def join_to_room(self, room_code: str, notification_data: NotificationCreate, inviter_id: str):
     exist_room = await self.repository.get_room_by_code(room_code)
     
     if not exist_room:
       raise AppError(400, 'Такой комнаты не существует')
     
-    for user in exist_room.members:
-      if user.user_id == inviter_id:
-        raise AppError(400, 'Этот пользователь уже находится в комнате')
-      
-      if user.role == 'owner':
-        exist_user = await self.user_repository.get_user_by_id(user.user_id)
-        
-        exist_invite = await self.invitation_repository.is_active_user_invite(exist_user.id, exist_room.id)
-        current_user_in_room = await self.repository.check_member_in_room(exist_room.id, exist_user.id)
-        
-        print('exist_user', exist_user)
-        
-        if not exist_user:
-          AppError(400, 'Пользователь не найден')
-          
+    member_owner = await self.repository.get_member_room_owner(exist_room.id)
+    print('member_owner', member_owner)
+    
+    if not member_owner:
+      raise AppError(404, 'Владелец комнаты не найден')
+    
+    if member_owner.user_id == inviter_id:
+      raise AppError(400, 'Вы являетесь создателем этой комнаты')
+    
+    # Это владелец комнаты
+    room_owner_user = await self.user_repository.get_user_by_id(member_owner.user_id)
+    
+    # Отправитель приглашения
+    inviter_user = await self.user_repository.get_user_by_id(inviter_id)
+    
+    exist_invite = await self.invitation_repository.get_active_user_invite(room_owner_user.id, exist_room.id)
+    
+    current_user_in_room = await self.repository.check_member_in_room(exist_room.id, inviter_id)
+
     if exist_invite:
-      raise AppError(400, 'Приглашение в комнату еще существует')
+      raise AppError(400, 'Приглашение в комнату уже отправлено')
     
     if current_user_in_room:
       raise AppError(400, 'Пользователь уже существует в комнате')
-      
-    if exist_user:
-      new_invite = await self.invitation_repository.create_invite(inviter_id, exist_user.id, exist_room.id)
     
-    if new_invite:
-      await self.notification_repository.create_notification(exist_user.id, notification_data, new_invite.id)
+    if inviter_user:
+      new_invite = await self.invitation_repository.create_invite(inviter_id, room_owner_user.id, exist_room.id)
+    
+      if new_invite:
+        await self.notification_repository.create_notification(room_owner_user.id, notification_data, new_invite.id)
     
     await self.db.commit()
-    
     await self.db.refresh(new_invite)
     return new_invite
+  
+  async def delete_member_from_room(self, room_id: str, user_id: str, member_id: str):
+    exist_room = await self.repository.get_room_by_id(room_id)
+    
+    if not exist_room:
+      raise AppError(400, f'Комнаты с ID {room_id} не найдено')
+    
+    member_in_room = await self.repository.check_member_in_room(room_id, user_id)
+    
+    if not member_in_room:
+      raise AppError(400, 'Пользователя в текущей комнате не найдено')
+    
+    exist_member = await self.member_repository.get_member_by_id(member_id)
+    
+    if not exist_member:
+      raise AppError(400, f'Участника чата с ID {member_id} не найдено')
+    
+    if exist_member.role == 'owner':
+      raise AppError(400, 'Создатель комнаты не может удалить себя из комнаты')
+    
+    deleted_member = await self.member_repository.delete_member_from_room(room_id, member_id)
+    
+    return deleted_member
   
   async def delete_current_room(self, room_id: str, user_id: str):
     deleted_room = await self.repository.delete_current_room(room_id, user_id)

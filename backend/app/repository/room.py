@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sqlalchemy.orm import selectinload
 from ..core.exceptions import AppError
-from ..models import Member, Room, User
+from ..models import Member, Room, Member
 from ..schemas.room import RoomUpdate
 
 class RoomRepository:
@@ -30,8 +30,8 @@ class RoomRepository:
     room = query.scalar_one_or_none()
     
     if room:
-      for user in room.members:
-        if user.id == user_id:
+      for member in room.members:
+        if member.user_id == user_id:
           return True
       
     return False
@@ -112,6 +112,11 @@ class RoomRepository:
     await self.db.commit()
       
     return room
+  
+  async def get_member_room_owner(self, room_id: str):
+    query = await self.db.execute(select(Member).where(Member.room_id == room_id, Member.role == 'owner'))
+    member = query.scalars().first()
+    return member
     
   async def delete_all_rooms(self):
     query = await self.db.execute(select(Room))

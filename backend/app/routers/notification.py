@@ -30,3 +30,10 @@ async def update_notification(user_id: str, notification_id: str, service: Notif
     data=updated_notification,
     message='Уведомление успешно обновлено'
   )
+  
+@router.post('/read_all_notifications', response_model=SuccessResponse[NotificationResponse])
+async def read_all_notifications(user_id: str, service: NotificationService = Depends(get_notification_service)):
+  await service.read_all_notifications(user_id)
+  return SuccessResponse(
+    data=None
+  )

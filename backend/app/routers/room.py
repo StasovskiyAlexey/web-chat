@@ -57,9 +57,9 @@ async def invite_user_to_room(user_code: str, inviter_id: str, notification_data
     message='Приглашение пользователю успешно отправлено'
   )
 
-@router.post('/invite_from_user_to_room', response_model=SuccessResponse[InviteResponse])
-async def invite_from_user_to_room(room_code: str, notification_data: NotificationCreate, inviter_id: str, service: RoomService = Depends(get_room_service)):
-  invite_to_room = await service.invite_from_user_to_room(
+@router.post('/join_to_room', response_model=SuccessResponse[InviteResponse], description='Эндпоинт для отправки приглашение в комнату по её коду')
+async def join_to_room(room_code: str, notification_data: NotificationCreate, inviter_id: str, service: RoomService = Depends(get_room_service)):
+  invite_to_room = await service.join_to_room(
     room_code,
     notification_data,
     inviter_id
@@ -81,6 +81,13 @@ async def accept_room_invite(invite_id: str, notification_id: str, user_id: str,
   
   return SuccessResponse(
     message=message
+  )
+
+@router.post('/delete_member_from_room', response_model=SuccessResponse[RoomResponse])
+async def delete_member_from_room(room_id: str, user_id: str, member_id: str, service: RoomService = Depends(get_room_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
+  await service.delete_member_from_room(room_id, user_id, member_id)
+  return SuccessResponse(
+    message='Пользователь успешно удален из комнаты'
   )
 
 @router.post('/delete_room', response_model=SuccessResponse[RoomResponse])

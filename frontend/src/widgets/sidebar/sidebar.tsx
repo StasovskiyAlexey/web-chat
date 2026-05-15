@@ -16,7 +16,6 @@ export const Sidebar = () => {
 	const { logout, user } = useAuth()
 	const { switcher, popups } = usePopup()
 	const { data: notifications } = useNotifications(user?.id as string)
-	console.log(notifications)
 
 	const [isOpen, setIsOpen] = useState<boolean>(true)
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
