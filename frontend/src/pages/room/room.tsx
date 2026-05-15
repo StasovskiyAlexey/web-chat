@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send, Users, MoreVertical, ShieldCheck } from 'lucide-react'
+import { Send, Users, MoreVertical } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { ScrollArea } from '@/shared/ui/scroll-area'
@@ -16,20 +16,21 @@ import { usePopup } from '@/app/providers/PopupProvider'
 import RoomSettings from '@/entities/room/ui/room-settings-popup'
 import useWebsocket from '@/shared/hooks/useWebsocket'
 import { queryClient } from '@/app/lib/query-client'
+import MemberSettingsPopup from '@/widgets/member-settings-popup/ui/member-settings-popup'
 
 export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
 	const chatArea = useRef<null | HTMLDivElement>(null)
 
 	const [message, setMessage] = useState('')
-	const { popups, switcher } = usePopup()
+	const { popups, switcher, add } = usePopup()
 
 	const { addMessage } = useRoomMutations()
 	const { data: room, isLoading, isError } = useRoom(roomId)
 
 	const { user } = useAuth()
 	const { socket } = useWebsocket(`${websocketUrl}/room_connection?room_id=${roomId}`)
-	console.log(room)
+
 	useEffect(() => {
 		if (!socket) return
 
@@ -164,23 +165,48 @@ export const Room = () => {
 
 				<ScrollArea className='flex-1 overflow-auto'>
 					<div className='p-4 space-y-4'>
-						{room?.members.map((user) => (
+						{room?.members.map((member) => (
 							<div
-								key={user.id}
+								key={member.id}
 								className='flex items-center justify-between group'>
-								<div className='flex items-center gap-3'>
-									<div className='relative'>
-										<Avatar className='size-9'>
-											<AvatarImage src={user.user.picture || ''} />
-											<AvatarFallback>{user.user.login.slice(0, 2)}</AvatarFallback>
-										</Avatar>
+								<div className='flex items-center w-full justify-between gap-3'>
+									<div className='flex items-center gap-2'>
+										<div className='relative'>
+											<Avatar className='size-9'>
+												<AvatarImage src={member.user.picture || ''} />
+												<AvatarFallback>{member.user.login.slice(0, 2)}</AvatarFallback>
+											</Avatar>
+										</div>
+										<div>
+											<p className='text-sm font-medium leading-none'>{member.user.login}</p>
+											<p className='text-xs text-muted-foreground'>
+												{member.role === 'owner'
+													? `${user?.id === member.user_id ? 'Создатель(Вы)' : 'Создатель'}`
+													: `${user?.id === member.user_id ? 'Участник(Вы)' : 'Участник'}`}
+											</p>
+										</div>
 									</div>
-									<div>
-										<p className='text-sm font-medium leading-none'>{user.user.login}</p>
-										<p className='text-xs text-muted-foreground'>{user.role === 'owner' ? 'Создатель' : 'Участник'}</p>
-									</div>
+									<Popover
+										onOpenChange={(open) => add(`member-settings-popup-${member.id}`, open, room)}
+										open={popups[`member-settings-popup-${member.id}`]?.isOpen}>
+										<PopoverTrigger asChild>
+											<Button
+												variant='ghost'
+												size='icon'>
+												<MoreVertical className='w-4 h-4' />
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent
+											align='end'
+											className='w-80'>
+											<MemberSettingsPopup
+												roomId={room.id}
+												userId={user?.id as string}
+												member={member}
+											/>
+										</PopoverContent>
+									</Popover>
 								</div>
-								{user.role === 'owner' && <ShieldCheck className='w-4 h-4 text-amber-500' />}
 							</div>
 						))}
 					</div>

@@ -20,7 +20,7 @@ export default function InviteToRoomBtn({ room }: { room: TRoom }) {
 				</Button>
 			</PopoverTrigger>
 
-			<PopoverContent className='w-80'>
+			<PopoverContent className='w-70'>
 				<InviteUserToRoom room={room} />
 			</PopoverContent>
 		</Popover>

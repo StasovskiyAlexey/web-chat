@@ -31,7 +31,7 @@ class NotificationRepository():
   async def update_notification(self, user_id: str, notification_id: str):
     query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
     exist_notification = query.scalar_one_or_none()
-    print('exist_notification', exist_notification)
+
     if exist_notification:
       exist_notification.is_read = True
     
@@ -43,11 +43,13 @@ class NotificationRepository():
     query = await self.db.execute(select(Notification).where(Notification.user_id == user_id))
     exist_notifications = query.scalars().all()
     
-    for notification in exist_notifications:
-      if notification.is_read:
-        raise AppError(400, 'Все уведомления уже прочитаны')
+    # for notification in exist_notifications:
+    #   if notification.is_read:
+    #     raise AppError(400, 'Все уведомления уже прочитаны')
     
     for notification in exist_notifications:
       notification.is_read = True
+    
+    await self.db.commit()
     
     return None
