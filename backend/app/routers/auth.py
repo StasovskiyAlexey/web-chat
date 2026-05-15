@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request
+from sqlalchemy import desc
 from ..schemas.response import SuccessResponse
 from ..schemas.user import UserCreate, UserLogin, UserResponse
 from ..models.user import User
@@ -11,7 +12,7 @@ from ..dependencies.services import get_user_service
 
 router = APIRouter(prefix='/api/v1/auth', tags=['Auth'])
 
-@router.post('/refresh')
+@router.post('/refresh', description='Эндпоинт для обновления access токена(который нужен для доступа к API)')
 async def refresh_access_token(
     request: Request,
 ):
@@ -23,27 +24,16 @@ async def refresh_access_token(
     try:
       payload = decode_token(refresh_token)
       user_id = payload.get("user_id")
-      print(user_id, payload)
-      
-      # Не мешало бы сделать проверку на тип токена
-      # if payload.get("scope") != "refresh_token":
-      #   raise AppError(401, "Невалідний тип токена")
+
+      if user_id:
+        new_access_token = create_access_token(user_id)
+
     except Exception:
       raise AppError(401, "Токен невалідний")
 
-    new_access_token = create_access_token(user_id) # type: ignore
-    
     return {"access_token": new_access_token}
 
-# @router.post('/create_access_token', response_model=SuccessResponse[str], description='Уникальный токен созданный для юзера, который имеет доступ к API, на продакшене, это выглядит примерно следующим образом, мы генерируем такой токен лишь один раз, его длительность в моем случае на месяц, но в проде я бы выдавал на полгода или год, то-есть только имея этот токен, можно пользоваться API')
-# async def create_token(user_id: str):
-#   token = create_access_token(user_id)
-#   return SuccessResponse(
-#     data=token,
-#     message='Уникальный токен для пользователя успешно создан'
-#   )
-
-@router.post('/register_user', response_model=SuccessResponse[UserResponse])
+@router.post('/register_user', response_model=SuccessResponse[UserResponse], description='Регистрация аккаунта пользователя')
 async def register_user(user_data: UserCreate, response: Response, service: UserService = Depends(get_user_service)):
   user = User(login=user_data.login, email=user_data.email, password=user_data.password)
   new_user = await service.create_user(user)
@@ -63,7 +53,7 @@ async def register_user(user_data: UserCreate, response: Response, service: User
     message='Пользователь зарегистрирован',
   )
 
-@router.post('/login_user', response_model=SuccessResponse[UserResponse])
+@router.post('/login_user', response_model=SuccessResponse[UserResponse], description='Вход в аккаунт пользователя')
 async def login_user(user_data: UserLogin, response: Response, service: UserService = Depends(get_user_service)):
   user = User(login=user_data.login, password=user_data.password)
   exist_user = await service.login_user(user)
@@ -83,14 +73,14 @@ async def login_user(user_data: UserLogin, response: Response, service: UserServ
     message='Успешный вход в аккаунт'
   )
 
-@router.get('/check_user', response_model=SuccessResponse[UserResponse])
+@router.get('/check_user', response_model=SuccessResponse[UserResponse], description='Проверка пользователя на авторизацию')
 async def check_user(user: User = Depends(get_user_by_refresh_token)):
   return SuccessResponse(
     data=user,
     message='Пользователь залогинен'
   )
   
-@router.get('/logout', response_model=SuccessResponse[UserResponse])
+@router.get('/logout', response_model=SuccessResponse[UserResponse], description='Проверка пользователя на авторизацию')
 async def logout(response: Response, user: User = Depends(get_user_by_refresh_token)):
   if user is None:
     raise AppError(400, 'Пользователь не зарегистрирован')

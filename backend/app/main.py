@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
-from .routers import auth, user, room, member, message, websockets, notification, invite
+from .routers import auth, user, room, message, websockets, notification, invite
 
 app = FastAPI(
     docs_url="/docs",
@@ -20,7 +20,6 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(room.router)
-app.include_router(member.router)
 app.include_router(message.router)
 app.include_router(websockets.router)
 app.include_router(notification.router)

@@ -1,6 +1,6 @@
 import type { IHttpClient } from "@/shared/di/interfaces";
 import { TTypes } from "@/shared/di/types";
-import type { TInvite, TNotification, TNotificationCreate, TNotificationUpdate } from "@/entities/notification/model/types";
+import type { TInvite, TNotification } from "@/entities/notification/model/types";
 import type { TResponse } from "@/app/types/response";
 import { inject, injectable } from "inversify";
 
@@ -18,32 +18,13 @@ export class NotificationService {
     return res.data
   }
 
-  async addNotification(userId: string, data: TNotificationCreate) {
-    const res = await this.http.post<TResponse<TNotification[]>>(`notifications/add_notification`, {}, {
+  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string) {
+    const res = await this.http.post<TResponse<null>>(`invitations/accept_room_invite`, {}, {
       params: {
-        user_id: userId,
-        title: data.title,
-        type: data.type
-      }
-    })
-    return res.data
-  }
-
-  async updateNotification(userId: string, notificationId: string, notificationData: TNotificationUpdate) {
-    const res = await this.http.post<TResponse<TNotification>>(`notifications/update_notification`, {}, {
-      params: {
-        user_id: userId,
         notification_id: notificationId,
-        notification_data: notificationData
-      }
-    });
-    return res.data
-  }
-
-  async readAllNotifications(userId: string) {
-    const res = await this.http.post<TResponse<TNotification>>(`notifications/read_all_notifications`, {}, {
-      params: {
-        user_id: userId,
+        status: status,
+        invite_id: inviteId, 
+        user_id: userId, 
       }
     });
     return res.data
