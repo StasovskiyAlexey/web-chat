@@ -1,8 +1,9 @@
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.exceptions import AppError
-from ..models.member import Member
+from ..models import Member, Room
 from ..schemas.member import MemberCreate
 
 class MemberRepository:
@@ -56,3 +57,11 @@ class MemberRepository:
     await self.db.commit()
     await self.db.refresh(exist_member)
     return exist_member
+  
+  async def delete_member_from_room(self, room_id: str, member_id: str):
+    query = await self.db.execute(select(Member).where(Member.room_id == room_id).where(Member.id == member_id))
+    member = query.scalars().first()
+
+    await self.db.delete(member)
+    await self.db.commit()
+    return member

@@ -3,22 +3,22 @@ import { Hash } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import useJoinToRoom from '../model/use-join-to-room'
 import type { TNotificationCreate } from '@/entities/notification/model/types'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export default function JoinRoomInput({
 	setCode,
 	code,
-	inviterId,
 	notificationData,
 }: {
 	setCode: (code: string) => void
 	code: string
-	inviterId: string
 	notificationData: TNotificationCreate
 }) {
 	const { mutate } = useJoinToRoom()
+	const { user } = useAuth()
 
 	function handleJoinToRoom() {
-		mutate({ code, inviterId, notificationData })
+		mutate({ code, inviterId: user?.id as string, notificationData })
 		setCode('')
 	}
 

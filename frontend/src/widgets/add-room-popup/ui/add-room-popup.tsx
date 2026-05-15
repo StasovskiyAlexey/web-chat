@@ -44,7 +44,6 @@ export const AddRoomPopup = () => {
 					<JoinRoomInput
 						setCode={(code) => setRoom((prev) => ({ ...prev, code: code }))}
 						code={room.code}
-						inviterId={user?.id as string}
 						notificationData={{ title: 'Запрос на приглашение в комнату', type: 'invite' }}
 					/>
 				</TabsContent>

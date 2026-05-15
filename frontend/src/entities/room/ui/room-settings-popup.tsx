@@ -16,7 +16,7 @@ export default function RoomSettings() {
 		<div className='flex w-full max-w-4xl rounded-xl bg-white'>
 			{/* Бокове меню (Sidebar) */}
 			<aside className='flex flex-col gap-4 w-full'>
-				<h2 className='text-md font-bold text-gray-800'>Настройки комнаты</h2>
+				<h2 className='text-md text-gray-800'>Настройки комнаты</h2>
 				<div className='flex items-center gap-2 bg-gray-100 rounded-sm p-2'>
 					<p className='text-sm'>Код для приглашения:</p>
 					<span className='text-red-500 uppercase text-xs'>{room?.room_code}</span>
@@ -25,6 +25,7 @@ export default function RoomSettings() {
 					<p className='text-sm'>ID:</p>
 					<span className='text-red-500 uppercase text-xs'>{room?.id}</span>
 				</div>
+
 				{isOwnerRoom && (
 					<>
 						<Separator />
