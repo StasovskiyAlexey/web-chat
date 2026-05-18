@@ -2,11 +2,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase
 from .config import settings
 
-# Создание ассинхроного движка
-engine = create_async_engine(settings.database_url, echo=settings.debug)
-
-# Фабрика сессий
-async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+async_engine = create_async_engine(settings.database_url, echo=settings.debug)
+async_session = async_sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)
 
 class Base(DeclarativeBase):
   pass

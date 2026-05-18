@@ -1,24 +1,13 @@
 from datetime import datetime
-
 from pydantic import BaseModel
 
 class Invite(BaseModel):
-  pass
+  # user_id: str
+  # room_id: str
+  type: str
   
 class InviteCreate(Invite):
-  inviter_id: str
-  user_id: str
-  room_id: str
-  status: str
-  
-class InviteCreateFromUserToRoom(Invite):
-  inviter_id: str
-
-class InviteCreateToRoom(Invite):
-  room_id: str
-
-class InviteUpdate(Invite):
-  status: str
+  pass
 
 class InviteResponse(BaseModel):
   id: str
@@ -26,4 +15,5 @@ class InviteResponse(BaseModel):
   user_id: str
   room_id: str
   status: str
+  type: str
   created_at: datetime

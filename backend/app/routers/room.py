@@ -5,11 +5,11 @@ from fastapi.security import HTTPAuthorizationCredentials
 
 from ..schemas.response import SuccessResponse
 from ..schemas.room import RoomCreate, RoomResponse, RoomUpdate, RoomResponseWithMessages
-from ..dependencies.services import get_room_service, get_invitation_service, get_user_service
-from ..services import RoomService, InviteService
+from ..dependencies.services import get_room_service, get_user_service
+from ..services import RoomService
 from ..models import Room, User
 from ..dependencies.auth import get_user_by_access_token, get_user_by_refresh_token
-from ..schemas.invite import InviteCreateToRoom, InviteResponse
+from ..schemas.invite import InviteResponse, InviteCreate
 from ..schemas.notification import NotificationCreate
 
 router = APIRouter(prefix='/api/v1/rooms', tags=['Rooms'])
@@ -44,48 +44,34 @@ async def update_room(room_id: str, room_data: RoomUpdate, service: RoomService 
     data=updated_room
   )
 
-@router.post('/invite_user_to_room', response_model=SuccessResponse[InviteResponse], description='Приглашения пользователя в комнату через код')
-async def invite_user_to_room(user_code: str, inviter_id: str, notification_data: NotificationCreate, invite_data: InviteCreateToRoom, service: RoomService = Depends(get_room_service)):
-  invite_to_room = await service.invite_user_to_room(
+@router.post('/invite_to_room_from_user', response_model=SuccessResponse[InviteResponse], description='Приглашения в комнату ОТ пользователя через код комнаты')
+async def invite_to_room_from_user(user_code: str, room_code: str, title: str, service: RoomService = Depends(get_room_service)):
+  invite_to_room = await service.invite_to_room_from_user(
     user_code,
-    inviter_id,
-    notification_data,
-    invite_data
+    room_code,
+    title,
   )
+  
   return SuccessResponse(
     data=invite_to_room,
     message='Приглашение пользователю успешно отправлено'
   )
-
-@router.post('/join_to_room', response_model=SuccessResponse[InviteResponse], description='Эндпоинт для отправки приглашение в комнату по её коду')
-async def join_to_room(room_code: str, notification_data: NotificationCreate, inviter_id: str, service: RoomService = Depends(get_room_service)):
-  invite_to_room = await service.join_to_room(
+  
+@router.post('/invite_from_room_to_user', response_model=SuccessResponse[InviteResponse], description='Приглашения ИЗ комнаты через код пользователя')
+async def invite_from_room_to_user(room_code: str, user_code: str, title: str, service: RoomService = Depends(get_room_service)):
+  invite_to_room = await service.invite_from_room_to_user(
     room_code,
-    notification_data,
-    inviter_id
+    user_code,
+    title,
   )
   return SuccessResponse(
     data=invite_to_room,
     message='Приглашение для добавления в комнату успешно отправлено'
   )
 
-@router.post('/accept_room_invite', response_model=SuccessResponse[None])
-async def accept_room_invite(invite_id: str, notification_id: str, user_id: str, status: str, service: InviteService = Depends(get_invitation_service)):
-  await service.accept_room_invite(invite_id, notification_id, user_id, status)
-  message = ''
-  
-  if status == 'accepted':
-    message='Приглашение принято'
-  else:
-    message='Приглашение отклонено'
-  
-  return SuccessResponse(
-    message=message
-  )
-
 @router.post('/delete_member_from_room', response_model=SuccessResponse[RoomResponse])
-async def delete_member_from_room(room_id: str, user_id: str, member_id: str, service: RoomService = Depends(get_room_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
-  await service.delete_member_from_room(room_id, user_id, member_id)
+async def delete_member_from_room(room_id: str, user_id: str, member_id: str, user: User = Depends(get_user_by_refresh_token), service: RoomService = Depends(get_room_service),  is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
+  await service.delete_member_from_room(room_id, user_id, member_id, user.id)
   return SuccessResponse(
     message='Пользователь успешно удален из комнаты'
   )

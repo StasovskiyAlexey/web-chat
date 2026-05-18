@@ -40,10 +40,8 @@ export const Room = () => {
 				const data = JSON.parse(event.data)
 				const payload = data.payload
 
-				console.log(payload)
 				queryClient.setQueryData(['rooms', roomId], (oldData: any) => {
 					if (!oldData) return oldData
-					console.log(oldData)
 					return { ...oldData, messages: [...oldData.messages, payload] }
 				})
 			} catch (e) {

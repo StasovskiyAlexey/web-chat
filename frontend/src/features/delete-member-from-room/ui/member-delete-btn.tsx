@@ -1,6 +1,6 @@
 import { Button } from '@/shared/ui/button'
 import { UserMinus } from 'lucide-react'
-import { useDeleteMember } from '../model/use-delete-member'
+import { useDeleteMember } from '../model/queries'
 
 export default function MemberDeleteBtn(data: { roomId: string; userId: string; memberId: string }) {
 	const { mutate } = useDeleteMember()

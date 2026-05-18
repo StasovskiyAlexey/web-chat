@@ -11,21 +11,21 @@ class NotificationRepository():
     self.db = db
     
   async def get_notifications(self, user_id: str):
-    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invitation)))
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invite)))
     notifications = query.scalars().all()
     return notifications
   
   async def get_notification_by_id(self, user_id: str, notification_id: str):
-    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invitation)).where(Notification.id == notification_id))
+    query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).options(joinedload(Notification.invite)).where(Notification.id == notification_id))
     notification = query.scalar_one_or_none()
     return notification
   
-  async def create_notification(self, user_id: str, notification_data: NotificationCreate, invitation_id: str):
-    new_notification = Notification(title=notification_data.title, user_id=user_id, invitation_id=invitation_id)
+  async def create_notification(self, title: str, user_id: str, invite_id: str):
+    new_notification = Notification(title=title, user_id=user_id, invite_id=invite_id)
 
     self.db.add(new_notification)
     await self.db.flush()
-    await self.db.refresh(new_notification, ["invitation"])
+    await self.db.refresh(new_notification, ["invite"])
     return new_notification
     
   async def update_notification(self, user_id: str, notification_id: str):

@@ -1,5 +1,5 @@
 import { Input } from '@/shared/ui/input'
-import { useCreateRoom } from '../model/use-create-room'
+import { useCreateRoom } from '../model/queries'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { usePopup } from '@/app/providers/PopupProvider'
 import { Button } from '@/shared/ui/button'

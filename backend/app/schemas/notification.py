@@ -1,14 +1,12 @@
 from datetime import datetime
 from pydantic import BaseModel
-from ..schemas.invite import Invite
+from ..schemas.invite import InviteResponse
 
 class Notification(BaseModel):
   title: str
-  type: str
 
 class NotificationCreate(Notification):
-  title: str
-  type: str
+  pass
 
 class NotificationUpdate(NotificationCreate):
   is_read: bool
@@ -16,9 +14,9 @@ class NotificationUpdate(NotificationCreate):
 class NotificationResponse(BaseModel):
   id: str
   user_id: str
-  invitation_id: str
+  invite: InviteResponse
+  invite_id: str
   title: str
   is_read: bool
   type: str
-  invitation: 'Invite'
   created_at: datetime

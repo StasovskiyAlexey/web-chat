@@ -18,13 +18,14 @@ export class NotificationService {
     return res.data
   }
 
-  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string) {
-    const res = await this.http.post<TResponse<null>>(`invitations/accept_room_invite`, {}, {
+  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string, inviteType: 'invite_from_room' | 'invite_to_room') {
+    const res = await this.http.post<TResponse<null>>(`invitations/accept_invite`, {}, {
       params: {
         notification_id: notificationId,
         status: status,
         invite_id: inviteId, 
-        user_id: userId, 
+        user_id: userId,
+        invite_type: inviteType
       }
     });
     return res.data

@@ -9,7 +9,7 @@ export type TPopupContext = {
 type TPopupNames = 'addRoom' | 'userNotifications' | 'roomSettings' | 'inviteUserToRoom'
 
 export type TPopups = {
-	[K in TPopupNames]: { isOpen: boolean; props: null }
+	[K in TPopupNames]: { isOpen: boolean; props: any }
 }
 
 const PopupContext = createContext<TPopupContext | null>(null)

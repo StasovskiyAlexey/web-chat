@@ -1,5 +1,5 @@
 import { Check, X } from 'lucide-react'
-import useAcceptRoomInvite from '../model/use-accept-room-invite'
+import useAcceptRoomInvite from '../model/queries'
 import { useAuth } from '@/app/providers/AuthProvider'
 import type { TNotification } from '@/entities/notification/model/types'
 
@@ -16,6 +16,7 @@ export default function AcceptButtons({ notification }: { notification: TNotific
 						notificationId: notification.id,
 						inviteId: notification.invitation_id,
 						status: 'accepted',
+						inviteType: 'invite_from_room',
 					})
 				}
 				className='flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-md shadow-sm transition-all active:scale-95'>
@@ -29,6 +30,7 @@ export default function AcceptButtons({ notification }: { notification: TNotific
 						notificationId: notification.id,
 						inviteId: notification.invitation_id,
 						status: 'canceled',
+						inviteType: 'invite_from_room',
 					})
 				}
 				className='flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-600 text-[11px] font-semibold rounded-md border border-slate-200 transition-all active:scale-95'>

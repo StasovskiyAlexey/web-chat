@@ -11,14 +11,36 @@ import { NotificationPopup } from '@/entities/notification/ui/notifications-popu
 import { websocketUrl } from '@/app/lib/envVariables'
 import useWebsocket from '@/shared/hooks/useWebsocket'
 import { useNotifications } from '@/entities/notification/api/queries'
+import { queryClient } from '@/app/lib/query-client'
 
 export const Sidebar = () => {
 	const { logout, user } = useAuth()
 	const { switcher, popups } = usePopup()
 	const { data: notifications } = useNotifications(user?.id as string)
-
+	console.log(notifications)
 	const [isOpen, setIsOpen] = useState<boolean>(true)
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
+
+	useEffect(() => {
+		if (!socket) return
+
+		const handleMessage = (event: MessageEvent) => {
+			try {
+				const data = JSON.parse(event.data)
+				const payload = data.payload
+
+				queryClient.setQueryData(['notifications', user?.id], (oldData: any) => {
+					if (!oldData) return oldData
+					return [payload, ...oldData]
+				})
+			} catch (e) {
+				console.error(e)
+			}
+		}
+
+		socket.addEventListener('message', handleMessage)
+		return () => socket.removeEventListener('message', handleMessage)
+	}, [socket, queryClient, user?.id])
 
 	if (!user) return null
 
@@ -72,14 +94,14 @@ export const Sidebar = () => {
 							icon={Bell}
 							label='Уведомления'
 							isOpen={isOpen}
-							data={notifications}
+							isMarked={notifications?.some((el) => !el.is_read)}
 						/>
 					</PopoverTrigger>
 
 					<PopoverContent
 						side='right'
 						className='w-100'>
-						<NotificationPopup socket={socket} />
+						<NotificationPopup notifications={notifications} />
 					</PopoverContent>
 				</Popover>
 

@@ -1,8 +1,8 @@
 """init
 
-Revision ID: a7b0093f7df5
+Revision ID: 09da1fd3a630
 Revises: 
-Create Date: 2026-05-07 09:31:30.193338
+Create Date: 2026-05-18 00:16:45.822903
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a7b0093f7df5'
+revision: str = '09da1fd3a630'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -42,9 +42,10 @@ def upgrade() -> None:
     op.create_table('invitations',
     sa.Column('id', sa.String(), nullable=False),
     sa.Column('inviter_id', sa.String(), nullable=False),
+    sa.Column('type', sa.Enum('invite_from_room', 'invite_to_room', name='invite_type'), nullable=False),
     sa.Column('user_id', sa.String(), nullable=False),
     sa.Column('room_id', sa.String(), nullable=False),
-    sa.Column('status', sa.Enum('pending', 'accepted', 'canceled', name='invitation_status'), nullable=False),
+    sa.Column('status', sa.Enum('pending', 'accepted', 'canceled', name='invite_status'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['inviter_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['room_id'], ['rooms.id'], ondelete='CASCADE'),

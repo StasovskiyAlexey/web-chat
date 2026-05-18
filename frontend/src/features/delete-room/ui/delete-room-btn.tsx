@@ -1,5 +1,5 @@
 import { Button } from '@/shared/ui/button'
-import useDeleteRoom from '../model/use-delete-room'
+import useDeleteRoom from '../model/queries'
 import type { TRoom } from '@/entities/room/model/types'
 import { Trash } from 'lucide-react'
 

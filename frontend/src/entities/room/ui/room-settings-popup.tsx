@@ -1,7 +1,7 @@
 import { Separator } from '@/shared/ui/separator'
 import { usePopup } from '@/app/providers/PopupProvider'
 import type { TRoom } from '@/entities/room/model/types'
-import { InviteToRoomBtn } from '@/features/invite-to-room'
+import { InviteToRoomBtn } from '@/features/invite-from-room-to-user'
 import DeleteRoomBtn from '@/features/delete-room/ui/delete-room-btn'
 import { useAuth } from '@/app/providers/AuthProvider'
 
@@ -9,6 +9,10 @@ export default function RoomSettings() {
 	const { popups } = usePopup()
 	const { user } = useAuth()
 	const room: TRoom = popups.roomSettings.props
+
+	if (!room) {
+		return
+	}
 
 	const isOwnerRoom = room?.members.find((el) => el.user_id == user?.id)?.role === 'owner'
 

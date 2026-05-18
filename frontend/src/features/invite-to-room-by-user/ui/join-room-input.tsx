@@ -1,7 +1,7 @@
 import { Input } from '@/shared/ui/input'
 import { Hash } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
-import useJoinToRoom from '../model/use-join-to-room'
+import useInviteToRoomByCode from '../model/queries'
 import type { TNotificationCreate } from '@/entities/notification/model/types'
 import { useAuth } from '@/app/providers/AuthProvider'
 
@@ -14,10 +14,10 @@ export default function JoinRoomInput({
 	code: string
 	notificationData: TNotificationCreate
 }) {
-	const { mutate } = useJoinToRoom()
+	const { mutate } = useInviteToRoomByCode()
 	const { user } = useAuth()
 
-	function handleJoinToRoom() {
+	function handleInviteToRoomByCode() {
 		mutate({ code, inviterId: user?.id as string, notificationData })
 		setCode('')
 	}
@@ -35,7 +35,7 @@ export default function JoinRoomInput({
 			</div>
 			<Button
 				disabled={!code}
-				onClick={() => handleJoinToRoom()}
+				onClick={() => handleInviteToRoomByCode()}
 				className='w-full'>
 				Отправить приглашение в комнату
 			</Button>

@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { JoinRoomInput } from '@/features/join-room-by-code'
+import { JoinRoomInput } from '@/features/invite-to-room-by-user'
 import { CreateRoomInput } from '@/features/create-room'
 
 export const AddRoomPopup = () => {
-	const { user } = useAuth()
-
 	const [room, setRoom] = useState({
 		name: '',
 		code: '',

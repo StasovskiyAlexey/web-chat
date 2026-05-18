@@ -5,6 +5,7 @@ from typing import Any, TypeVar
 from fastapi import Request, HTTPException
 from passlib.context import CryptContext
 from jose import JWTError, jwt
+from ..core.exceptions import AppError
 
 T = TypeVar("T")  
 ALGORITHM = "HS256"
@@ -35,4 +36,6 @@ def decode_token(token: str) -> dict[str, Any]:
   
 def get_token(request: Request, token_type: str) -> str:
   token = request.cookies.get(token_type)
-  return token # type: ignore
+  if not token:
+    raise AppError(400, 'Токен не получен')
+  return token

@@ -10,9 +10,9 @@ class Notification(Base):
   id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(nanoid.generate(size=10)))
   
   user_id: Mapped[str] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
-  invitation_id: Mapped[str] = mapped_column(ForeignKey('invitations.id', ondelete='CASCADE'))
+  invite_id: Mapped[str] = mapped_column(ForeignKey('invitations.id', ondelete='CASCADE'))
   
-  invitation: Mapped['Invitation'] = relationship(lazy='joined')
+  invite: Mapped['Invite'] = relationship(lazy='joined')
   
   title: Mapped[str] = mapped_column(String(255), nullable=True)
   is_read: Mapped[bool] = mapped_column(Boolean, default=False)

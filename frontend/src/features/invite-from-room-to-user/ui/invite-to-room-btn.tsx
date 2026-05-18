@@ -16,7 +16,7 @@ export default function InviteToRoomBtn({ room }: { room: TRoom }) {
 					onClick={() => switcher('inviteUserToRoom', true)}
 					className='w-full'
 					variant='outline'>
-					<UserPlus /> Добавить участника
+					<UserPlus /> Пригласить участника
 				</Button>
 			</PopoverTrigger>
 

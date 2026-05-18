@@ -3,7 +3,7 @@ export default function useWebsocket(url: string) {
 
 	useEffect(() => {
 		const ws = new WebSocket(url)
-
+		console.log(socket)
 		ws.onopen = () => {
 			console.log('Соединение открыто')
 			setSocket(ws)

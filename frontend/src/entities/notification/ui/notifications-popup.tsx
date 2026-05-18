@@ -1,37 +1,17 @@
 import { Bell, Check, CheckCheck, UserPlus } from 'lucide-react'
 import { ScrollArea } from '@/shared/ui/scroll-area'
-import { useNotifications } from '../api/queries'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { Separator } from '@/shared/ui/separator'
+import { AcceptButtons } from '@/features/accept-invite'
+import { type TNotification } from '../model/types'
 import dayjs from 'dayjs'
-import { AcceptButtons } from '@/features/accept-invite-room'
 
-export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
+export const NotificationPopup = ({ notifications }: { notifications?: TNotification[] }) => {
 	const { user } = useAuth()
 
 	if (!user) {
 		return null
 	}
-
-	const { data: notifications } = useNotifications(user?.id)
-
-	useEffect(() => {
-		if (!socket) return
-
-		// Тут делаем onMessage только делаем функцию хендлер для создания события
-		const handleMessage = (event: MessageEvent) => {
-			try {
-				const data = JSON.parse(event.data)
-				const payload = data.payload
-				console.log(payload)
-			} catch (e) {
-				console.error(e)
-			}
-		}
-
-		socket.addEventListener('message', handleMessage)
-		return () => socket.removeEventListener('message', handleMessage)
-	}, [socket, notifications])
 
 	return (
 		<div className='flex flex-col w-full max-h-[400px] max-w-[380px] bg-white rounded-md'>
@@ -75,7 +55,7 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 											</span>
 											<div className='flex items-center gap-2 mt-1'>
 												<span className='text-[10px] uppercase tracking-wider font-semibold text-slate-400'>
-													ID: {item.invitation_id}
+													ID: {item.invite_id}
 												</span>
 											</div>
 										</div>
@@ -100,10 +80,8 @@ export const NotificationPopup = ({ socket }: { socket: WebSocket | null }) => {
 									</div>
 								</div>
 
-								{/* Блок дій (тільки для активних інвайтів) */}
 								{item.type === 'invite' && !item.is_read && <AcceptButtons notification={item} />}
 
-								{/* Розділювач, крім останнього елемента */}
 								<div className='absolute bottom-0 left-4 right-4 h-px bg-slate-100 group-last:hidden' />
 							</div>
 						))}
