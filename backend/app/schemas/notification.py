@@ -15,7 +15,6 @@ class NotificationResponse(BaseModel):
   id: str
   user_id: str
   invite: InviteResponse
-  invite_id: str
   title: str
   is_read: bool
   type: str

@@ -8,7 +8,7 @@
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"api": "npx openapi-typescript http://localhost:8000/openapi.json --output src/types/paths.ts"
+		"api": "npx openapi-typescript http://localhost:8000/openapi.json --output src/app/types/paths.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",

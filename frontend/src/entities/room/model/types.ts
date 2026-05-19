@@ -18,15 +18,9 @@ export type TRoomUpdate = {
 }
 
 export type TRoomInvite = {
-  code: string
-  inviterId: string
-  notificationData: {
-    title: string,
-    type: string
-  },
-  inviteData: {
-    roomId: string
-  }
+  roomCode: string
+  userCode: string
+  title: string
 }
 
 export type TMessageCreate = components['schemas']['MessageCreate']

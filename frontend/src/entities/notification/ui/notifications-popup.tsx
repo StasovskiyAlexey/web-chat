@@ -55,7 +55,7 @@ export const NotificationPopup = ({ notifications }: { notifications?: TNotifica
 											</span>
 											<div className='flex items-center gap-2 mt-1'>
 												<span className='text-[10px] uppercase tracking-wider font-semibold text-slate-400'>
-													ID: {item.invite_id}
+													ID: {item.invite.id}
 												</span>
 											</div>
 										</div>

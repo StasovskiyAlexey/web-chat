@@ -3,7 +3,6 @@ import { TTypes } from "@/shared/di/types";
 import type { TResponse } from "@/app/types/response";
 import { type TMessage, type TMessageCreate, type TMessageUpdate, type TRoom, type TRoomCreate } from '@/entities/room/model/types';
 import { inject, injectable } from "inversify";
-import type { TNotificationCreate } from "@/entities/notification/model/types";
 
 @injectable()
 export class RoomService {
@@ -55,45 +54,27 @@ export class RoomService {
     return res.data
   }
 
-  async inviteToRoomByUser(code: string, inviterId: string, notificationData: {title: string, type: string}, inviteData: {roomId: string}) {
-    const res = await this.http.post<TResponse<any>>(`rooms/invite_to_room_by_user`, {
-      notification_data: {
-        title: notificationData.title,
-        type: notificationData.type
-      },
-      invite_data: {
-        room_id: inviteData.roomId
-      }}, 
-      {params: {
-        user_code: code, 
-        inviter_id: inviterId
-      }
-    });
-    return res.data
-  }
-
-  async inviteFromRoomToUser(roomCode: string, inviterId: string, data: TNotificationCreate) {
-    const res = await this.http.post<TResponse<null>>(`rooms/invite_from_room_to_user`, {title: data.title, type: data.type}, {
+  async inviteToRoom(userCode: string, roomCode: string, title: string) {
+    const res = await this.http.post<TResponse<any>>(`invitations/invite_to_room_from_user`, {}, {
       params: {
+        user_code: userCode,
         room_code: roomCode,
-        inviter_id: inviterId
+        title
       }
     });
     return res.data
   }
 
-  // async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string, invite_type: 'invite_from_room' | 'invite_to_room') {
-  //   const res = await this.http.post<TResponse<null>>(`invitations/accept_invite`, {}, {
-  //     params: {
-  //       notification_id: notificationId,
-  //       status: status,
-  //       invite_id: inviteId, 
-  //       user_id: userId,
-  //       invite_type
-  //     }
-  //   });
-  //   return res.data
-  // }
+  async inviteFromRoom(userCode: string, roomCode: string, title: string) {
+    const res = await this.http.post<TResponse<null>>(`invitations/invite_from_room_to_user`, {}, {
+      params: {
+        user_code: userCode,
+        room_code: roomCode,
+        title
+      }
+    });
+    return res.data
+  }
  
   async deleteRoom(roomId: string) {
     const res = await this.http.post<TResponse<null>>(`rooms/delete_room`, {}, {

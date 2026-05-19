@@ -44,30 +44,30 @@ async def update_room(room_id: str, room_data: RoomUpdate, service: RoomService 
     data=updated_room
   )
 
-@router.post('/invite_to_room_from_user', response_model=SuccessResponse[InviteResponse], description='Приглашения в комнату ОТ пользователя через код комнаты')
-async def invite_to_room_from_user(user_code: str, room_code: str, title: str, service: RoomService = Depends(get_room_service)):
-  invite_to_room = await service.invite_to_room_from_user(
-    user_code,
-    room_code,
-    title,
-  )
+# @router.post('/invite_to_room_from_user', response_model=SuccessResponse[InviteResponse], description='Приглашения в комнату ОТ пользователя через код комнаты')
+# async def invite_to_room_from_user(user_code: str, room_code: str, title: str, service: RoomService = Depends(get_room_service)):
+#   invite_to_room = await service.invite_to_room_from_user(
+#     user_code,
+#     room_code,
+#     title,
+#   )
   
-  return SuccessResponse(
-    data=invite_to_room,
-    message='Приглашение пользователю успешно отправлено'
-  )
+#   return SuccessResponse(
+#     data=invite_to_room,
+#     message='Приглашение пользователю успешно отправлено'
+#   )
   
-@router.post('/invite_from_room_to_user', response_model=SuccessResponse[InviteResponse], description='Приглашения ИЗ комнаты через код пользователя')
-async def invite_from_room_to_user(room_code: str, user_code: str, title: str, service: RoomService = Depends(get_room_service)):
-  invite_to_room = await service.invite_from_room_to_user(
-    room_code,
-    user_code,
-    title,
-  )
-  return SuccessResponse(
-    data=invite_to_room,
-    message='Приглашение для добавления в комнату успешно отправлено'
-  )
+# @router.post('/invite_from_room_to_user', response_model=SuccessResponse[InviteResponse], description='Приглашения ИЗ комнаты через код пользователя')
+# async def invite_from_room_to_user(room_code: str, user_code: str, title: str, service: RoomService = Depends(get_room_service)):
+#   invite_to_room = await service.invite_from_room_to_user(
+#     room_code,
+#     user_code,
+#     title,
+#   )
+#   return SuccessResponse(
+#     data=invite_to_room,
+#     message='Приглашение для добавления в комнату успешно отправлено'
+#   )
 
 @router.post('/delete_member_from_room', response_model=SuccessResponse[RoomResponse])
 async def delete_member_from_room(room_id: str, user_id: str, member_id: str, user: User = Depends(get_user_by_refresh_token), service: RoomService = Depends(get_room_service),  is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):

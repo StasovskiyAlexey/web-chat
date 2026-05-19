@@ -28,7 +28,18 @@ class NotificationRepository():
     await self.db.refresh(new_notification, ["invite"])
     return new_notification
     
-  async def update_notification(self, user_id: str, notification_id: str):
+  # async def update_notification(self, user_id: str, notification_id: str):
+  #   query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
+  #   exist_notification = query.scalar_one_or_none()
+
+  #   if exist_notification:
+  #     exist_notification.is_read = True
+    
+  #   await self.db.commit()
+  #   await self.db.refresh(exist_notification)
+  #   return exist_notification
+  
+  async def read_notification(self, user_id: str, notification_id: str):
     query = await self.db.execute(select(Notification).where(Notification.user_id == user_id).where(Notification.id == notification_id))
     exist_notification = query.scalar_one_or_none()
 

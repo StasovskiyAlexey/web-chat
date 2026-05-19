@@ -99,8 +99,6 @@ class RoomRepository:
     
   async def delete_current_room(self, room_id: str, user_id: str):
     query = await self.db.execute(select(Room).where(Room.id == room_id).options(selectinload(Room.members).selectinload(Member.user)))
-    
-    # Комнаты с members
     room = query.scalar_one_or_none()
     
     for member in room.members:

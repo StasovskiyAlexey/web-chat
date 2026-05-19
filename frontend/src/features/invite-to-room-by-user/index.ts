@@ -1,1 +1,0 @@
-export {default as JoinRoomInput} from './ui/join-room-input'

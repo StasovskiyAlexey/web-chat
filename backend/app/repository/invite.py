@@ -21,7 +21,7 @@ class InviteRepository():
   
   async def get_active_user_invite(self, user_id: str, room_id: str):
     query = await self.db.execute(select(Invite).where(Invite.room_id == room_id, Invite.user_id == user_id, Invite.status == 'pending'))
-    user_invite = query.scalar_one_or_none()
+    user_invite = query.scalars().first()
     return user_invite
   
   async def create_invite(self, inviter_id: str, user_id: str, room_id: str, type: str):

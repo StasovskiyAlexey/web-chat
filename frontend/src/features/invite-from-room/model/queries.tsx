@@ -8,17 +8,11 @@ import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
-export default function useInviteToRoomByCode() {
+export default function useInviteFromRoom() {
 	const roomService = useInjection<TRoomService>(TTypes.RoomService)
 
 	return useMutation({
-		mutationFn: (data: TRoomInvite) =>
-			roomService.inviteToRoomByUser(
-				data.code,
-				data.inviterId,
-				{ title: data.notificationData.title, type: data.notificationData.type },
-				{ roomId: data.inviteData.roomId },
-			),
+		mutationFn: (data: TRoomInvite) => roomService.inviteFromRoom(data.userCode, data.roomCode, data.title),
 		onSuccess: (res) => {
 			queryClient.invalidateQueries({ queryKey: ['notifications', 'rooms'] })
 			toast.success(res.message)

@@ -1,1 +1,0 @@
-export {default as InviteToRoomBtn} from './ui/invite-to-room-btn'

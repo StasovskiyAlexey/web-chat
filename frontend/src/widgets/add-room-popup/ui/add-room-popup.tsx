@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
-import { JoinRoomInput } from '@/features/invite-to-room-by-user'
+import { JoinRoomInput } from '@/features/invite-to-room'
 import { CreateRoomInput } from '@/features/create-room'
 
 export const AddRoomPopup = () => {
-	const [room, setRoom] = useState({
+	const [data, setData] = useState({
 		name: '',
 		code: '',
 		type: 'direct',
@@ -29,9 +29,9 @@ export const AddRoomPopup = () => {
 					value='create'
 					className='space-y-4 pt-4'>
 					<CreateRoomInput
-						type={room.type}
-						name={room.name}
-						setRoom={(name) => setRoom((prev) => ({ ...prev, name }))}
+						type={data.type}
+						name={data.name}
+						setRoom={(name) => setData((prev) => ({ ...prev, name }))}
 					/>
 				</TabsContent>
 
@@ -39,9 +39,9 @@ export const AddRoomPopup = () => {
 					value='search'
 					className='space-y-4 pt-4'>
 					<JoinRoomInput
-						setCode={(code) => setRoom((prev) => ({ ...prev, code: code }))}
-						code={room.code}
-						notificationData={{ title: 'Запрос на приглашение в комнату', type: 'invite' }}
+						setCode={(code) => setData((prev) => ({ ...prev, code: code }))}
+						roomCode={data.code}
+						title='Запрос на добавление в комнату'
 					/>
 				</TabsContent>
 			</Tabs>

@@ -1,6 +1,6 @@
 import type { IHttpClient } from "@/shared/di/interfaces";
 import { TTypes } from "@/shared/di/types";
-import type { TInvite, TNotification } from "@/entities/notification/model/types";
+import type { TNotification } from "@/entities/notification/model/types";
 import type { TResponse } from "@/app/types/response";
 import { inject, injectable } from "inversify";
 
@@ -13,19 +13,13 @@ export class NotificationService {
     return res.data
   }
 
-  async getInvitations(userId: string) {
-    const res = await this.http.post<TResponse<TInvite[]>>(`invitations/get_user_invitations?user_id=${userId}`)
-    return res.data
-  }
-
-  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string, inviteType: 'invite_from_room' | 'invite_to_room') {
+  async acceptInvite(userId: string, notificationId: string, inviteId: string, status: string) {
     const res = await this.http.post<TResponse<null>>(`invitations/accept_invite`, {}, {
       params: {
         notification_id: notificationId,
         status: status,
         invite_id: inviteId, 
         user_id: userId,
-        invite_type: inviteType
       }
     });
     return res.data

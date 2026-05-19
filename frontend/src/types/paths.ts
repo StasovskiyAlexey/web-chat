@@ -224,46 +224,6 @@ export interface paths {
         patch: operations["update_room_api_v1_rooms_update_room_patch"];
         trace?: never;
     };
-    "/api/v1/rooms/invite_to_room_from_user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Invite To Room From User
-         * @description Приглашения в комнату ОТ пользователя через код комнаты
-         */
-        post: operations["invite_to_room_from_user_api_v1_rooms_invite_to_room_from_user_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/rooms/invite_from_room_to_user": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Invite From Room To User
-         * @description Приглашения ИЗ комнаты через код пользователя
-         */
-        post: operations["invite_from_room_to_user_api_v1_rooms_invite_from_room_to_user_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/rooms/delete_member_from_room": {
         parameters: {
             query?: never;
@@ -358,46 +318,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/notifications/add_notification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Add Notifications
-         * @description Добавить уведомление
-         */
-        post: operations["add_notifications_api_v1_notifications_add_notification_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notifications/update_notification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Update Notification
-         * @description В основном для обновления is_read оповещения, и для принятие или отмены инвайтов
-         */
-        post: operations["update_notification_api_v1_notifications_update_notification_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/invitations/accept_invite": {
         parameters: {
             query?: never;
@@ -418,24 +338,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/invitations/invite_to_room_from_user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Invite To Room From User
+         * @description Приглашения в комнату ОТ пользователя через код комнаты
+         */
+        post: operations["invite_to_room_from_user_api_v1_invitations_invite_to_room_from_user_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/invitations/invite_from_room_to_user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Invite From Room To User
+         * @description Приглашения ИЗ комнаты через код пользователя
+         */
+        post: operations["invite_from_room_to_user_api_v1_invitations_invite_from_room_to_user_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Body_invite_from_room_to_user_api_v1_rooms_invite_from_room_to_user_post */
-        Body_invite_from_room_to_user_api_v1_rooms_invite_from_room_to_user_post: {
-            invite_data: components["schemas"]["InviteCreate"];
-            notification_data: components["schemas"]["NotificationCreate"];
-        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
-        };
-        /** InviteCreate */
-        InviteCreate: {
-            /** Type */
-            type: string;
         };
         /** InviteResponse */
         InviteResponse: {
@@ -511,19 +461,13 @@ export interface components {
             /** Content */
             content: string;
         };
-        /** NotificationCreate */
-        NotificationCreate: {
-            /** Title */
-            title: string;
-        };
         /** NotificationResponse */
         NotificationResponse: {
             /** Id */
             id: string;
             /** User Id */
             user_id: string;
-            /** Invite Id */
-            invite_id: string;
+            invite: components["schemas"]["InviteResponse"];
             /** Title */
             title: string;
             /** Is Read */
@@ -535,13 +479,6 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
-        };
-        /** NotificationUpdate */
-        NotificationUpdate: {
-            /** Title */
-            title: string;
-            /** Is Read */
-            is_read: boolean;
         };
         /** RoomCreate */
         RoomCreate: {
@@ -606,17 +543,6 @@ export interface components {
             /** Members */
             members: components["schemas"]["MemberResponse"][];
         };
-        /** SuccessResponse[InviteResponse] */
-        SuccessResponse_InviteResponse_: {
-            /**
-             * Status
-             * @default 200
-             */
-            status: number;
-            /** Message */
-            message?: string | null;
-            data?: components["schemas"]["InviteResponse"] | null;
-        };
         /** SuccessResponse[List[MessageResponse]] */
         SuccessResponse_List_MessageResponse__: {
             /**
@@ -675,17 +601,6 @@ export interface components {
             message?: string | null;
             /** Data */
             data?: null;
-        };
-        /** SuccessResponse[NotificationResponse] */
-        SuccessResponse_NotificationResponse_: {
-            /**
-             * Status
-             * @default 200
-             */
-            status: number;
-            /** Message */
-            message?: string | null;
-            data?: components["schemas"]["NotificationResponse"] | null;
         };
         /** SuccessResponse[RoomResponseWithMessages] */
         SuccessResponse_RoomResponseWithMessages_: {
@@ -1098,75 +1013,6 @@ export interface operations {
             };
         };
     };
-    invite_to_room_from_user_api_v1_rooms_invite_to_room_from_user_post: {
-        parameters: {
-            query: {
-                user_code: string;
-                room_code: string;
-                title: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse_InviteResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    invite_from_room_to_user_api_v1_rooms_invite_from_room_to_user_post: {
-        parameters: {
-            query: {
-                room_code: string;
-                inviter_id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Body_invite_from_room_to_user_api_v1_rooms_invite_from_room_to_user_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse_InviteResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     delete_member_from_room_api_v1_rooms_delete_member_from_room_post: {
         parameters: {
             query: {
@@ -1330,78 +1176,6 @@ export interface operations {
             };
         };
     };
-    add_notifications_api_v1_notifications_add_notification_post: {
-        parameters: {
-            query: {
-                user_id: string;
-                invite_id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NotificationCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse_NotificationResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_notification_api_v1_notifications_update_notification_post: {
-        parameters: {
-            query: {
-                user_id: string;
-                notification_id: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NotificationUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessResponse_NotificationResponse_"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     accept_invite_api_v1_invitations_accept_invite_post: {
         parameters: {
             query: {
@@ -1409,7 +1183,72 @@ export interface operations {
                 notification_id: string;
                 user_id: string;
                 status: string;
-                invite_type: "invite_from_room" | "invite_to_room";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_NoneType_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_to_room_from_user_api_v1_invitations_invite_to_room_from_user_post: {
+        parameters: {
+            query: {
+                user_code: string;
+                room_code: string;
+                title: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_NoneType_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_from_room_to_user_api_v1_invitations_invite_from_room_to_user_post: {
+        parameters: {
+            query: {
+                room_code: string;
+                user_code: string;
+                title: string;
             };
             header?: never;
             path?: never;

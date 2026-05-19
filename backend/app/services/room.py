@@ -48,28 +48,34 @@ class RoomService:
   
   # Работает
   async def invite_to_room_from_user(self, user_code: str, room_code: str, title: str):
-    exist_user = await self.user_repository.get_user_by_code(user_code)
-    
     exist_room = await self.repository.get_room_by_code(room_code)
     
-    # Тот кому мы отправляем инвайт, тобишь владельцу комнаты, от пользователя
+    # Тот кто отправил
+    inviter_user = await self.user_repository.get_user_by_code(user_code)
+    
+    # Тот кто получает
     room_member_owner = await self.repository.get_member_room_owner(exist_room.id)
     
-    if not exist_user:
+    if not inviter_user:
       raise AppError(400, f'Пользователя не найдено')
     
     if not exist_room:
       raise AppError(400, 'Комната не найдена')
+    
+    exist_invite = await self.invitation_repository.get_active_user_invite(inviter_user.id, exist_room.id)
+    
+    if exist_invite:
+      raise AppError(400, 'Приглашение в комнату уже отправлено')
 
-    user_in_room = await self.repository.check_member_in_room(exist_room.id, exist_user.id)
+    user_in_room = await self.repository.check_member_in_room(exist_room.id, inviter_user.id)
 
     if user_in_room:
       raise AppError(400, 'Пользователь уже добавлен в комнату')
     
-    if await self.invitation_repository.get_active_user_invite(exist_user.id, exist_room.id):
-      raise AppError(400, 'Приглашение пользователю уже отправлено')
+    if await self.invitation_repository.get_active_user_invite(inviter_user.id, exist_room.id):
+      raise AppError(400, 'Приглашение в комнату уже отправлено')
     
-    new_invite = await self.invitation_repository.create_invite(exist_user.id, room_member_owner.user_id, exist_room.id, "invite_to_room")
+    new_invite = await self.invitation_repository.create_invite(inviter_user.id, room_member_owner.user_id, exist_room.id, "invite_to_room")
     
     if new_invite:
       new_notification = await self.notification_repository.create_notification(title, room_member_owner.user_id, new_invite.id)
@@ -91,28 +97,27 @@ class RoomService:
     await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, room_member_owner.user_id)
     return new_invite
   
+  # Работает
   async def invite_from_room_to_user(self, room_code: str, user_code: str, title: str):
     exist_room = await self.repository.get_room_by_code(room_code)
+    
+    # Тот кто отправляет
     room_owner_member = await self.repository.get_member_room_owner(exist_room.id)
     
-    # Это владелец комнаты
-    room_owner_user = await self.user_repository.get_user_by_id(room_owner_member.user_id)
-    
-    # Тот кому мы отправляем инвайт, тобишь пользователю, от владельца комнаты
-    exist_user = await self.user_repository.get_user_by_code(user_code)
+    # Тот кому мы отправляем 
+    inviter_user = await self.user_repository.get_user_by_code(user_code)
 
     if not exist_room:
       raise AppError(400, 'Такой комнаты не существует')
     
     member_owner = await self.repository.get_member_room_owner(exist_room.id)
-    print('member_owner', member_owner)
     
     if not member_owner:
       raise AppError(404, 'Владелец комнаты не найден')
     
-    exist_invite = await self.invitation_repository.get_active_user_invite(room_owner_user.id, exist_room.id)
+    exist_invite = await self.invitation_repository.get_active_user_invite(inviter_user.id, exist_room.id)
     
-    current_user_in_room = await self.repository.check_member_in_room(exist_room.id, exist_user.id)
+    current_user_in_room = await self.repository.check_member_in_room(exist_room.id, inviter_user.id)
 
     if exist_invite:
       raise AppError(400, 'Приглашение в комнату уже отправлено')
@@ -120,10 +125,10 @@ class RoomService:
     if current_user_in_room:
       raise AppError(400, 'Пользователь уже существует в комнате')
     
-    new_invite = await self.invitation_repository.create_invite(room_owner_user.id, exist_user.id, exist_room.id, "invite_from_room")
-    
+    new_invite = await self.invitation_repository.create_invite(room_owner_member.user_id, inviter_user.id, exist_room.id, "invite_from_room")
+    print('new_invite', new_invite)
     if new_invite:
-      new_notification = await self.notification_repository.create_notification(title, exist_user.id, new_invite.id)
+      new_notification = await self.notification_repository.create_notification(title, inviter_user.id, new_invite.id)
       
     notification_payload = {
       "created_at": new_notification.created_at.isoformat(),
@@ -139,7 +144,7 @@ class RoomService:
     await self.db.commit()
     await self.db.refresh(new_invite)
     
-    await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, exist_user.id)
+    await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, inviter_user.id)
     return new_invite
   
   async def delete_member_from_room(self, room_id: str, user_id: str, member_id: str, owner_id: str):
@@ -176,3 +181,5 @@ class RoomService:
   async def delete_all_rooms(self):
     deleted_rooms = await self.repository.delete_all_rooms()
     return deleted_rooms
+  
+  # Осталось сделать принятие приглашения эндпоинт

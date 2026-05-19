@@ -1,8 +1,8 @@
 import { queryClient } from '@/app/lib/query-client'
 import { useInjection } from '@/app/providers/DIProvider'
-import type { TNotificationCreate } from '@/entities/notification/model/types'
 
 import type { TRoomService } from '@/entities/room/api/room.service'
+import type { TRoomInvite } from '@/entities/room/model/types'
 import { TTypes } from '@/shared/di/types'
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
@@ -12,11 +12,7 @@ export default function useInviteToRoom() {
 	const roomService = useInjection<TRoomService>(TTypes.RoomService)
 
 	return useMutation({
-		mutationFn: (data: { code: string; inviterId: string; notificationData: TNotificationCreate }) =>
-			roomService.inviteFromRoomToUser(data.code, data.inviterId, {
-				title: data.notificationData.title,
-				type: data.notificationData.type,
-			}),
+		mutationFn: (data: TRoomInvite) => roomService.inviteToRoom(data.userCode, data.roomCode, data.title),
 		onSuccess: (res) => {
 			queryClient.invalidateQueries({ queryKey: ['notifications', 'rooms'] })
 			toast.success(res.message)

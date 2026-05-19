@@ -1,7 +1,7 @@
 import { Separator } from '@/shared/ui/separator'
 import { usePopup } from '@/app/providers/PopupProvider'
 import type { TRoom } from '@/entities/room/model/types'
-import { InviteToRoomBtn } from '@/features/invite-from-room-to-user'
+import { InviteToRoomBtn } from '@/features/invite-from-room'
 import DeleteRoomBtn from '@/features/delete-room/ui/delete-room-btn'
 import { useAuth } from '@/app/providers/AuthProvider'
 

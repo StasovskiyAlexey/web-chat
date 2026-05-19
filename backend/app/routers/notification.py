@@ -15,18 +15,10 @@ async def get_notifications(user_id: str, service: NotificationService = Depends
     data=notifications
   )
 
-@router.post('/add_notification', response_model=SuccessResponse[NotificationResponse], description='Добавить уведомление')
-async def add_notifications(user_id: str, invite_id: str, notification_data: NotificationCreate, service: NotificationService = Depends(get_notification_service)):
-  new_notification = await service.create_notification(user_id, notification_data, invite_id)
-  return SuccessResponse(
-    data=new_notification,
-    message='Уведомление успешно добавлено'
-  )
-
-@router.post('/update_notification', response_model=SuccessResponse[NotificationResponse], description='В основном для обновления is_read оповещения, и для принятие или отмены инвайтов')
-async def update_notification(user_id: str, notification_id: str, service: NotificationService = Depends(get_notification_service), **notification_data: NotificationUpdate):
-  updated_notification = await service.update_notification(user_id, notification_id, **notification_data)
-  return SuccessResponse(
-    data=updated_notification,
-    message='Уведомление успешно обновлено'
-  )
+# @router.post('/add_notification', response_model=SuccessResponse[NotificationResponse], description='Добавить уведомление')
+# async def add_notifications(user_id: str, invite_id: str, notification_data: NotificationCreate, service: NotificationService = Depends(get_notification_service)):
+#   new_notification = await service.create_notification(user_id, notification_data, invite_id)
+#   return SuccessResponse(
+#     data=new_notification,
+#     message='Уведомление успешно добавлено'
+#   )
