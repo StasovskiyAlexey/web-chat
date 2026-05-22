@@ -1,10 +1,10 @@
 services:
   db:
     image: postgres:17
-    container_name: db_web-chat
+    container_name: chat-db
     restart: always
     env_file:
-      - .env
+      - .env.dev
     ports:
       - "5432:5432"
     volumes:
@@ -13,15 +13,26 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend_web-chat
+    container_name: chat-backend
     ports:
       - "8000:8000"
     depends_on:
       - db
     env_file:
-      - .env
+      - .env.dev
     volumes:
       - .:/app
 
+  test-db:
+    image: postgres:15-alpine
+    container_name: chat-test-db
+    restart: always
+    env_file:
+      - .env.test
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
 volumes:
   postgres_data:
+  postgres_test_data:

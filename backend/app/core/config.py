@@ -1,4 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
+
+ENV_STATE = os.getenv('ENV_STATE', 'dev')
 
 class Settings(BaseSettings):
   secret_key: str
@@ -16,7 +19,8 @@ class Settings(BaseSettings):
   ]
 
   model_config = SettingsConfigDict(
-    env_file='.env'
+    env_file=('.env.test' if ENV_STATE == 'test' else ".env.dev"),
+    extra='ignore'
   )
 
   @property
