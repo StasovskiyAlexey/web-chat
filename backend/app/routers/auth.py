@@ -33,7 +33,7 @@ async def refresh_access_token(
 
     return {"access_token": new_access_token}
 
-@router.post('/register_user', response_model=SuccessResponse[UserResponse], description='Регистрация аккаунта пользователя')
+@router.post('/register_user', status_code=201, response_model=SuccessResponse[UserResponse], description='Регистрация аккаунта пользователя')
 async def register_user(user_data: UserCreate, response: Response, service: UserService = Depends(get_user_service)):
   user = User(login=user_data.login, email=user_data.email, password=user_data.password)
   new_user = await service.create_user(user)

@@ -18,8 +18,20 @@ python-dotenv = "^1.2.2"
 sqlalchemy = "^2.0.49"
 nanoid = "^2.0.0"
 passlib = "^1.7.4"
+pytest-env = "^1.6.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+addopts = "-v -p no:warnings"
+
+env = ["ENV_STATE=test"]

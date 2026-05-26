@@ -6,3 +6,6 @@ up:
 
 down:
 	docker-compose -p backend-template -f docker-compose.yml down -v
+
+pytest-run:
+	pytest -s

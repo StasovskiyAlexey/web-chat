@@ -43,7 +43,7 @@ class UserRepository:
     await self.db.commit()
     await self.db.refresh(new_user)
     return new_user
-  
+    
   async def login_user(self, user_data: User):
     exist_user = await self.get_user_by_login(user_data.login)
     

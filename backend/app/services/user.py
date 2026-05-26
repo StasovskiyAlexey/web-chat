@@ -24,10 +24,6 @@ class UserService:
   
   async def create_user(self, new_user: User):
     user = await self.repository.create_user(new_user)
-    
-    has_password_user = True if user.password else False
-    setattr(user, 'has_password', has_password_user)
-    
     return user
   
   async def update_user(self, user_id: str, **updated_data):
