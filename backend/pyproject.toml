@@ -32,6 +32,6 @@ asyncio_default_test_loop_scope = "session"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["."]
-addopts = ["-v", "-p", "no:warnings"]
+addopts = ["-v", "-p", "no:warnings", "-s", "--capture=no"]
 
 env = ["ENV_STATE=test"]

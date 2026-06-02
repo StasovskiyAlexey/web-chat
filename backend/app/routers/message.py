@@ -11,7 +11,7 @@ from ..dependencies.auth import get_user_by_access_token
 
 router = APIRouter(prefix='/api/v1/messages', tags=['Messages'])
 
-@router.post('/add_message', response_model=SuccessResponse[MessageResponse], description='Добавление сообщения в комнату')
+@router.post('/add_message', status_code=201, response_model=SuccessResponse[MessageResponse], description='Добавление сообщения в комнату')
 async def add_message(message_data: MessageCreate, service: MessageService = Depends(get_message_service), is_have_access: HTTPAuthorizationCredentials = Depends(get_user_by_access_token)):
   message = await service.create_message(message_data)
   return SuccessResponse(

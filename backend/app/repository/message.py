@@ -37,17 +37,17 @@ class MessageRepository():
       await self.db.rollback() # Откатываем, если что-то пошло не так
       raise AppError(500, f"Ошибка при cоздании сообщения: {str(e)}")
     
-  async def update_message(self, message_id: str, message_data: MessageUpdate):
-    exist_message = await self.get_messages_by_id(message_id)
+  # async def update_message(self, message_id: str, message_data: MessageUpdate):
+  #   exist_message = await self.get_messages_by_id(message_id)
     
-    for key, value in message_data.model_dump().items():
-      if hasattr(exist_message, key):
-        setattr(exist_message, key, value)
+  #   for key, value in message_data.model_dump().items():
+  #     if hasattr(exist_message, key):
+  #       setattr(exist_message, key, value)
     
-    try:
-      await self.db.commit()
-      await self.db.refresh(exist_message)
-      return exist_message
-    except Exception as e:
-      await self.db.rollback()
-      raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")
+  #   try:
+  #     await self.db.commit()
+  #     await self.db.refresh(exist_message)
+  #     return exist_message
+  #   except Exception as e:
+  #     await self.db.rollback()
+  #     raise AppError(500, f"Ошибка при cоздании комнаты: {str(e)}")

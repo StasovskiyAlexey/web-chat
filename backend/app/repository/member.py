@@ -1,9 +1,9 @@
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.exceptions import AppError
-from ..models import Member, Room
+from ..models import Member, Room, User
 from ..schemas.member import MemberCreate
 
 class MemberRepository:
@@ -26,7 +26,7 @@ class MemberRepository:
     return member
   
   async def get_member_by_user_id(self, user_id: str):
-    query = await self.db.execute(select(Member).where(Member.user_id == user_id))
+    query = await self.db.execute(select(Member).where(Member.user_id == user_id).options(joinedload(Member.user)))
     member = query.scalars().first()
     return member
   
@@ -41,7 +41,7 @@ class MemberRepository:
     try:
       self.db.add(new_member)
       await self.db.commit()
-      await self.db.refresh(new_member)
+      await self.db.refresh(new_member, attribute_names=['user'])
       return new_member
     except Exception as e:
       await self.db.rollback()

@@ -1,8 +1,8 @@
 import type { components, paths } from "@/app/types/paths";
 
 export type TRoom = paths['/api/v1/rooms/get_room_by_id']['post']['responses']['200']['content']['application/json']['data']
-export type TMessage = NonNullable<paths['/api/v1/messages/get_message_by_id']['post']['responses']['200']['content']['application/json']['data']>[number]
-export type TMember = NonNullable<paths['/api/v1/members/get_members']['get']['responses']['200']['content']['application/json']['data']>[number]
+export type TMessage = components['schemas']['MessageResponse']
+export type TMember = components['schemas']['MemberResponse']
 
 export type TRoomCreate = {
   userId?: string;

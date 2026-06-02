@@ -51,7 +51,9 @@ class InviteService():
       await self.notification_repository.read_notification(exist_invite.user_id, notification_id)
     
     # Для обновления самого статуса инвайта
-    await self.repository.update_invite(invite_id, exist_invite.user_id, status)
+    updated_invite = await self.repository.update_invite(invite_id, exist_invite.user_id, status)
+    
+    return updated_invite
 
   async def accept_all_invites(self, user_id: str):
     user_invites = await self.repository.accept_all_user_invites(user_id)

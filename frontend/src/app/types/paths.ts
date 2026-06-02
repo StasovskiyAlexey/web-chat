@@ -258,6 +258,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/rooms/add_member_to_room": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Member
+         * @description Эндпоинт в основном для тестов
+         */
+        post: operations["add_member_api_v1_rooms_add_member_to_room_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/messages/add_message": {
         parameters: {
             query?: never;
@@ -407,6 +427,18 @@ export interface components {
              */
             created_at: string;
         };
+        /** MemberCreate */
+        MemberCreate: {
+            /** User Id */
+            user_id: string;
+            /** Room Id */
+            room_id: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "member" | "owner";
+        };
         /** MemberResponse */
         MemberResponse: {
             /** Id */
@@ -484,15 +516,21 @@ export interface components {
         RoomCreate: {
             /** Name */
             name: string;
-            /** Type */
-            type: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "direct" | "group";
         };
         /** RoomResponse */
         RoomResponse: {
             /** Name */
             name: string;
-            /** Type */
-            type: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "direct" | "group";
             /** Id */
             id: string;
             /** Room Code */
@@ -512,8 +550,11 @@ export interface components {
         RoomResponseWithMessages: {
             /** Name */
             name: string;
-            /** Type */
-            type: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "direct" | "group";
             /** Id */
             id: string;
             /** Room Code */
@@ -538,16 +579,17 @@ export interface components {
         RoomUpdate: {
             /** Name */
             name: string;
-            /** Type */
-            type: string;
-            /** Members */
-            members: components["schemas"]["MemberResponse"][];
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "direct" | "group";
         };
         /** SuccessResponse[List[MessageResponse]] */
         SuccessResponse_List_MessageResponse__: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -559,7 +601,7 @@ export interface components {
         SuccessResponse_List_NotificationResponse__: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -571,7 +613,7 @@ export interface components {
         SuccessResponse_List_RoomResponse__: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -579,11 +621,22 @@ export interface components {
             /** Data */
             data?: components["schemas"]["RoomResponse"][] | null;
         };
+        /** SuccessResponse[MemberResponse] */
+        SuccessResponse_MemberResponse_: {
+            /**
+             * Status
+             * @default 201
+             */
+            status: number;
+            /** Message */
+            message?: string | null;
+            data?: components["schemas"]["MemberResponse"] | null;
+        };
         /** SuccessResponse[MessageResponse] */
         SuccessResponse_MessageResponse_: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -594,7 +647,7 @@ export interface components {
         SuccessResponse_NoneType_: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -606,7 +659,7 @@ export interface components {
         SuccessResponse_RoomResponseWithMessages_: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -617,7 +670,7 @@ export interface components {
         SuccessResponse_RoomResponse_: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -628,7 +681,7 @@ export interface components {
         SuccessResponse_UserResponse_: {
             /**
              * Status
-             * @default 200
+             * @default 201
              */
             status: number;
             /** Message */
@@ -746,7 +799,7 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -946,7 +999,7 @@ export interface operations {
         parameters: {
             query: {
                 user_id: string;
-                role: string;
+                role: "member" | "owner";
             };
             header?: never;
             path?: never;
@@ -959,7 +1012,7 @@ export interface operations {
         };
         responses: {
             /** @description Successful Response */
-            200: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1064,6 +1117,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuccessResponse_RoomResponse_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_member_api_v1_rooms_add_member_to_room_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessResponse_MemberResponse_"];
                 };
             };
             /** @description Validation Error */

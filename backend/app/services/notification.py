@@ -13,9 +13,9 @@ class NotificationService():
     new_notification = await self.repository.create_notification(title, user_id, invite_id)
     return new_notification
   
-  async def update_notification(self, user_id: str, notification_id: str, **notification_data: NotificationUpdate):
-    updated_notification = await self.repository.update_notification(user_id, notification_id, **notification_data)
-    return updated_notification
+  # async def update_notification(self, user_id: str, notification_id: str, **notification_data: NotificationUpdate):
+  #   updated_notification = await self.repository.update_notification(user_id, notification_id, **notification_data)
+  #   return updated_notification
   
   async def read_all_notifications(self, user_id: str):
     notifications = await self.repository.read_all_notifications(user_id)

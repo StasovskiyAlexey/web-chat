@@ -25,7 +25,7 @@ class NotificationRepository():
 
     self.db.add(new_notification)
     await self.db.flush()
-    await self.db.refresh(new_notification, ["invite"])
+    await self.db.refresh(new_notification, attribute_names=["invite"])
     return new_notification
     
   # async def update_notification(self, user_id: str, notification_id: str):

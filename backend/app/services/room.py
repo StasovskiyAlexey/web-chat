@@ -3,11 +3,10 @@ from ..core.exceptions import AppError
 from ..repository import RoomRepository, MemberRepository, UserRepository, NotificationRepository, InviteRepository
 from ..schemas.room import RoomUpdate
 from ..schemas.member import MemberCreate
-from ..models import Room, Notification
+from ..models import Room
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.notification import NotificationCreate
 from ..core.websockets.websocket_manager import websocket_manager
-from ..schemas.invite import InviteCreate
+from typing import Literal
 
 class RoomService: 
   def __init__(self, db: AsyncSession, repository: RoomRepository, user_repository: UserRepository, member_repository: MemberRepository, notification_repository: NotificationRepository, invitation_repository: InviteRepository):
@@ -34,7 +33,7 @@ class RoomService:
     room = await self.repository.get_room_by_name(room_name)
     return room
   
-  async def create_room(self, room_data: Room, user_id: str, role: str):
+  async def create_room(self, room_data: Room, user_id: str, role: Literal['member', 'owner']):
     new_room = await self.repository.create_room(room_data)
     member_data = MemberCreate(user_id=user_id, room_id=new_room.id, role=role)
     await self.member_repository.create_member(member_data)
@@ -154,8 +153,9 @@ class RoomService:
     if not exist_room:
       raise AppError(400, f'Комнаты с ID {room_id} не найдено')
     
-    if owner_member.role != 'owner':
-      raise AppError(400, 'Вы не являетесь владельцем комнаты')
+    if owner_member:
+      if owner_member.role != 'owner':
+        raise AppError(400, 'Вы не являетесь владельцем комнаты')
     
     member_in_room = await self.repository.check_member_in_room(room_id, user_id)
     

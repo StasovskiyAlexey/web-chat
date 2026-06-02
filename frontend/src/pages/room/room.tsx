@@ -27,7 +27,7 @@ export const Room = () => {
 
 	const { addMessage } = useRoomMutations()
 	const { data: room, isLoading, isError } = useRoom(roomId)
-
+	console.log(room)
 	const { user } = useAuth()
 	const { socket } = useWebsocket(`${websocketUrl}/room_connection?room_id=${roomId}`)
 
@@ -111,7 +111,7 @@ export const Room = () => {
 								className={`flex ${msg.user_id === user?.id ? 'justify-end' : 'justify-start'}`}>
 								<div className={`flex gap-3 max-w-[70%] ${msg.user_id === user?.id ? 'flex-row-reverse' : ''}`}>
 									<Avatar className='size-10 shrink-0'>
-										<AvatarImage src={msg.user.picture || `https://cdn-icons-png.freepik.com/512/6596/6596121.png`} />
+										<AvatarImage src={msg.user?.picture || `https://cdn-icons-png.freepik.com/512/6596/6596121.png`} />
 										<AvatarFallback>{user?.login.slice(0, 2)}</AvatarFallback>
 									</Avatar>
 									<div>
