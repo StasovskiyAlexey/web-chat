@@ -1,4 +1,4 @@
-import { usePopup } from '@/app/providers/PopupProvider'
+import { usePopup } from '@/app/providers/popup-provider'
 import type { TRoom } from '@/entities/room/model/types'
 import { Button } from '@/shared/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'

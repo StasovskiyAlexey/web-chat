@@ -1,9 +1,9 @@
 import { Separator } from '@/shared/ui/separator'
-import { usePopup } from '@/app/providers/PopupProvider'
+import { usePopup } from '@/app/providers/popup-provider'
 import type { TRoom } from '@/entities/room/model/types'
 import { InviteToRoomBtn } from '@/features/invite-from-room'
 import DeleteRoomBtn from '@/features/delete-room/ui/delete-room-btn'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 
 export default function RoomSettings() {
 	const { popups } = usePopup()

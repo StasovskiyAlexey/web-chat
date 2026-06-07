@@ -1,5 +1,5 @@
 import { TTypes } from '@/shared/di/types'
-import { useInjection } from '@/app/providers/DIProvider'
+import { useInjection } from '@/app/providers/di-provider'
 import { type TNotificationService } from './notifications.service'
 import { useQuery } from '@tanstack/react-query'
 

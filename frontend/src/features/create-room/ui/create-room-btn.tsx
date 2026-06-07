@@ -1,4 +1,4 @@
-import { usePopup } from '@/app/providers/PopupProvider'
+import { usePopup } from '@/app/providers/popup-provider'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { Plus } from 'lucide-react'
 import { AddRoomPopup } from '@/widgets/add-room-popup/ui/add-room-popup'

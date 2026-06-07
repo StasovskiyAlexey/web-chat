@@ -1,7 +1,7 @@
 import { Sidebar } from '@/widgets/sidebar/sidebar'
-import AppProvider from '../providers/AppProvider'
+import AppProvider from '../providers/app-provider'
 import { type ReactNode } from 'react'
-import useMobile from '@/shared/hooks/useMobile'
+import useMobile from '@/shared/hooks/use-mobile'
 import MobileMenu from '@/widgets/mobile-menu'
 
 export default function MainLayout({ children }: { children?: ReactNode }) {

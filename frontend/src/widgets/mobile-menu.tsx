@@ -1,12 +1,12 @@
-import { useAuth } from '../app/providers/AuthProvider'
-import { useInjection } from '../app/providers/DIProvider'
-import { TTypes } from '../shared/di/types'
+import { useAuth } from '@/app/providers/auth-provider'
+import { useInjection } from '@/app/providers/di-provider'
+import { TTypes } from '@/shared/di/types'
 import { type TAuthService } from '@/features/auth/api/auth.service'
 import { MessageSquare, LogOut, Settings, Menu } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '../shared/ui/avatar'
-import { Button } from '../shared/ui/button'
-import { Separator } from '../shared/ui/separator'
-import { Sheet, SheetContent, SheetTrigger } from '../shared/ui/sheet'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
+import { Button } from '@/shared/ui/button'
+import { Separator } from '@/shared/ui/separator'
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet'
 
 export default function MobileMenu() {
 	const { user } = useAuth()

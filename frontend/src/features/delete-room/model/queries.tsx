@@ -1,5 +1,5 @@
 import { queryClient } from '@/app/lib/query-client'
-import { useInjection } from '@/app/providers/DIProvider'
+import { useInjection } from '@/app/providers/di-provider'
 import type { TRoomService } from '@/entities/room/api/room.service'
 import { TTypes } from '@/shared/di/types'
 import { useMutation } from '@tanstack/react-query'

@@ -1,5 +1,5 @@
 import { TTypes } from '@/shared/di/types'
-import { useInjection } from '@/app/providers/DIProvider'
+import { useInjection } from '@/app/providers/di-provider'
 import type { TUserUpdateSchema } from '@/entities/user/model/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'

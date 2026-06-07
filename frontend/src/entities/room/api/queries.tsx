@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { AxiosError } from 'axios'
-import { useInjection } from '@/app/providers/DIProvider'
+import { useInjection } from '@/app/providers/di-provider'
 import { TTypes } from '@/shared/di/types'
 import type { TRoomService } from '@/entities/room/api/room.service'
 import type { TMessageCreate, TRoomCreate, TRoomUpdate } from '../model/types'

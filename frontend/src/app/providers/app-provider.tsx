@@ -1,12 +1,12 @@
 import { type ReactNode } from 'react'
-import { AuthProvider } from './AuthProvider'
-import { DIProvider } from './DIProvider'
+import { AuthProvider } from './auth-provider'
+import { DIProvider } from './di-provider'
 import { TooltipProvider } from '../../shared/ui/tooltip'
 import { Toaster } from 'sonner'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '../lib/query-client'
-import { ModalProvider } from './ModalProvider'
-import { PopupProvider } from './PopupProvider'
+import { ModalProvider } from './modal-provider'
+import { PopupProvider } from './popup-provider'
 
 export default function AppProvider({ children }: { children: ReactNode }) {
 	return (

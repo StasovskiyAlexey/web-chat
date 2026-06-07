@@ -1,7 +1,7 @@
 import { Input } from '@/shared/ui/input'
 import { Hash } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 import useInviteToRoom from '../model/queries'
 
 export default function InviteToRoomInput({

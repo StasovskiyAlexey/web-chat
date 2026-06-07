@@ -1,5 +1,5 @@
 import {Container} from 'inversify'
-import { AxiosClient } from '../../app/api/AxiosClient'
+import { AxiosClient } from '../../app/api/axios-client'
 import { AuthService, type TAuthService } from '@/features/auth/api/auth.service'
 import { TTypes } from './types'
 import { type IHttpClient } from './interfaces'

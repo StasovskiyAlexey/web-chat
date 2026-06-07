@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 import { LogOut, Settings, ChevronLeft, House, Bell } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Separator } from '@/shared/ui/separator'
 import { motion } from 'framer-motion'
 import { NavItem } from './nav-item'
-import { usePopup } from '@/app/providers/PopupProvider'
+import { usePopup } from '@/app/providers/popup-provider'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { NotificationPopup } from '@/entities/notification/ui/notifications-popup'
-import { websocketUrl } from '@/app/lib/envVariables'
-import useWebsocket from '@/shared/hooks/useWebsocket'
+import { websocketUrl } from '@/app/lib/env-variables'
+import useWebsocket from '@/shared/hooks/use-websocket'
 import { useNotifications } from '@/entities/notification/api/queries'
 import { queryClient } from '@/app/lib/query-client'
 
@@ -20,7 +20,7 @@ export const Sidebar = () => {
 	console.log(notifications)
 	const [isOpen, setIsOpen] = useState<boolean>(true)
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
-
+	console.log(socket)
 	useEffect(() => {
 		if (!socket) return
 
@@ -28,7 +28,7 @@ export const Sidebar = () => {
 			try {
 				const data = JSON.parse(event.data)
 				const payload = data.payload
-
+				console.log(data, payload, 'kek')
 				queryClient.setQueryData(['notifications', user?.id], (oldData: any) => {
 					if (!oldData) return oldData
 					return [payload, ...oldData]

@@ -1,4 +1,4 @@
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { User, Mail, Settings } from 'lucide-react'

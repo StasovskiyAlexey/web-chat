@@ -63,20 +63,15 @@ class WebsocketManager:
       for connection in self.user_notifications_connections[user_id]:
         print('connection', connection)
         try:
-          res = await connection.send_json(notification)
-          print('res123', res)
-          print('Успех')
+          await connection.send_json(notification)
         except Exception as e:
           lost_connections.append(connection)
-          print('Ошибка', e)
-          
+          print('error_socket', e)
+    
     for connection in lost_connections:
       self.user_notifications_connections[user_id].remove(connection)
       
     if not self.user_notifications_connections[user_id]:
       del self.user_notifications_connections[user_id]
-      
-  # # Для добавления сообщения
-  # async def add_payload(self, payload, )
 
 websocket_manager = WebsocketManager()

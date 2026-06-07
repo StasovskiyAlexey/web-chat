@@ -1,6 +1,6 @@
 import { Check, X } from 'lucide-react'
 import useAcceptRoomInvite from '../model/queries'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 import type { TNotification } from '@/entities/notification/model/types'
 
 export default function AcceptButtons({ notification }: { notification: TNotification }) {

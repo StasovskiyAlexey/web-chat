@@ -1,7 +1,7 @@
 import { Input } from '@/shared/ui/input'
 import { useCreateRoom } from '../model/queries'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { usePopup } from '@/app/providers/PopupProvider'
+import { useAuth } from '@/app/providers/auth-provider'
+import { usePopup } from '@/app/providers/popup-provider'
 import { Button } from '@/shared/ui/button'
 
 export default function CreateRoomInput({

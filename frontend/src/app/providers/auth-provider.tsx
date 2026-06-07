@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { AxiosError } from 'axios'
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { toast } from 'react-toastify'
-import { useInjection } from './DIProvider'
+import { useInjection } from './di-provider'
 import { TTypes } from '@/shared/di/types'
 import { type TAuthService } from '@/features/auth/api/auth.service'
 

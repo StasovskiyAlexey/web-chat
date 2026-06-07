@@ -1,6 +1,6 @@
 import { Bell, Check, CheckCheck, UserPlus } from 'lucide-react'
 import { ScrollArea } from '@/shared/ui/scroll-area'
-import { useAuth } from '@/app/providers/AuthProvider'
+import { useAuth } from '@/app/providers/auth-provider'
 import { Separator } from '@/shared/ui/separator'
 import { AcceptButtons } from '@/features/accept-invite'
 import { type TNotification } from '../model/types'

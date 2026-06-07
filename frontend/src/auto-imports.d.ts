@@ -53,7 +53,7 @@ declare global {
   const ErrorFallback: typeof import('./components/ErrorFallback').default
   const Example: typeof import('./components/VirtualList').Example
   const Header: typeof import('./components/Header').default
-  const Loader: typeof import('./shared/Loader').default
+  const Loader: typeof import('./shared/loader').default
   const Menu: typeof import('./components/Menu').default
   const MobileMenu: typeof import('./widgets/mobile-menu').default
   const NotificationItem: typeof import('./components/NotificationItem').NotificationItem
@@ -104,13 +104,13 @@ declare global {
   const useInsertionEffect: typeof import('react').useInsertionEffect
   const useLayoutEffect: typeof import('react').useLayoutEffect
   const useMemo: typeof import('react').useMemo
-  const useMobile: typeof import('./shared/hooks/useMobile').default
+  const useMobile: typeof import('./shared/hooks/use-mobile').default
   const useReducer: typeof import('react').useReducer
   const useRef: typeof import('react').useRef
   const useState: typeof import('react').useState
   const useSyncExternalStore: typeof import('react').useSyncExternalStore
   const useTransition: typeof import('react').useTransition
   const useWebSocket: typeof import('./shared/hooks/useWebSocket').default
-  const useWebsocket: typeof import('./shared/hooks/useWebsocket').default
+  const useWebsocket: typeof import('./shared/hooks/use-websocket').default
   const zustand: typeof import('zustand').create
 }

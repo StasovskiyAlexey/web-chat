@@ -1,6 +1,6 @@
 import { Users, Hash } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
-import Loader from '@/shared/Loader'
+import Loader from '@/shared/loader'
 import { useRooms } from '@/entities/room/api/queries'
 import { CreateRoomBtn } from '@/features/create-room'
 

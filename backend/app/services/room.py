@@ -3,6 +3,7 @@ from ..core.exceptions import AppError
 from ..repository import RoomRepository, MemberRepository, UserRepository, NotificationRepository, InviteRepository
 from ..schemas.room import RoomUpdate
 from ..schemas.member import MemberCreate
+from ..schemas.invite import InviteResponse
 from ..models import Room
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..core.websockets.websocket_manager import websocket_manager
@@ -78,12 +79,15 @@ class RoomService:
     
     if new_invite:
       new_notification = await self.notification_repository.create_notification(title, room_member_owner.user_id, new_invite.id)
-      
+    
+    # Создали обьект из модели invite в new_notification
+    invite_from_notification = InviteResponse.model_validate(new_notification.invite).model_dump(mode='json')
+    
     notification_payload = {
       "created_at": new_notification.created_at.isoformat(),
       "id": new_notification.id,
       "invitation_id": new_notification.invite_id,
-      "invite": new_notification.invite,
+      "invite": invite_from_notification,
       "is_read": new_notification.is_read,
       "title": new_notification.title,
       "type": new_notification.type,
@@ -94,6 +98,7 @@ class RoomService:
     await self.db.refresh(new_invite)
     
     await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, room_member_owner.user_id)
+    
     return new_invite
   
   # Работает
@@ -126,24 +131,31 @@ class RoomService:
     
     new_invite = await self.invitation_repository.create_invite(room_owner_member.user_id, inviter_user.id, exist_room.id, "invite_from_room")
     print('new_invite', new_invite)
+    
     if new_invite:
       new_notification = await self.notification_repository.create_notification(title, inviter_user.id, new_invite.id)
-      
+
+    # Создали обьект из модели invite в new_notification
+    invite_from_notification = InviteResponse.model_validate(new_notification.invite).model_dump(mode='json')
+
     notification_payload = {
       "created_at": new_notification.created_at.isoformat(),
       "id": new_notification.id,
       "invitation_id": new_notification.invite_id,
-      "invite": new_notification.invite,
+      "invite": invite_from_notification,
       "is_read": new_notification.is_read,
       "title": new_notification.title,
       "type": new_notification.type,
       "user_id": new_notification.user_id
     }
     
+    # Проблема в том что invite это модель, и получаем notification_data в websocket
+    
     await self.db.commit()
     await self.db.refresh(new_invite)
     
-    await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, inviter_user.id)
+    connect_to_websocket = await websocket_manager.broadcast_notifications_to_user({"action": "new_notification", "payload": notification_payload}, inviter_user.id)
+
     return new_invite
   
   async def delete_member_from_room(self, room_id: str, user_id: str, member_id: str, owner_id: str):
