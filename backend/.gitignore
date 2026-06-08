@@ -3,6 +3,9 @@ venv/
 .venv/
 env/
 
+.env.dev
+.env.test
+
 # Кеш Python
 **/__pycache__/
 *.pyc
