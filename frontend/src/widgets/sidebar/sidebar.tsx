@@ -12,15 +12,17 @@ import { websocketUrl } from '@/app/lib/env-variables'
 import useWebsocket from '@/shared/hooks/use-websocket'
 import { useNotifications } from '@/entities/notification/api/queries'
 import { queryClient } from '@/app/lib/query-client'
+import { Button } from '@/shared/ui/button'
 
 export const Sidebar = () => {
 	const { logout, user } = useAuth()
 	const { switcher, popups } = usePopup()
+
 	const { data: notifications } = useNotifications(user?.id as string)
-	console.log(notifications)
-	const [isOpen, setIsOpen] = useState<boolean>(true)
+	const [isOpen, setIsOpen] = useState<boolean>(localStorage.getItem('sidebarIsOpen') === 'true' ? true : false)
+
 	const { socket } = useWebsocket(`${websocketUrl}/get_notifications?user_id=${user?.id}`)
-	console.log(socket)
+
 	useEffect(() => {
 		if (!socket) return
 
@@ -28,7 +30,7 @@ export const Sidebar = () => {
 			try {
 				const data = JSON.parse(event.data)
 				const payload = data.payload
-				console.log(data, payload, 'kek')
+
 				queryClient.setQueryData(['notifications', user?.id], (oldData: any) => {
 					if (!oldData) return oldData
 					return [payload, ...oldData]
@@ -47,33 +49,47 @@ export const Sidebar = () => {
 	return (
 		<motion.aside
 			initial={false}
-			animate={{ width: isOpen ? 260 : 80 }}
-			className='relative flex h-screen flex-col border-r bg-card p-3 shadow-sm transition-colors'>
-			<button
-				onClick={() => setIsOpen(!isOpen)}
-				className='absolute -right-3 top-12 z-50 flex size-6 items-center justify-center rounded-full border bg-background shadow-md hover:bg-accent transition-transform'
-				style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }}>
-				<ChevronLeft className='size-4' />
-			</button>
-
-			<div className='flex flex-col justify-start items-start px-2 py-2'>
-				{isOpen ? (
+			animate={{ width: isOpen ? 280 : 76 }}
+			transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+			className='relative flex flex-col border-r bg-card shadow-sm'>
+			{/* HEADER: Логотип + Кнопка свертывания */}
+			<div
+				className={`flex h-16 items-center ${isOpen ? 'justify-between' : 'justify-center'} px-4 border-b border-border/40`}>
+				{isOpen && (
 					<div className='flex items-center gap-2'>
-						<span className='ml-3 truncate font-bold tracking-tight text-foreground'>Web-Chat</span>
 						<img
-							className='size-10'
-							src='https://static.vecteezy.com/system/resources/thumbnails/008/508/754/small_2x/3d-chat-mail-message-notification-chatting-illustration-png.png'
+							className='size-8 shrink-0 object-contain'
+							src='https://static.vecteezy.com/system/resources/thumbnails/028/754/648/small/3d-purple-online-chatting-bubble-icon-for-ui-ux-web-mobile-apps-social-media-ads-designs-png.png'
+							alt='Logo'
 						/>
+
+						<motion.span
+							initial={{ opacity: 0, x: -10 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -10 }}
+							className='uppercase font-black text-base tracking-tight text-foreground whitespace-nowrap'>
+							Web-chat
+						</motion.span>
 					</div>
-				) : (
-					<img
-						className='size-10'
-						src='https://static.vecteezy.com/system/resources/thumbnails/008/508/754/small_2x/3d-chat-mail-message-notification-chatting-illustration-png.png'
-					/>
 				)}
+
+				<Button
+					variant='ghost'
+					size='icon'
+					onClick={() => {
+						localStorage.setItem('sidebarIsOpen', !isOpen ? 'true' : 'false')
+						setIsOpen(!isOpen)
+					}}
+					className=' text-muted-foreground hover:text-foreground'>
+					<motion.div
+						animate={{ rotate: isOpen ? 0 : 180 }}
+						transition={{ duration: 0.2 }}>
+						<ChevronLeft className='size-4' />
+					</motion.div>
+				</Button>
 			</div>
 
-			<nav className='flex flex-col gap-2'>
+			<nav className='flex-1 p-3 space-y-1'>
 				<NavItem
 					to='/'
 					icon={House}
@@ -82,50 +98,51 @@ export const Sidebar = () => {
 				/>
 			</nav>
 
-			<div className='mt-auto flex flex-col gap-2'>
-				<Separator className='my-2 opacity-50' />
+			<div className='p-3 border-t border-border/40'>
+				<div className='flex flex-col gap-2'>
+					<Popover
+						onOpenChange={(open) => switcher('userNotifications', open)}
+						open={popups.userNotifications.isOpen}>
+						<PopoverTrigger asChild>
+							<NavItem
+								onClick={() => switcher('userNotifications', true)}
+								icon={Bell}
+								label='Уведомления'
+								isOpen={isOpen}
+								isMarked={notifications?.some((el) => !el.is_read)}
+							/>
+						</PopoverTrigger>
 
-				<Popover
-					onOpenChange={(open) => switcher('userNotifications', open)}
-					open={popups.userNotifications.isOpen}>
-					<PopoverTrigger asChild>
-						<NavItem
-							onClick={() => switcher('userNotifications', true)}
-							icon={Bell}
-							label='Уведомления'
-							isOpen={isOpen}
-							isMarked={notifications?.some((el) => !el.is_read)}
-						/>
-					</PopoverTrigger>
+						<PopoverContent
+							side='right'
+							sideOffset={12}
+							className='w-80 p-0 overflow-hidden'>
+							<NotificationPopup notifications={notifications} />
+						</PopoverContent>
+					</Popover>
 
-					<PopoverContent
-						side='right'
-						className='w-100'>
-						<NotificationPopup notifications={notifications} />
-					</PopoverContent>
-				</Popover>
+					<NavItem
+						to='/settings'
+						icon={Settings}
+						label='Настройки'
+						isOpen={isOpen}
+					/>
 
-				<NavItem
-					to='/settings'
-					icon={Settings}
-					label='Настройки'
-					isOpen={isOpen}
-				/>
+					<NavItem
+						to=''
+						icon={LogOut}
+						label='Выйти'
+						isOpen={isOpen}
+						variant='danger'
+						onClick={logout}
+					/>
+				</div>
 
-				<NavItem
-					to=''
-					icon={LogOut}
-					label='Выйти'
-					isOpen={isOpen}
-					variant='danger'
-					onClick={logout}
-				/>
+				<Separator className='my-3 opacity-40' />
 
-				<Separator className='my-2 opacity-50' />
-
-				<div
-					className={`flex items-center gap-3 rounded-xl p-2 transition-colors ${isOpen ? 'hover:bg-accent/50' : 'justify-center'}`}>
-					<Avatar className='size-9 border border-border shadow-sm'>
+				{/* КОМПАКТНЫЙ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ */}
+				<div className={`flex items-center gap-3 rounded-xl p-2 bg-muted/40 ${!isOpen && 'justify-center'}`}>
+					<Avatar className='size-9 border border-border/60 shrink-0 shadow-sm'>
 						<AvatarImage src={user.picture as string} />
 						<AvatarFallback className='bg-primary/5 text-[10px] font-bold text-primary'>
 							{user?.login?.slice(0, 2).toUpperCase()}
@@ -133,11 +150,9 @@ export const Sidebar = () => {
 					</Avatar>
 
 					{isOpen && (
-						<div className='flex flex-col gap-1 min-w-0'>
-							<span className='truncate text-xs font-semibold text-foreground'>{user?.login}</span>
-							<span className='truncate text-xs text-muted-foreground'>{user?.email}</span>
-							<span className='truncate text-xs text-muted-foreground'>Код приглашения: {user?.user_code}</span>
-							<span className='truncate text-xs text-muted-foreground'>ID пользователя: {user?.id}</span>
+						<div className='flex flex-col min-w-0 flex-1'>
+							<span className='truncate text-xs font-semibold text-foreground leading-tight'>{user?.login}</span>
+							<span className='truncate text-[10px] text-muted-foreground mt-0.5'>{user?.email}</span>
 						</div>
 					)}
 				</div>

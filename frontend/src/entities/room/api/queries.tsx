@@ -53,20 +53,8 @@ export const useRoomMutations = () => {
 		},
 	})
 
-	const addMessage = useMutation({
-		mutationFn: (data: TMessageCreate) => roomService.createMessage(data),
-		onSuccess: (res) => {
-			queryClient.invalidateQueries({ queryKey: ['room'] })
-			return res.data
-		},
-		onError: (e: AxiosError<any>) => {
-			toast.error(e.response?.data.detail)
-		},
-	})
-
 	return {
 		createRoom: createRoom.mutate,
 		updateRoom: updateRoom.mutate,
-		addMessage: addMessage.mutate,
 	}
 }

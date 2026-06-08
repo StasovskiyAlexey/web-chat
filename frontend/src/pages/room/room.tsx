@@ -1,7 +1,5 @@
-import { useState } from 'react'
-import { Send, Users, MoreVertical } from 'lucide-react'
+import { Users, MoreVertical } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
 import { ScrollArea } from '@/shared/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { useParams } from '@tanstack/react-router'
@@ -9,7 +7,7 @@ import { useAuth } from '@/app/providers/auth-provider'
 import Loader from '@/shared/loader'
 import ErrorFallback from '@/shared/error-fallback'
 import { websocketUrl } from '@/app/lib/env-variables'
-import { useRoomMutations, useRoom } from '@/entities/room/api/queries'
+import { useRoom } from '@/entities/room/api/queries'
 import dayjs from 'dayjs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { usePopup } from '@/app/providers/popup-provider'
@@ -17,24 +15,20 @@ import RoomSettings from '@/entities/room/ui/room-settings-popup'
 import useWebsocket from '@/shared/hooks/use-websocket'
 import { queryClient } from '@/app/lib/query-client'
 import MemberSettingsPopup from '@/widgets/member-settings-popup/ui/member-settings-popup'
+import { AddMessageForm } from '@/features/add-message'
 
 export const Room = () => {
 	const roomId = useParams({ from: '/rooms/$roomId' }).roomId
-	const chatArea = useRef<null | HTMLDivElement>(null)
-
-	const [message, setMessage] = useState('')
 	const { popups, switcher, add } = usePopup()
 
-	const { addMessage } = useRoomMutations()
 	const { data: room, isLoading, isError } = useRoom(roomId)
-	console.log(room)
+
 	const { user } = useAuth()
 	const { socket } = useWebsocket(`${websocketUrl}/room_connection?room_id=${roomId}`)
 
 	useEffect(() => {
 		if (!socket) return
 
-		// Тут делаем onMessage только делаем функцию хендлер для создания события
 		const handleMessage = (event: MessageEvent) => {
 			try {
 				const data = JSON.parse(event.data)
@@ -52,17 +46,6 @@ export const Room = () => {
 		socket.addEventListener('message', handleMessage)
 		return () => socket.removeEventListener('message', handleMessage)
 	}, [socket, roomId])
-
-	function handleAddMessage() {
-		addMessage({
-			content: message,
-			room_id: roomId,
-			user_id: user?.id as string,
-			member_id: room?.members.find((el) => el.user_id === user?.id)?.id as string,
-		})
-
-		setMessage('')
-	}
 
 	if (isLoading) {
 		return <Loader message='Загрузка комнаты' />
@@ -94,6 +77,7 @@ export const Room = () => {
 								</Button>
 							</PopoverTrigger>
 
+							{/* При захода в другую руму попап остается открытым и со старыми пропсами */}
 							<PopoverContent className='w-70'>
 								<RoomSettings />
 							</PopoverContent>
@@ -101,9 +85,7 @@ export const Room = () => {
 					</div>
 				</header>
 
-				<ScrollArea
-					ref={chatArea}
-					className='flex-1 p-4 overflow-auto'>
+				<ScrollArea className='flex-1 p-4 overflow-auto'>
 					<div className='space-y-6 '>
 						{room?.messages.map((msg, i) => (
 							<div
@@ -134,23 +116,7 @@ export const Room = () => {
 				</ScrollArea>
 
 				<footer className='p-4 border-t bg-background'>
-					<form
-						className='flex gap-2'
-						onSubmit={(e) => e.preventDefault()}>
-						<Input
-							placeholder='Написать сообщение...'
-							value={message}
-							onChange={(e) => setMessage(e.target.value)}
-							className='flex-1 bg-muted/50 border-none focus-visible:ring-1'
-						/>
-						<Button
-							onClick={() => handleAddMessage()}
-							type='submit'
-							size='icon'
-							disabled={!message}>
-							<Send className='w-4 h-4' />
-						</Button>
-					</form>
+					<AddMessageForm room={room} />
 				</footer>
 			</main>
 

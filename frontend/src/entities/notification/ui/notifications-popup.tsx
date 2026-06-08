@@ -14,7 +14,7 @@ export const NotificationPopup = ({ notifications }: { notifications?: TNotifica
 	}
 
 	return (
-		<div className='flex flex-col w-full max-h-[400px] max-w-[380px] bg-white rounded-md'>
+		<div className='flex flex-col w-full p-4 max-h-[400px] max-w-[380px] bg-white rounded-md'>
 			{/* Header */}
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-2'>

@@ -8,6 +8,7 @@ import { useAuth } from '@/app/providers/auth-provider'
 export default function RoomSettings() {
 	const { popups } = usePopup()
 	const { user } = useAuth()
+
 	const room: TRoom = popups.roomSettings.props
 
 	if (!room) {
