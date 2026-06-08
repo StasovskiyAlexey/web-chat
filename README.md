@@ -1,6 +1,111 @@
-Возможно добавить docker-compose для сборки и frontend и backend
-Протестировать весь фунционал руками + сделать тесты для сообщений
-Оформить красиво readme файл и выложить на публичный доступ в гит
-Добавить webscoket в свое резюме
+# 🚀 Web-Chat Application
 
-Завтра сделать readme и выгрузить проект в общий доступ
+#### **Чат в реальном времени, с комнатами, сообщениями, ролями и оповещениями**
+
+## 🏗 Технологический стек
+
+### Frontend (Vite + TanStack)
+
+- **Ядро**: React 19, TypeScript
+- **Роутинг**: `@tanstack/react-router`
+- **Данные**: `@tanstack/react-query`, Axios
+- **Валидация**: React Hook Form + Zod
+- **UI**: Tailwind CSS, Radix UI, Framer Motion, Vaul (для модальных окон)
+
+### Backend (FastAPI + SQLAlchemy)
+
+- **Ядро**: Python 3.12, FastAPI
+- **Тестирование**: Pytest, httpx
+- **ORM**: SQLAlchemy 2.0 + Alembic (миграции)
+- **БД**: PostgreSQL (через `asyncpg`)
+- **Real-time**: WebSockets
+- **Безопасность**: JWT (PyJWT), Passlib
+
+---
+
+## **⚙️ Функционал:**
+
+1. Создание, удаление комнаты.
+2. У каждого пользователя и комнаты есть уникальный идентификатор в виде кода user_code или room_code.
+3. Приглашение пользователя по его коду или приглашение в комнату от пользователя по коду комнаты.
+4. Создание сообщений в комнате от участников комнаты.
+5. Реализация отправки, получения сообщений, и создание уведомлений в аккаунте пользователя в реальном времени, интеграция с Websocket.
+6. Поп-ап для уведомлений пользователя о событиях связанным с ним.
+7. Аутентификация через JWT токен с использованием pyJWT, регистрация и логин в аккаунт, пользователи создаются и лежат в БД postgreSQL.
+
+---
+
+## 📂 Структура проекта
+
+### Frontend (`/frontend`)
+
+```
+src/
+├── app/            # API клиенты (Axios), типы, конфигурация, маршрутизация
+├── entities/       # Бизнес-сущности (User, Message, Invite)
+├── features/       # Бизнес-фичи (Auth, SendMessage, Notifications, СreateRoom)
+├── shared/         # UI-кит (Shadcn UI, хуки, стили, Dependency Injection)
+├── widgets/        # Крупные блоки (Header, Footer, Sidebar, Modals, Popups)
+```
+
+### Back-end (`/backend`)
+
+```
+tests/
+├── api/            # Тесты API, отдельные файлы с тестированием эндпоинтов
+app/
+├── routers/        # Эндпоинты
+├── dependencies/   # Внедрение зависимостей в виде функций (Аутентификация, получения сервисов)
+├── core/           # Конфигурация, Security, DB session
+├── models/         # SQLAlchemy модели (таблицы)
+├── schemas/        # Pydantic модели (валидация запросов/ответов)
+└── services/       # Бизнес-логика и WebSocket Manager
+```
+
+---
+
+### Запуск проекта
+
+## Front-end
+
+1. Путь к проекту - **cd frontend**
+2. Установка зависимостей - **npm i**
+3. Создать .env внутри папки frontend для зависимостей окружения со следующими переменными:
+
+- VITE_BASE_URL=http://localhost:5173/
+- VITE_API_BASE_URL=http://localhost:8000/api/v1/
+- VITE_API_WS_BASE_URL=ws://localhost:8000/api/v1/websockets
+
+4. Запуск фронтенда в dev режиме - **npm run dev**
+
+## Back-end
+
+1. Путь к проекту - **cd frontend**
+2. Установка зависимостей - **poetry install**
+3. Создать зависимости окружения проекта:
+
+#### .env.dev - для разработки
+
+- POSTGRES_USER=postgres
+- POSTGRES_PASSWORD=postgres
+- POSTGRES_DB=chat-db
+- DEBUG=True
+- MAX_IMAGE_SIZE_MB=5
+- SECREY_KEY=secret_key
+- DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/chat-db
+
+#### .env.test - для тестирования
+
+- POSTGRES_USER=postgres
+- POSTGRES_PASSWORD=postgres
+- POSTGRES_DB=chat-test-db
+- DEBUG=True
+- MAX_IMAGE_SIZE_MB=5
+- SECRET_KEY=secret_for_tests_only
+- DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5433/chat-test-db
+
+4. Собираем docker-compose - **make build**
+5. Поднимаем наш docker-compose - **make up**
+6. Заходим в docker контейнер бекенда через новый терминал, предварительно<br>
+   прописывая путь к бекенду для доступа к контейнеру - **docker exec -it chat-backend bash**
+7. Создаем миграции с помощью alembic - **alembic upgrade head**
