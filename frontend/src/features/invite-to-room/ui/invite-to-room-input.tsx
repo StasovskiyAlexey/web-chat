@@ -16,14 +16,17 @@ export default function InviteToRoomInput({
 	const { mutate } = useInviteToRoom()
 	const { user } = useAuth()
 
-	function handleInviteToRoom() {
+	function handleInviteToRoom(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
 		mutate({ userCode: user?.user_code as string, roomCode, title })
 		setCode('')
 	}
 
 	return (
 		<>
-			<div className='relative'>
+			<form
+				className='flex relative flex-col gap-2'
+				onSubmit={(e) => handleInviteToRoom(e)}>
 				<Hash className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
 				<Input
 					value={roomCode}
@@ -31,13 +34,14 @@ export default function InviteToRoomInput({
 					placeholder='Введите код комнаты'
 					className='pl-8'
 				/>
-			</div>
-			<Button
-				disabled={!roomCode}
-				onClick={() => handleInviteToRoom()}
-				className='w-full'>
-				Отправить приглашение в комнату
-			</Button>
+
+				<Button
+					disabled={!roomCode}
+					type='submit'
+					className='w-full'>
+					Отправить приглашение в комнату
+				</Button>
+			</form>
 		</>
 	)
 }

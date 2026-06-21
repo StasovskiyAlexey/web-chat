@@ -116,7 +116,7 @@ export const Sidebar = () => {
 						<PopoverContent
 							side='right'
 							sideOffset={12}
-							className='w-80 p-0 overflow-hidden'>
+							className='p-0 w-full max-w-100'>
 							<NotificationPopup notifications={notifications} />
 						</PopoverContent>
 					</Popover>

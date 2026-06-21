@@ -2,6 +2,66 @@
 
 #### **Чат в реальном времени, с комнатами, сообщениями, ролями и оповещениями**
 
+## 🖼️ Интерфейс приложения (Screenshots)
+
+<p align="center">
+  Ниже представлены ключевые экраны приложения. Вы можете развернуть каждый блок, чтобы увидеть интерфейс системы.
+</p>
+
+---
+
+### 🔐 1. Аутентификация и Вход
+
+<details>
+<summary><b>Посмотреть экран авторизации (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/tlagwhuqbyztrcavcn0pn/auth.png?rlkey=kpc5tjzi6h1e6i7900bxbe52j&st=pm4rz68b&raw=1" width="100%" alt="Страница авторизации" />
+</p>
+<p align="center"><i>Минималистичная форма входа и регистрации пользователя с валидацией полей.</i></p>
+</details>
+
+---
+
+### 📋 2. Комнаты пользователя (Рабочие пространства)
+
+<details>
+<summary><b>Посмотреть список комнат(чатов) (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/jnqadxtqz6zp2zv9tomgv/rooms.png?rlkey=dd6n2kud8hrjnz6gbmxe5zuo5&st=jnurnfhq&raw=1" width="100%" alt="Список комнат" />
+</p>
+<p align="center"><i>Список комнат(чатов) доступные пользователю.</i></p>
+</details>
+
+---
+
+### ⚡ 3. Чат-комната
+
+<details>
+<summary><b>Посмотреть интерфейс комнаты (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/78aw509gao1l2x4mqrikf/chat-room.png?rlkey=m2wz0viqv90t08jzqeoj634ey&st=qgyc35bg&raw=1" width="100%" alt="Чат комната" />
+</p>
+<p align="center"><i>Интерфейс комнаты с данными о комнате и чатом с сообщениями которые приходят в реальном времени</i></p>
+</details>
+
+---
+
+### 📄 4. Настройки
+
+<details>
+<summary><b>Посмотреть настройки пользователя (Нажмите, чтобы развернуть)</b></summary>
+<br />
+<p align="center">
+  <img src="https://www.dropbox.com/scl/fi/w2678xcfto2hbpr9oz7h0/settings.png?rlkey=ky6pkpbz0xw97zljniktwuswf&st=9i5sna2v&raw=1" width="100%" alt="Настройки" />
+</p>
+<p align="center"><i>Настройки пользователя</i></p>
+</details>
+
+---
+
 ## 🏗 Технологический стек
 
 ### Frontend (Vite + TanStack)

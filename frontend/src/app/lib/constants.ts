@@ -3,18 +3,18 @@ export const inputs: {label: string, type: string, placeholder: string, name: 'l
     label: 'Логін',
     name: 'login',
     type: 'login',
-    placeholder: 'Введіть ваш логін',
+    placeholder: 'Введите ваш логин',
   },
   {
     label: 'Email',
     name: 'email',
     type: 'email',
-    placeholder: 'Введіть email',
+    placeholder: 'Введите email',
   },
   {
     label: 'Пароль',
     name: 'password',
     type: 'password',
-    placeholder: 'Введіть пароль',
+    placeholder: 'Введите пароль',
   },
 ]

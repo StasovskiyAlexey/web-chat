@@ -27,7 +27,6 @@ export default function Auth() {
 
 	const handleLogin: SubmitHandler<FieldValues> = (data) => {
 		login({ login: data.login, password: data.password })
-		console.log(data)
 		reset()
 	}
 

@@ -50,6 +50,9 @@ class RoomService:
   async def invite_to_room_from_user(self, user_code: str, room_code: str, title: str):
     exist_room = await self.repository.get_room_by_code(room_code)
     
+    if not exist_room:
+      raise AppError(400, 'Комнаты с таким идентификатором не найдена')
+    
     # Тот кто отправил
     inviter_user = await self.user_repository.get_user_by_code(user_code)
     
@@ -104,6 +107,9 @@ class RoomService:
   # Работает
   async def invite_from_room_to_user(self, room_code: str, user_code: str, title: str):
     exist_room = await self.repository.get_room_by_code(room_code)
+    
+    if not exist_room:
+      raise AppError(400, 'Комнаты с таким идентификатором не найдена')
     
     # Тот кто отправляет
     room_owner_member = await self.repository.get_member_room_owner(exist_room.id)

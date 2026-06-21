@@ -15,7 +15,7 @@ export default function MainLayout({ children }: { children?: ReactNode }) {
 
 				<main className='flex-1 min-w-0 relative overflow-y-auto'>
 					{isMobile && <MobileMenu />}
-					<div className='p-4'>{children}</div>
+					{children}
 				</main>
 			</div>
 		</AppProvider>

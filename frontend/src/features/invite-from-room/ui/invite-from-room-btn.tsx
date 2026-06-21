@@ -4,6 +4,7 @@ import { Button } from '@/shared/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 import { UserPlus } from 'lucide-react'
 import useInviteFromRoom from '../model/queries'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
 
 export default function InviteFromRoomBtn({ room }: { room: TRoom }) {
 	const { switcher, popups } = usePopup()
@@ -28,12 +29,17 @@ export default function InviteFromRoomBtn({ room }: { room: TRoom }) {
 			open={popups.inviteUserToRoom.isOpen}
 			onOpenChange={(open) => switcher('inviteUserToRoom', open)}>
 			<PopoverTrigger asChild>
-				<Button
-					onClick={() => switcher('inviteUserToRoom', true)}
-					className='w-full'
-					variant='outline'>
-					<UserPlus /> Пригласить участника
-				</Button>
+				<Tooltip>
+					<TooltipTrigger>
+						<Button
+							onClick={() => switcher('inviteUserToRoom', true)}
+							className='w-full'
+							variant='outline'>
+							<UserPlus />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>Пригласить участника</TooltipContent>
+				</Tooltip>
 			</PopoverTrigger>
 
 			<PopoverContent className='w-70'>

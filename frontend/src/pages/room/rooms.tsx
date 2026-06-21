@@ -12,7 +12,7 @@ export const Rooms = () => {
 
 	return (
 		<section className='rooms-page'>
-			<div className='rooms-container flex flex-col gap-6'>
+			<div className='rooms-container p-4 flex flex-col gap-6'>
 				<div className='flex justify-between items-center'>
 					<div>
 						<h1 className='text-3xl font-bold tracking-tight'>Ваши комнаты</h1>

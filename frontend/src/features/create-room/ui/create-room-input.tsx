@@ -3,6 +3,7 @@ import { useCreateRoom } from '../model/queries'
 import { useAuth } from '@/app/providers/auth-provider'
 import { usePopup } from '@/app/providers/popup-provider'
 import { Button } from '@/shared/ui/button'
+import type React from 'react'
 
 export default function CreateRoomInput({
 	setRoom,
@@ -17,7 +18,8 @@ export default function CreateRoomInput({
 	const { user } = useAuth()
 	const { mutate } = useCreateRoom()
 
-	async function handleCreateRoom() {
+	async function handleCreateRoom(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
 		mutate({
 			userId: user?.id as string,
 			role: 'owner',
@@ -29,16 +31,20 @@ export default function CreateRoomInput({
 
 	return (
 		<>
-			<Input
-				onChange={(e) => setRoom(e.target.value)}
-				placeholder='Название новой комнаты'
-			/>
-			<Button
-				onClick={handleCreateRoom}
-				disabled={!name}
-				className='w-full'>
-				Создать комнату
-			</Button>
+			<form
+				className='flex flex-col gap-2'
+				onSubmit={(e) => handleCreateRoom(e)}>
+				<Input
+					onChange={(e) => setRoom(e.target.value)}
+					placeholder='Название новой комнаты'
+				/>
+				<Button
+					type='submit'
+					disabled={!name}
+					className='w-full'>
+					Создать комнату
+				</Button>
+			</form>
 		</>
 	)
 }

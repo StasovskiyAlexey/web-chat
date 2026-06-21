@@ -4,10 +4,13 @@ import type { TRoom } from '@/entities/room/model/types'
 import { InviteToRoomBtn } from '@/features/invite-from-room'
 import DeleteRoomBtn from '@/features/delete-room/ui/delete-room-btn'
 import { useAuth } from '@/app/providers/auth-provider'
+import useCopy from '@/shared/hooks/use-copy'
+import { Copy } from 'lucide-react'
 
 export default function RoomSettings() {
 	const { popups } = usePopup()
 	const { user } = useAuth()
+	const { handleCopyText } = useCopy()
 
 	const room: TRoom = popups.roomSettings.props
 
@@ -22,13 +25,17 @@ export default function RoomSettings() {
 			{/* Бокове меню (Sidebar) */}
 			<aside className='flex flex-col gap-4 w-full'>
 				<h2 className='text-md text-gray-800'>Настройки комнаты</h2>
-				<div className='flex items-center gap-2 bg-gray-100 rounded-sm p-2'>
+				<div className='flex items-center justify-between gap-2 bg-gray-100 rounded-sm p-2'>
 					<p className='text-sm'>Код для приглашения:</p>
-					<span className='text-red-500 uppercase text-xs'>{room?.room_code}</span>
-				</div>
-				<div className='flex gap-2'>
-					<p className='text-sm'>ID:</p>
-					<span className='text-red-500 uppercase text-xs'>{room?.id}</span>
+					<button
+						onClick={(e) => {
+							e.preventDefault()
+							handleCopyText(room?.room_code as string)
+						}}
+						className='p-1.5 hover:bg-muted rounded-md transition-colors'
+						title='Скопировать код'>
+						<Copy className='w-3.5 h-3.5 text-muted-foreground' />
+					</button>
 				</div>
 
 				{isOwnerRoom && (
